@@ -56,13 +56,13 @@ function code() {
 function code-wsl()
 {
 	# in a wsl shell
-	ELECTRON="$ROOT/.build/electron/Code - OSS.exe"
+	ELECTRON="$ROOT/.build/electron/Cactiva.exe"
 	if [ -f "$ELECTRON"  ]; then
 		local CWD=$(pwd)
 		cd $ROOT
 		export WSLENV=ELECTRON_RUN_AS_NODE/w:$WSLENV
 		local WSL_EXT_ID="ms-vscode-remote.remote-wsl"
-		local WSL_EXT_WLOC=$(ELECTRON_RUN_AS_NODE=1 "$ROOT/.build/electron/Code - OSS.exe" "out/cli.js" --locate-extension $WSL_EXT_ID)
+		local WSL_EXT_WLOC=$(ELECTRON_RUN_AS_NODE=1 "$ROOT/.build/electron/Cactiva.exe" "out/cli.js" --locate-extension $WSL_EXT_ID)
 		cd $CWD
 		if [ -n "$WSL_EXT_WLOC" ]; then
 			# replace \r\n with \n in WSL_EXT_WLOC

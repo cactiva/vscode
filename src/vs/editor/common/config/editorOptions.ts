@@ -1783,6 +1783,7 @@ export class EditorLayoutInfoComputer extends ComputedEditorOption<EditorOption.
 		return { typicalViewportLineCount, extraLinesBeyondLastLine, desiredRatio, minimapLineCount };
 	}
 
+	// calculate new canvas size here
 	public static computeLayout(options: IComputedEditorOptions, env: EditorLayoutInfoComputerEnv): EditorLayoutInfo {
 		const outerWidth = env.outerWidth | 0;
 		const outerHeight = env.outerHeight | 0;

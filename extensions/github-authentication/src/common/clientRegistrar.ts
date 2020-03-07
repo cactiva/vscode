@@ -42,6 +42,10 @@ export class Registrar {
 	getClientDetails(callbackUri: Uri): ClientDetails {
 		let details: ClientDetails | undefined;
 		switch (callbackUri.scheme) {
+			case 'cactiva':
+				details = this._config.OSS;
+				break;
+
 			case 'code-oss':
 				details = this._config.OSS;
 				break;
