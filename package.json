@@ -35,7 +35,7 @@
   },
   "build": {
     "appId": "com.cactiva.app",
-    "category": "cactiva.cactiva.category.type",
+    "asar": true,
      "files": [
       "out"
     ],
