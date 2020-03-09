@@ -10,7 +10,6 @@ jobs:
       - checkout
       - node/with-cache:
           steps:
-            - run: make
             - run: sudo apt-get update
             - run: sudo apt-get install -y g++ gcc make python2.7 pkg-config libx11-dev libxkbfile-dev
             - run: sudo apt-get install libsecret-1-dev
