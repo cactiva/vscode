@@ -11,7 +11,7 @@ jobs:
       - node/with-cache:
           steps:
             - run: sudo apt-get update
-            - run: sudo apt install -y build-essentials
+            - run: sudo apt-get install -y build-essentials
             - run: sudo npm install yarn -g
             - run: sudo npm install node-abi -g
             - run: yarn install --ignore-engines
