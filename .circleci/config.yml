@@ -21,8 +21,9 @@ jobs:
             - run: sudo npm install yarn -g
             - run: yarn
             - run: yarn add electron-packager --dev
-            - run: yarn run watch
+            - run: yarn run package-linux
             - run: yarn run package-win
+            - run: yarn run package-mac
 workflows:
     build-and-test:
       jobs:
