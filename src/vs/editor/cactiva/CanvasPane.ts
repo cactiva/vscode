@@ -1,54 +1,62 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Cactiva. All rights reserved.
  *--------------------------------------------------------------------------------------------*/
-
-import { observer, useObservable } from 'mobx-react-lite';
-import { deepObserve } from 'mobx-utils';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Pane } from 'vs/base/browser/ui/splitview/paneview';
 import { IView } from 'vs/base/browser/ui/splitview/splitview';
 import { ModelData } from 'vs/editor/browser/widget/codeEditorWidget';
-import Canvas from 'vs/editor/cactiva/canvas/Canvas';
-import { canvasStore } from 'vs/editor/cactiva/libs/canvasStore';
-import html from './html';
-import { Project } from 'ts-morph';
+import Editor from 'vs/editor/cactiva/editor/Editor';
+import { cactiva } from 'vs/editor/cactiva/models/cactiva';
+import { walkNode } from 'vs/editor/cactiva/libs/morph/walk';
+import { JsxSelfClosingElement, JsxExpression, JsxElement, JsxFragment, JsxText, Node } from 'ts-morph';
 
 export class CanvasPane extends Pane implements IView {
+	public selectNode(node: Node) {
+		cactiva.breadcrumbs = [];
+		cactiva.breadcrumbs.push(node);
+		cactiva.selectedNode = {
+			node: node,
+			start: {
+				line: node.getStartLineNumber(),
+				column: node.getPos()
+			},
+			end: {
+				line: node.getEndLineNumber(),
+				column: node.getEnd()
+			}
+		};
+	}
 
 	public updateModelData(modelData: ModelData) {
-		// console.log(modes.DocumentSymbolProviderRegistry.all(modelData.model));
-		console.log(modelData.model.getValue(), Project);
+		cactiva.source = cactiva.project.createSourceFile(modelData.model.uri.fsPath, modelData.model.getValue(), {
+			overwrite: true
+		});
+
+		const list = [] as Node[];
+		walkNode(cactiva.source, (node: Node) => {
+			if (node instanceof JsxSelfClosingElement ||
+				node instanceof JsxExpression ||
+				node instanceof JsxElement ||
+				node instanceof JsxFragment ||
+				node instanceof JsxText) {
+				list.push(node);
+				return false;
+			}
+			return true;
+		});
+		if (list.length > 0) {
+			this.selectNode(list[0]);
+		}
+		// if (list.length === 1 && cactiva.breadcrumbs.length === 0) {
+		// 	this.selectNode(list[0]);
+		// }
 	}
 
 	constructor() {
 		super();
-
-		const Mantab = () => {
-			return html`<div>Joni</div>`;
-		}
-		const Greetings = observer(() => {
-			const meta = useObservable({
-				counter: 100,
-				text: 'halo  tulisan'
-			});
-			const effect = () => {
-				setInterval(() => {
-					meta.counter += 1;
-				}, 1000);
-			};
-			React.useEffect(effect, []);
-
-			return html`<div>
-				 wow <span>Mantab</span>
-				 <div>${meta.text}</div>
-				 <${Canvas} />
-				 ${meta.counter}
-				 <${Mantab}> Okedeh <//>
-			</div>`;
-		})
 		ReactDOM.render(
-			React.createElement(Greetings),
+			React.createElement(Editor),
 			this.element
 		);
 	}

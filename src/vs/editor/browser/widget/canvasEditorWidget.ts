@@ -2,7 +2,7 @@
  *  Copyright (c) Cactiva. All rights reserved.
  *--------------------------------------------------------------------------------------------*/
 
- import { Pane } from 'vs/base/browser/ui/splitview/paneview';
+import { Pane } from 'vs/base/browser/ui/splitview/paneview';
 import { IView, Orientation, Sizing, SplitView } from 'vs/base/browser/ui/splitview/splitview';
 import 'vs/css!./media/editor';
 import { ICodeEditorService } from 'vs/editor/browser/services/codeEditorService';
@@ -66,7 +66,6 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 		@INotificationService notificationService: INotificationService,
 		@IAccessibilityService accessibilityService: IAccessibilityService) {
 
-		console.log(options, codeEditorWidgetOptions);
 		const splitview = new SplitView(domElement, {
 			orientation: Orientation.HORIZONTAL
 		});
@@ -94,8 +93,8 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			})
 		}));
 
+		console.log(options, codeEditorWidgetOptions, this._codePane, this._paneMode);
 		splitview.addView(codePane, Sizing.Split(0));
-
 	}
 
 	protected _attachModel(model: ITextModel | null): void {
