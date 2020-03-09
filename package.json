@@ -59,7 +59,7 @@
       ]
     },
     "win": {
-      "target": "squirrel",
+      "target": "msi",
       "icon": "src/assets/cactiva.ico "
     }
   },
