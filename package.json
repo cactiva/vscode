@@ -35,10 +35,6 @@
   },
   "build": {
     "appId": "com.cactiva.app",
-    "asar": true,
-     "files": [
-      "out"
-    ],
     "dmg": {
       "contents": [
         {
