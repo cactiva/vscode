@@ -11,7 +11,7 @@ jobs:
       - node/with-cache:
           steps:
             - run: sudo npm install -g n
-            - run: sudo n 11.0.0
+            - run: sudo n 11.10.1
             - run: sudo apt-get update
             - run: sudo apt-get install -y g++ gcc make python2.7 pkg-config libx11-dev libxkbfile-dev
             - run: sudo apt-get install libsecret-1-dev
@@ -20,7 +20,7 @@ jobs:
             - run: sudo npm install -g node-gyp
             - run: sudo npm install yarn -g
             - run: yarn
-            - run: yarn watch
+            - run: yarn run watch
 workflows:
     build-and-test:
       jobs:
