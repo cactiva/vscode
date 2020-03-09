@@ -11,6 +11,7 @@ jobs:
       - node/with-cache:
           steps:
             - run: sudo apt-get update
+            - run: sudo apt-get install -y g++ gcc make python2.7 pkg-config libx11-dev libxkbfile-dev
             - run: sudo npm install yarn -g
             - run: sudo npm install node-abi -g
             - run: sudo yarn install --ignore-engines
