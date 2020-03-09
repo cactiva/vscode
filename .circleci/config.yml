@@ -10,6 +10,9 @@ jobs:
       - checkout
       - node/with-cache:
           steps:
+            - run: sudo npm cache clean -f
+            - run: sudo npm install -g n
+            - run: sudo n latest
             - run: sudo apt-get update
             - run: sudo apt-get install -y g++ gcc make python2.7 pkg-config libx11-dev libxkbfile-dev
             - run: sudo apt-get install libsecret-1-dev
@@ -17,7 +20,7 @@ jobs:
             - run: sudo npm install yarn -g
             - run: sudo npm install node-abi -g
             - run: sudo npm install -g node-gyp
-            - run: yarn --ignore-engines
+            - run: yarn
             - run: yarn watch
 workflows:
     build-and-test:
