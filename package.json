@@ -30,9 +30,38 @@
     "update-distro": "node build/npm/update-distro.js",
     "web": "node scripts/code-web.js",
     "eslint": "eslint -c .eslintrc.json --rulesdir ./build/lib/eslint --ext .ts --ext .js ./src/vs ./extensions",
-    "package-win": "electron-packager . Cactiva --overwrite --asar --platform=win32 --arch=x64 --icon=src/assets/cactiva.ico --no-prune --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Cactiva - OSS Dev\"",
-    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=src/assets/cactiva.icns --prune=true --out=release-builds-mac",
-    "package-linux": "electron-packager . Cactiva --overwrite --asar=true --platform=linux --arch=x64 --icon=src/assets/cactiva.png --prune=true --out=release-builds-linux"
+    "pack": "build --dir",
+    "dist": "build"
+  },
+  "build": {
+    "appId": "cactivaid",
+    "category": "cactiva.cactiva.category.type",
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "icon": "src/assets/cactiva.icns"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm"
+      ]
+    },
+    "win": {
+      "target": "squirrel",
+      "icon": "src/assets/cactiva.ico "
+    }
   },
   "dependencies": {
     "applicationinsights": "1.0.8",
