@@ -30,11 +30,11 @@
     "update-distro": "node build/npm/update-distro.js",
     "web": "node scripts/code-web.js",
     "eslint": "eslint -c .eslintrc.json --rulesdir ./build/lib/eslint --ext .ts --ext .js ./src/vs ./extensions",
-    "pack": "build --dir",
-    "dist": "build"
+    "pack": "yarn compile && electron-builder --dir",
+    "dist": "yarn compile && electron-builder"
   },
   "build": {
-    "appId": "cactivaid",
+    "appId": "com.cactiva.app",
     "category": "cactiva.cactiva.category.type",
     "dmg": {
       "contents": [
