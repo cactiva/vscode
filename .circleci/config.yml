@@ -20,7 +20,9 @@ jobs:
             - run: sudo npm install -g node-gyp
             - run: sudo npm install yarn -g
             - run: yarn
+            - run: yarn add electron-packager --dev
             - run: yarn run watch
+            - run: yarn run package-win
 workflows:
     build-and-test:
       jobs:
