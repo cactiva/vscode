@@ -10,7 +10,14 @@ const path = require('path');
 let window = null;
 
 app.once('ready', () => {
-	window = new BrowserWindow({ width: 800, height: 600, webPreferences: { nodeIntegration: true, webviewTag: true } });
+	window = new BrowserWindow({
+		width: 800, height: 600, webPreferences: {
+			nodeIntegration: true,
+			webviewTag: true,
+			webSecurity: false,
+			allowRunningInsecureContent: true
+		}
+	});
 	window.setMenuBarVisibility(false);
 	window.loadURL(url.format({ pathname: path.join(__dirname, 'index.html'), protocol: 'file:', slashes: true }));
 	// window.webContents.openDevTools();
