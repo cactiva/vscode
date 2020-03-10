@@ -30,6 +30,7 @@ jobs:
         - image: electronuserland/builder:wine
       steps:
         - checkout
+        - run: npm install --global windows-build-tools --vs2015
         - run: yarn
         - run: yarn add node-abi@2.15.0 
         - run: yarn add electron-builder --dev
