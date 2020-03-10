@@ -30,8 +30,6 @@ jobs:
     executor: win/default
     steps:
       - checkout
-      - run: npm install --global windows-build-tools --vs2015
-      - run: npm i -g vscode-ripgrep 
       - run: yarn
       - run: yarn add electron-builder --dev
       - run: yarn run dist --win
