@@ -8,6 +8,8 @@ jobs:
     steps:
       - checkout
       - run: yarn dist --win
+      - store_artifacts:
+          path: /root/project/build/win
 
   build_macos:
     macos:
@@ -20,6 +22,8 @@ jobs:
       - run: echo $KEYSTORE | base64 --decode - > keystore.p12
       - run: security import keystore.p12 -k build.keychain -P $KEYCHAIN_PASSWORD -T /usr/bin/codesign
       - run: yarn run dist --mac
+      - store_artifacts:
+          path: /root/project/build/mac
   
   build:
     executor:
@@ -41,6 +45,8 @@ jobs:
             - run: yarn add node-abi@2.15.0
             - run: yarn add electron-builder --dev
             - run: yarn run dist --linux
+            - store_artifacts:
+                path: /root/project/build/linux
 workflows:
     build-and-test:
       jobs:
