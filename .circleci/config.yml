@@ -2,7 +2,26 @@ version: 2.1
 orbs:
   node: circleci/node@1.1.6
 jobs:
-  build-and-test:
+  build_windows:
+    docker:
+      - image: electronuserland/builder:wine
+    steps:
+      - checkout
+      - run: yarn dist --win
+
+  build_macos:
+    macos:
+      xcode: "10.0.0"
+    steps:
+      - checkout
+      - run: security create-keychain -p $KEYCHAIN_PASSWORD build.keychain
+      - run: security default-keychain -s build.keychain
+      - run: security unlock-keychain -p $KEYCHAIN_PASSWORD build.keychain
+      - run: echo $KEYSTORE | base64 --decode - > keystore.p12
+      - run: security import keystore.p12 -k build.keychain -P $KEYCHAIN_PASSWORD -T /usr/bin/codesign
+      - run: yarn run dist --mac
+  
+  build:
     executor:
       name: node/default
       tag: '10.4'
@@ -21,8 +40,10 @@ jobs:
             - run: yarn
             - run: yarn add node-abi@2.15.0
             - run: yarn add electron-builder --dev
-            - run: yarn run dist
+            - run: yarn run dist --linux
 workflows:
     build-and-test:
       jobs:
-        - build-and-test
+        - build
+        - build_windows
+        - build_mac
