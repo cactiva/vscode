@@ -23,7 +23,7 @@ jobs:
             - run: yarn
             - run: yarn add node-abi@2.15.0
             - run: yarn add electron-builder --dev
-            - run: yarn run dist --linux --win
+            - run: yarn run dist --linux
             - store_artifacts:
                 path: /root/project/build/linux
   
@@ -43,7 +43,9 @@ jobs:
       - run: yarn
       - run: yarn add node-abi@2.15.0
       - run: yarn add electron-builder --dev
-      - run: yarn run dist --linux --win
+      - run: yarn run dist --win
+      - store_artifacts:
+          path: /root/project/build/linux
 
   build_macos:
       macos:
