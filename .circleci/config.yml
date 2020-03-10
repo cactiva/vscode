@@ -3,26 +3,26 @@ orbs:
   node: circleci/windows@2.2.0
 jobs:
   build_linux:
-    docker:
-      - image: ubuntu-1604:201903-01 
+    machine:
+      image: ubuntu-1604:201903-01
+      docker_layer_caching: true
     steps:
       - checkout
-      - node/with-cache:
-          steps:
-            - run: sudo npm install -g n
-            - run: sudo n 11.10.1
-            - run: sudo apt-get update
-            - run: sudo apt-get install -y g++ gcc make python2.7 pkg-config libx11-dev libxkbfile-dev
-            - run: sudo apt-get install libsecret-1-dev
-            - run: sudo apt-get install fakeroot rpm
-            - run: sudo npm install -g node-gyp
-            - run: sudo npm install yarn -g
-            - run: yarn
-            - run: yarn add node-abi@2.15.0
-            - run: yarn add electron-builder --dev
-            - run: yarn run dist --linux
-            - store_artifacts:
-                path: /root/project/build/linux
+      - run: sudo npm install -g n
+      - run: sudo n 11.10.1
+      - run: sudo apt-get update
+      - run: sudo apt-get install -y g++ gcc make python2.7 pkg-config libx11-dev libxkbfile-dev
+      - run: sudo apt-get install libsecret-1-dev
+      - run: sudo apt-get install fakeroot rpm
+      - run: sudo npm install -g node-gyp
+      - run: sudo npm install yarn -g
+      - run: yarn
+      - run: yarn add node-abi@2.15.0
+      - run: yarn add electron-builder --dev
+      - run: yarn run dist --linux
+      - store_artifacts:
+          path: /root/project/build/linux
+           
   
   build_windows:
     executor: win/default
