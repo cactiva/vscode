@@ -52,7 +52,7 @@
        "publish": {
         "provider":"github",
         "owner":"erlanggaadikara",
-        "repo":"release",
+        "repo":"vscode",
         "token":"76a37eb096d4ed98fc3598b53929f92a76e2e5e0",
         "releaseType":"release"
       }
@@ -82,7 +82,7 @@
       "publish": {
         "provider":"github",
         "owner":"erlanggaadikara",
-        "repo":"release",
+        "repo":"vscode",
         "token":"76a37eb096d4ed98fc3598b53929f92a76e2e5e0",
         "releaseType":"release"
       }
