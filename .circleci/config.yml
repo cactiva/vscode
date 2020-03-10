@@ -38,7 +38,7 @@ jobs:
       - run: yarn add electron-builder --dev
       - run: yarn run dist --win
       - store_artifacts:
-          path: /root/project/build/linux
+          path: /root/project/build/win
 
   build_macos:
       macos:
