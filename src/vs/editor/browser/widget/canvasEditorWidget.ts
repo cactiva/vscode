@@ -19,11 +19,12 @@ import { IThemeService } from 'vs/platform/theme/common/themeService';
 import { CanvasPane } from 'vs/editor/cactiva/CanvasPane';
 
 export class CodePane extends Pane implements IView {
-	protected renderHeader(container: HTMLElement): void { }
-	protected renderBody(container: HTMLElement): void {
-	}
+	protected renderHeader(container: HTMLElement): void {}
+	protected renderBody(container: HTMLElement): void {}
 	protected layoutBody(height: number, width: number): void {
-		this.element.setAttribute('style', 'width: 100%;height:100%;');
+		const sidebar = document.getElementById('workbench.parts.sidebar');
+		let border = sidebar?.style.borderRight ? `border-right: ${sidebar?.style.borderRight}` : ``;
+		this.element.setAttribute('style', `width: 100%;height:100%;${border};box-sizing:border-box;`);
 	}
 }
 
@@ -39,18 +40,30 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 	public layout(dimension?: editorCommon.IDimension): void {
 		if (dimension) {
 			if (this._splitView.length > 1) {
-				super.layout({
+				this.superLayout({
 					...dimension,
-					width: this._firstPaneSize || dimension.width / 2
+					width: (this._firstPaneSize || dimension.width / 2)
 				});
 			} else {
-				super.layout(dimension);
+				this.superLayout(dimension);
 			}
 		} else {
-			super.layout();
+			this.superLayout();
 		}
 		if (this._splitView.length > 1) {
 			this._splitView.layout(dimension?.width || 0);
+		}
+	}
+	public superLayout(dimension?: editorCommon.IDimension): void {
+		if (dimension) {
+			const border =
+				this._paneMode === 'horizontal'
+					? this._codePane.element.style.borderRightWidth
+					: this._codePane.element.style.borderTopWidth;
+			const borderOffset = parseInt(border) || 0;
+			super.layout({ ...dimension, width: dimension.width - borderOffset });
+		} else {
+			super.layout();
 		}
 	}
 
@@ -64,18 +77,26 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 		@IContextKeyService contextKeyService: IContextKeyService,
 		@IThemeService themeService: IThemeService,
 		@INotificationService notificationService: INotificationService,
-		@IAccessibilityService accessibilityService: IAccessibilityService) {
-
+		@IAccessibilityService accessibilityService: IAccessibilityService
+	) {
 		const splitview = new SplitView(domElement, {
 			orientation: Orientation.HORIZONTAL
 		});
-		const codePane = new CodePane();
-		const canvasPane = new CanvasPane();
+		const codePane = new CodePane({ title: 'Code' });
+		const canvasPane = new CanvasPane({ title: 'Canvas' });
 
-		super(codePane.element, options, codeEditorWidgetOptions,
-			instantiationService, codeEditorService, commandService,
-			contextKeyService, themeService, notificationService,
-			accessibilityService);
+		super(
+			codePane.element,
+			options,
+			codeEditorWidgetOptions,
+			instantiationService,
+			codeEditorService,
+			commandService,
+			contextKeyService,
+			themeService,
+			notificationService,
+			accessibilityService
+		);
 
 		this._paneMode = 'horizontal';
 		this._domEl = domElement;
@@ -84,16 +105,17 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 		this._canvasPane = this._register(canvasPane);
 		this._firstPaneSize = 0;
 
-		this._register(this._splitView.onDidSashChange(() => {
-			const size = this._splitView.getViewSize(0);
-			this._firstPaneSize = size < 200 ? this._domEl.clientWidth / 2 : size;
-			super.layout({
-				width: size,
-				height: this._domEl.clientHeight
+		this._register(
+			this._splitView.onDidSashChange(() => {
+				const size = this._splitView.getViewSize(0);
+				this._firstPaneSize = size < 200 ? this._domEl.clientWidth / 2 : size;
+				this.superLayout({
+					width: size,
+					height: this._domEl.clientHeight
+				});
 			})
-		}));
+		);
 
-		console.log(options, codeEditorWidgetOptions, this._codePane, this._paneMode);
 		splitview.addView(codePane, Sizing.Split(0));
 	}
 
@@ -104,9 +126,11 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 				this._canvasPane.updateModelData(this._modelData);
 			}
 			this._changeLanguageTo(model?.getLanguageIdentifier().language);
-			this._modelData?.listenersToRemove.push(this.onDidChangeModelLanguage((e) => {
-				this._changeLanguageTo(e.newLanguage);
-			}));
+			this._modelData?.listenersToRemove.push(
+				this.onDidChangeModelLanguage(e => {
+					this._changeLanguageTo(e.newLanguage);
+				})
+			);
 		}
 	}
 
@@ -117,13 +141,13 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			this.layout({
 				width: this._domEl.clientWidth,
 				height: this._domEl.clientHeight
-			})
+			});
 		} else if (this._splitView.length > 1 && languageId.indexOf('react') < 0) {
 			this._splitView.removeView(1);
 			this.layout({
 				width: this._domEl.clientWidth,
 				height: this._domEl.clientHeight
-			})
+			});
 		}
 	}
 }
