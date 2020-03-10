@@ -31,7 +31,7 @@ jobs:
     steps:
       - checkout
       - run: npm install --global windows-build-tools --vs2015
-      - run: shutdown /r
+      - run: restart-computer
       - run: npm install yarn -g
       - run: yarn
       - run: yarn add electron-builder --dev
