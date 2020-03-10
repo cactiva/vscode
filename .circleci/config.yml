@@ -30,7 +30,16 @@ jobs:
         - image: electronuserland/builder:wine
       steps:
         - checkout
-        - run: yarn 
+        - run: sudo npm install -g n
+        - run: sudo n 11.10.1
+        - run: sudo apt-get update
+        - run: sudo apt-get install -y g++ gcc make python2.7 pkg-config libx11-dev libxkbfile-dev
+        - run: sudo apt-get install libsecret-1-dev
+        - run: sudo apt-get install fakeroot rpm
+        - run: sudo npm install -g node-gyp
+        - run: sudo npm install yarn -g
+        - run: yarn
+        - run: yarn add node-abi@2.15.0 
         - run: yarn add electron-builder --dev
         - run: yarn yarn dist --win
         - store_artifacts:
