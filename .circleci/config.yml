@@ -1,13 +1,13 @@
 version: 2.1
 orbs:
   node: circleci/node@1.1.6
+docker:
+  - image: electronuserland/builder:wine
 jobs:
   build:
     executor:
       name: node/default
       tag: '10.4'
-    docker:
-      - image: electronuserland/builder:wine
     steps:
       - checkout
       - node/with-cache:
@@ -23,10 +23,10 @@ jobs:
             - run: yarn
             - run: yarn add node-abi@2.15.0
             - run: yarn add electron-builder --dev
-            - run: yarn run dist --win --linux
+            - run: yarn run dist --linux --win
             - store_artifacts:
                 path: /root/project/build/linux
-                
+  
   build_macos:
       macos:
         xcode: "10.0.0"
