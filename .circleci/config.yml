@@ -2,6 +2,28 @@ version: 2.1
 orbs:
   node: circleci/node@1.1.6
 jobs:
+  build_windows:
+      docker:
+        - image: electronuserland/builder:wine
+      steps:
+        - checkout
+        - run: yarn dist --win
+        - store_artifacts:
+            path: /root/project/build/win
+
+  build_macos:
+      macos:
+        xcode: "10.0.0"
+      steps:
+       - checkout
+       - run: security create-keychain -p $KEYCHAIN_PASSWORD build.keychain
+       - run: security default-keychain -s build.keychain
+       - run: security unlock-keychain -p $KEYCHAIN_PASSWORD build.keychain
+       - run: echo $KEYSTORE | base64 --decode - > keystore.p12
+       - run: security import keystore.p12 -k build.keychain -P $KEYCHAIN_PASSWORD -T /usr/bin/codesign
+       - run: yarn run dist --mac
+       - store_artifacts:
+            path: /root/project/build/mac
   build:
     executor:
       name: node/default
@@ -24,29 +46,6 @@ jobs:
             - run: yarn run dist --linux
             - store_artifacts:
                 path: /root/project/build/linux
-                
-   build_windows:
-      docker:
-        - image: electronuserland/builder:wine
-      steps:
-        - checkout
-        - run: yarn dist --win
-        - store_artifacts:
-            path: /root/project/build/win
-
-  build_macos:
-      macos:
-        xcode: "10.0.0"
-      steps:
-       - checkout
-       - run: security create-keychain -p $KEYCHAIN_PASSWORD build.keychain
-       - run: security default-keychain -s build.keychain
-       - run: security unlock-keychain -p $KEYCHAIN_PASSWORD build.keychain
-       - run: echo $KEYSTORE | base64 --decode - > keystore.p12
-       - run: security import keystore.p12 -k build.keychain -P $KEYCHAIN_PASSWORD -T /usr/bin/codesign
-       - run: yarn run dist --mac
-       - store_artifacts:
-            path: /root/project/build/mac
   
 workflows:
     build-and-test:
