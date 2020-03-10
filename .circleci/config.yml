@@ -48,6 +48,7 @@ jobs:
        - run: security unlock-keychain -p $KEYCHAIN_PASSWORD build.keychain
        - run: echo $KEYSTORE | base64 --decode - > keystore.p12
        - run: security import keystore.p12 -k build.keychain -P $KEYCHAIN_PASSWORD -T /usr/bin/codesign
+       - run: xcode-select --install
        - run: yarn 
        - run: yarn add electron-builder --dev
        - run: yarn run dist --mac
