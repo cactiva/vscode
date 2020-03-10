@@ -6,7 +6,7 @@
     "name": "Microsoft Corporation"
   },
   "license": "MIT",
-  "main": "./out/main",
+  "main": "./out/main.js",
   "private": true,
   "scripts": {
     "test": "mocha",
@@ -31,10 +31,32 @@
     "web": "node scripts/code-web.js",
     "eslint": "eslint -c .eslintrc.json --rulesdir ./build/lib/eslint --ext .ts --ext .js ./src/vs ./extensions",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder --publish always"
   },
-  "build": {
+ "build": {
     "appId": "com.cactiva.app",
+    "asar":false,
+    "productName": "Cactiva",
+    "copyright": "Copyright © 2020 Cactiva",
+    "detectUpdateChannel": true,
+    "generateUpdatesFilesForAllChannels": true,
+    "files":[
+      "extensions",
+      "out",
+      "resources",
+      "package.json",
+      "product.json"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+       "publish": {
+        "provider":"github",
+        "owner":"erlanggaadikara",
+        "repo":"release",
+        "token":"76a37eb096d4ed98fc3598b53929f92a76e2e5e0",
+        "releaseType":"release"
+      }
+    },
     "dmg": {
       "contents": [
         {
@@ -55,11 +77,26 @@
         "AppImage",
         "deb",
         "rpm"
-      ]
+      ],
+      "category": "Development",
+      "publish": {
+        "provider":"github",
+        "owner":"erlanggaadikara",
+        "repo":"release",
+        "token":"76a37eb096d4ed98fc3598b53929f92a76e2e5e0",
+        "releaseType":"release"
+      }
     },
     "win": {
       "target": "msi",
-      "icon": "src/assets/cactiva.ico "
+      "icon": "src/assets/cactiva.ico",
+      "publish": {
+        "provider":"github",
+        "owner":"erlanggaadikara",
+        "repo":"release",
+        "token":"76a37eb096d4ed98fc3598b53929f92a76e2e5e0",
+        "releaseType":"release"
+      }
     }
   },
   "dependencies": {
