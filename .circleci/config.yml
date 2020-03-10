@@ -27,6 +27,24 @@ jobs:
             - store_artifacts:
                 path: /root/project/build/linux
   
+  build_windows:
+    docker:
+      - image: electronuserland/builder:wine
+    steps:
+      - checkout
+      - run: npm install -g n
+      - run: n 11.10.1
+      - run: apt-get update
+      - run: apt-get install -y g++ gcc make python2.7 pkg-config libx11-dev libxkbfile-dev
+      - run: apt-get install libsecret-1-dev
+      - run: apt-get install fakeroot rpm
+      - run: npm install -g node-gyp
+      - run: npm install yarn -g
+      - run: yarn
+      - run: yarn add node-abi@2.15.0
+      - run: yarn add electron-builder --dev
+      - run: yarn run dist --linux --win
+
   build_macos:
       macos:
         xcode: "10.0.0"
