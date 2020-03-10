@@ -31,10 +31,9 @@ jobs:
     steps:
       - checkout
       - run: npm install --global windows-build-tools --vs2015
-      - run: npm install -g node-gyp
+      - run: shutdown /r
       - run: npm install yarn -g
       - run: yarn
-      - run: yarn add node-abi@2.15.0
       - run: yarn add electron-builder --dev
       - run: yarn run dist --win
       - store_artifacts:
