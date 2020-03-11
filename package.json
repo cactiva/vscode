@@ -73,11 +73,11 @@
         "deb",
         "rpm"
       ],
-      "category": "Development",
+      "category": "Development"
     },
     "win": {
       "target": "msi",
-      "icon": "src/assets/cactiva.ico",
+      "icon": "src/assets/cactiva.ico"
     }
   },
   "dependencies": {
