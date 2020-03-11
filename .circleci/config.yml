@@ -75,6 +75,3 @@ workflows:
     build-and-test:
       jobs:
         - build_windows1
-        - build_windows2:
-            requires: 
-              - build_windows1
