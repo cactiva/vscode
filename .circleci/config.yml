@@ -34,14 +34,14 @@ jobs:
           command: npm --add-python-to-path install --global --production windows-build-tools
           shell: powershell.exe
       - run: 
-          command: yarn
-          shell: cmd.exe
+          command: yarn -ErrorAction SilentlyContinue
+          shell: powershell.exe
       - run: 
           command: yarn add electron-builder --dev
-          shell: cmd.exe
+          shell: powershell.exe
       - run: 
           command: yarn run dist --win
-          shell: cmd.exe
+          shell: powershell.exe
       - store_artifacts:
           path: /root/project/build/win
 
