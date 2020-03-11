@@ -32,24 +32,32 @@ jobs:
             - store_artifacts:
                 path: /home/circleci/project/dist/
   
-  build_windows:
+  build_windows1:
     executor: win/default
     steps:
       - checkout
       - run: 
           command: npm --add-python-to-path install --global --production windows-build-tools --vs2015
           shell: powershell.exe
-      - run: 
-          command: yarn -ErrorAction SilentlyContinue
+      - run:
+          command: Stop-Computer
           shell: powershell.exe
+  
+  build_windows2:
+    executor: win/default
+    steps:
+      - checkout
+      - run: 
+          command: yarn
+          shell: cmd.exe
       - run: 
           command: yarn add electron-builder --dev
-          shell: powershell.exe
+          shell: cmd.exe
       - run: 
           command: yarn run dist --win
-          shell: powershell.exe
+          shell: cmd.exe
       - store_artifacts:
-          path: /root/project/build/win
+          path: /home/circleci/project/dist/
 
   build_macos:
       macos:
@@ -66,9 +74,12 @@ jobs:
        - run: yarn add electron-builder --dev
        - run: yarn run dist --mac
        - store_artifacts:
-            path: /root/project/build/mac
+            path: /home/circleci/project/dist/
   
 workflows:
     build-and-test:
       jobs:
-        - build_linux
+        - build_windows1
+        - build_windows2:
+            requires: 
+              - build_windows1
