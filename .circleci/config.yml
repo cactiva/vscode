@@ -18,8 +18,11 @@ jobs:
             - run: sudo apt-get install libsecret-1-dev
             - run: sudo apt-get install fakeroot rpm
             - run: sudo npm install -g node-gyp
-            - run: sudo npm i -g electron-builder --dev
-            - run: npm run dist --linux
+            - run: sudo npm install yarn -g
+            - run: sudo yarn
+            - run: sudo yarn add node-abi@2.15.0
+            - run: sudo yarn add electron-builder --dev
+            - run: sudo yarn run dist --linux
             - store_artifacts:
                 path: /root/project/build/linux
   
