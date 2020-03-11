@@ -20,9 +20,9 @@ jobs:
             - run: sudo npm install -g node-gyp
             - run: sudo npm install yarn -g
             - run: yarn
-            - run: yarn add node-abi@2.15.0
             - run: yarn add electron-builder --dev
-            - run: yarn run electron
+            - run: chmod +x ./scripts/code.sh 
+            - run: sudo bash ./scripts/code.sh
             - run: yarn run dist --linux
             - store_artifacts:
                 path: /root/project/build/linux
