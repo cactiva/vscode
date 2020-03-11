@@ -32,7 +32,7 @@
     "web": "node scripts/code-web.js",
     "eslint": "eslint -c .eslintrc.json --rulesdir ./build/lib/eslint --ext .ts --ext .js ./src/vs ./extensions",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder --publish always"
+    "dist": "electron-builder"
   },
  "build": {
     "appId": "com.cactiva.app",
@@ -50,12 +50,6 @@
     ],
     "mac": {
       "category": "public.app-category.developer-tools",
-       "publish": {
-        "provider":"github",
-        "owner":"erlanggaadikara",
-        "repo":"vscode",
-        "token":"76a37eb096d4ed98fc3598b53929f92a76e2e5e0",
-        "releaseType":"release"
       }
     },
     "dmg": {
@@ -80,24 +74,10 @@
         "rpm"
       ],
       "category": "Development",
-      "publish": {
-        "provider":"github",
-        "owner":"erlanggaadikara",
-        "repo":"vscode",
-        "token":"76a37eb096d4ed98fc3598b53929f92a76e2e5e0",
-        "releaseType":"release"
-      }
     },
     "win": {
       "target": "msi",
       "icon": "src/assets/cactiva.ico",
-      "publish": {
-        "provider":"github",
-        "owner":"erlanggaadikara",
-        "repo":"vscode",
-        "token":"76a37eb096d4ed98fc3598b53929f92a76e2e5e0",
-        "releaseType":"release"
-      }
     }
   },
   "dependencies": {
