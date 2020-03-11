@@ -12,9 +12,8 @@
 	min-width: 200px;
 }
 
-.singletag.hover {
-	background-color: #e0f9ff;
-	border-color: #717171;
+.singletag:hover {
+	background-color: rgb(6, 95, 212, 0.1);
 }
 
 .singletag .headertag {
@@ -25,10 +24,10 @@
 
 .singletag .headertag .tagname {
 	color: #929292;
-	font-weight: bold;
+	font-size: 11px;
 }
 
-.singletag.hover .headertag .tagname {
+.singletag:hover .headertag .tagname {
 	color: #717171;
 }
 
@@ -36,7 +35,7 @@
 	display: none;
 }
 
-.singletag.hover > .headertag > .props {
+.singletag:hover > .headertag > .props {
 	display: block;
 }
 

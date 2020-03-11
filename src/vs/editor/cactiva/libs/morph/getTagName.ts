@@ -14,7 +14,7 @@ export const getTagName = (node: Node): string => {
 			break;
 		case node instanceof JsxFragment:
 			n = node as JsxFragment;
-			tagName = 'JsxFragment';
+			tagName = '</>';
 			break;
 		case node instanceof JsxSelfClosingElement:
 			n = node as JsxSelfClosingElement;

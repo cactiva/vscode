@@ -95,14 +95,6 @@ const SingleTag: any = observer(({ node, style, onClick, nodePath }: ISingleTag)
 					e.stopPropagation();
 				}
 			}}
-			onMouseOver=${(e: any) => {
-				e.stopPropagation();
-				e.target.classList.add('hover');
-			}}
-			onMouseOut=${(e: any) => {
-				e.stopPropagation();
-				e.target.classList.remove('hover');
-			}}
 			className="singletag vertical"
 			style=${style}
 		>
