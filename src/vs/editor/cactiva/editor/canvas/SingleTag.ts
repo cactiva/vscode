@@ -7,6 +7,9 @@ import Divider from './Divider';
 import html from 'vs/editor/cactiva/libs/html';
 import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
 import { getChildrenFromNode } from 'vs/editor/cactiva/libs/morph/getChildrenFromNode';
+import 'vs/css!./SingleTag';
+import { URI } from 'vs/base/common/uri';
+const icProps = URI.parse(require.toUrl('../../assets/images/ic-props.svg'));
 
 interface ISingleTag {
 	node: Node;
@@ -92,10 +95,23 @@ const SingleTag: any = observer(({ node, style, onClick, nodePath }: ISingleTag)
 					e.stopPropagation();
 				}
 			}}
+			onMouseOver=${(e: any) => {
+				e.stopPropagation();
+				e.target.classList.add('hover');
+			}}
+			onMouseOut=${(e: any) => {
+				e.stopPropagation();
+				e.target.classList.remove('hover');
+			}}
 			className="singletag vertical"
 			style=${style}
 		>
-			<span className="tagname"> ${tagName} </span>
+			<div className="headertag">
+				<span className="tagname"> ${tagName} </span>
+				<div className="btn props">
+					<img src=${icProps} className="ic-props" height="20" width="20" />
+				</div>
+			</div>
 			${children.findIndex(x => x !== true) > -1 &&
 				html`
 					<div className="children">
