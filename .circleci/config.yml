@@ -36,21 +36,11 @@ jobs:
     executor: win/default
     steps:
       - checkout
-      - run: 
-          command: npm --add-python-to-path install --global --production windows-build-tools --vs2015
-          shell: powershell.exe
-      - run:
-          command: Start-Process powershell -Verb runAsUser
-          shell: powershell.exe
-      - run: 
-          command: yarn
-          shell: powershell.exe
-      - run: 
-          command: yarn add electron-builder --dev
-          shell: powershell.exe
-      - run: 
-          command: yarn run dist --win
-          shell: powershell.exe
+      - run: npm --add-python-to-path install --global --production windows-build-tools --vs2015
+      - run: Start-Process powershell -Verb runAsUser
+      - run: yarn
+      - run: yarn add electron-builder --dev
+      - run: yarn run dist --win
       - store_artifacts:
           path: /home/circleci/project/dist/
 
