@@ -6,10 +6,11 @@ import * as ReactDOM from 'react-dom';
 import { Pane, IPaneOptions } from 'vs/base/browser/ui/splitview/paneview';
 import { IView } from 'vs/base/browser/ui/splitview/splitview';
 import { ModelData } from 'vs/editor/browser/widget/codeEditorWidget';
-import Editor from 'vs/editor/cactiva/editor/Editor';
+import Editor, { generateNodeInfo } from 'vs/editor/cactiva/editor/Editor';
 import { cactiva } from 'vs/editor/cactiva/models/cactiva';
 import { walkNode } from 'vs/editor/cactiva/libs/morph/walk';
 import { JsxSelfClosingElement, JsxExpression, JsxElement, JsxFragment, JsxText, Node } from 'ts-morph';
+import { getNodeFromPath } from 'vs/editor/cactiva/libs/morph/getNodeFromPath';
 
 export class CanvasPane extends Pane implements IView {
 	private _sidebarMutationObserver = {
@@ -17,20 +18,12 @@ export class CanvasPane extends Pane implements IView {
 		el: null as any
 	};
 
-	public selectNode(node: Node) {
+	private _selectFirstNode() {
 		cactiva.breadcrumbs = [];
-		cactiva.breadcrumbs.push(node);
-		cactiva.selectedNode = {
-			node: node,
-			start: {
-				line: node.getStartLineNumber(),
-				column: node.getPos()
-			},
-			end: {
-				line: node.getEndLineNumber(),
-				column: node.getEnd()
-			}
-		};
+		getNodeFromPath(cactiva.source, '0', (n, path) => {
+			cactiva.breadcrumbs.push(generateNodeInfo(n, path));
+		});
+		cactiva.selectedNode = cactiva.breadcrumbs[cactiva.breadcrumbs.length - 1];
 	}
 
 	public updateModelData(modelData: ModelData) {
@@ -38,23 +31,8 @@ export class CanvasPane extends Pane implements IView {
 			overwrite: true
 		});
 
-		const list = [] as Node[];
-		walkNode(cactiva.source, (node: Node) => {
-			if (
-				node instanceof JsxSelfClosingElement ||
-				node instanceof JsxExpression ||
-				node instanceof JsxElement ||
-				node instanceof JsxFragment ||
-				node instanceof JsxText
-			) {
-				list.push(node);
-				return false;
-			}
-			return true;
-		});
-		if (list.length > 0) {
-			this.selectNode(list[0]);
-		}
+		this._selectFirstNode();
+
 		// if (list.length === 1 && cactiva.breadcrumbs.length === 0) {
 		// 	this.selectNode(list[0]);
 		// }

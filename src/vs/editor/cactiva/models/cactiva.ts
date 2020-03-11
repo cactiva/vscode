@@ -5,15 +5,16 @@
 import { observable } from 'mobx';
 import { SourceFile, Project, Node } from 'ts-morph';
 
-export interface IEditorSelectedNode {
-	node: Node,
-	start: { line: number, column: number },
-	end: { line: number, column: number },
-};
+export interface IEditorNodeInfo {
+	node: Node;
+	nodePath: string;
+	start: { line: number; column: number };
+	end: { line: number; column: number };
+}
 
-export const cactiva: any = observable({
+export const cactiva = observable({
 	project: new Project(),
-	breadcrumbs: [] as Node[],
+	breadcrumbs: [] as IEditorNodeInfo[],
 	source: null as SourceFile | null,
-	selectedNode: undefined as (IEditorSelectedNode | undefined),
+	selectedNode: undefined as IEditorNodeInfo | undefined
 });

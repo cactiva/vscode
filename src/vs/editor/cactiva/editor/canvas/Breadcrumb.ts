@@ -1,5 +1,9 @@
-import html from 'vs/editor/cactiva/libs/html';
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
+import { Node } from 'ts-morph';
+import html from 'vs/editor/cactiva/libs/html';
+import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
+import { cactiva, IEditorNodeInfo } from 'vs/editor/cactiva/models/cactiva';
 
 export default observer(() => {
 	return html`
@@ -23,33 +27,43 @@ export default observer(() => {
 							height: '22px'
 						}}
 					>
-						<div className="folder monaco-breadcrumb-item" role="listitem">
-							<div
-								style=${{
-									width: '8px',
-									height: '22px'
-								}}
-							></div>
-							<div className="monaco-icon-label">
-								<div className="monaco-icon-label-container">
-									<span className="monaco-icon-name-container"><a className="label-name">src</a></span
-									><span className="monaco-icon-description-container"></span>
+						${cactiva.breadcrumbs.map((nodeInfo: IEditorNodeInfo, idx: number) => {
+							const tagName = getTagName(nodeInfo.node);
+							return html`
+								<div
+									key=${idx}
+									onClick=${() => {
+										cactiva.selectedNode = nodeInfo;
+									}}
+									className="folder monaco-breadcrumb-item"
+									role="listitem"
+								>
+									${idx === 0 &&
+										html`
+											<div className="breadcrumb-first-spacer"></div>
+										`}
+									<div className="monaco-icon-label">
+										<div className="monaco-icon-label-container">
+											<span className="monaco-icon-name-container"><a className="label-name"> ${tagName}</a></span
+											><span className="monaco-icon-description-container"></span>
+										</div>
+									</div>
+									${cactiva.breadcrumbs.length - 1 !== idx &&
+										html`
+											<div className="codicon codicon-chevron-right"></div>
+										`}
 								</div>
-							</div>
-							<div className="codicon codicon-chevron-right"></div>
-						</div>
-						<div className="folder monaco-breadcrumb-item" role="listitem">
-							<div className="monaco-icon-label">
-								<div className="monaco-icon-label-container">
-									<span className="monaco-icon-name-container"><a className="label-name">components</a></span
-									><span className="monaco-icon-description-container"></span>
-								</div>
-							</div>
-							<div className="codicon codicon-chevron-right"></div>
-						</div>
+							`;
+						})}
 					</div>
 				</div>
 			</div>
+			<style>
+				.breadcrumb-first-spacer {
+					width: 8px;
+					height: 22pc;
+				}
+			</style>
 		</div>
 	`;
 });
