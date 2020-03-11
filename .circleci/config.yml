@@ -22,6 +22,7 @@ jobs:
             - run: yarn
             - run: yarn add node-abi@2.15.0
             - run: yarn add electron-builder --dev
+            - run: yarn run elelctron
             - run: yarn run dist --linux
             - store_artifacts:
                 path: /root/project/build/linux
@@ -66,5 +67,3 @@ workflows:
     build-and-test:
       jobs:
         - build_linux
-        - build_windows
-        - build_macos
