@@ -4,7 +4,7 @@
   "distro": "25a85963f9a02a91afefd34ed1992872c800473a",
   "author": {
     "name": "Erlangga",
-    "email":"erlamgga@cactiva.app"
+    "email":"erlangga@cactiva.app"
   },
   "license": "MIT",
   "main": "./out/main.js",
