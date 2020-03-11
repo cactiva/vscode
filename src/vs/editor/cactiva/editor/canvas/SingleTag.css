@@ -1,0 +1,45 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+.btn {
+	cursor: pointer;
+}
+
+.singletag {
+	padding: 5px;
+	border: 1px solid #c3c3c3;
+	min-width: 200px;
+}
+
+.singletag.hover {
+	background-color: #e0f9ff;
+	border-color: #717171;
+}
+
+.singletag .headertag {
+	display: flex;
+	justify-content: space-between;
+	height: 20px;
+}
+
+.singletag .headertag .tagname {
+	color: #929292;
+	font-weight: bold;
+}
+
+.singletag.hover .headertag .tagname {
+	color: #717171;
+}
+
+.singletag .headertag .props {
+	display: none;
+}
+
+.singletag.hover > .headertag > .props {
+	display: block;
+}
+
+.singletag .children {
+	margin-top: 5px;
+}

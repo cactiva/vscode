@@ -96,10 +96,13 @@ const SingleTag: any = observer(({ node, style, onClick, nodePath }: ISingleTag)
 			style=${style}
 		>
 			<span className="tagname"> ${tagName} </span>
-			<div className="children">
-				<${Divider} position="before" node=${childrenNode[0]} index=${0} />
-				${children}
-			</div>
+			${children.findIndex(x => x !== true) > -1 &&
+				html`
+					<div className="children">
+						<${Divider} position="before" node=${childrenNode[0]} index=${0} />
+						${children}
+					</div>
+				`}
 		</div>
 	`;
 });
