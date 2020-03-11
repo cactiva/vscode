@@ -36,6 +36,9 @@ jobs:
     executor: win/default
     steps:
       - checkout
+      - run:
+          command: Start-Process powershell -Verb runAs
+          shell:  powershell.exe
       - run: 
           command: npm --add-python-to-path install --global --production windows-build-tools --vs2015
           shell: powershell.exe
