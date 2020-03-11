@@ -38,6 +38,9 @@ jobs:
       - checkout
       - run: npm --add-python-to-path install --global --production windows-build-tools --vs2015
       - run: Start-Process powershell -Verb runAsUser
+      - run:
+          command: git clean -xfd
+          shell: bash.exe
       - run: yarn
       - run: yarn add electron-builder --dev
       - run: yarn run dist --win
