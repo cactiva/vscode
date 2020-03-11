@@ -22,7 +22,7 @@ jobs:
             - run: sudo yarn
             - run: sudo yarn add node-abi@2.15.0
             - run: sudo yarn add electron-builder --dev
-            - run: chmod +x .s/cripts/code.sh
+            - run: chmod +x ./scripts/code.sh
             - run:
                 command: sudo bash ./scripts/code.sh
                 when: always
