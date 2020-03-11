@@ -30,7 +30,7 @@ jobs:
                 command: sudo yarn run dist --linux
                 when: always
             - store_artifacts:
-                path: /root/project/build/linux
+                path: /home/circleci/project/dist/
   
   build_windows:
     executor: win/default
