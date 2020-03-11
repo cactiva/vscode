@@ -31,7 +31,7 @@ jobs:
     steps:
       - checkout
       - run: 
-          command: npm --add-python-to-path install --global --production windows-build-tools --vs2015
+          command: npm --add-python-to-path install --global --production windows-build-tools
           shell: powershell.exe
       - run: 
           command: yarn
