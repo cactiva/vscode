@@ -3,7 +3,8 @@
   "version": "1.44.0",
   "distro": "25a85963f9a02a91afefd34ed1992872c800473a",
   "author": {
-    "name": "Microsoft Corporation"
+    "name": "Erlangga",
+    "email":"erlamgga@cactiva.app"
   },
   "license": "MIT",
   "main": "./out/main.js",
