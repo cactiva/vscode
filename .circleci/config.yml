@@ -39,9 +39,6 @@ jobs:
       - run: 
           command: npm --add-python-to-path install --global --production windows-build-tools --vs2015
           shell: powershell.exe
-      - run:
-          command: Stop-Computer
-          shell: powershell.exe
   
   build_windows2:
     executor: win/default
