@@ -21,8 +21,7 @@ jobs:
             - run: sudo npm install yarn -g
             - run: yarn
             - run: yarn add electron-builder --dev
-            - run: chmod +x ./scripts/code.sh 
-            - run: sudo bash ./scripts/code.sh
+            - run: yarn web
             - run: yarn run dist --linux
             - store_artifacts:
                 path: /root/project/build/linux
