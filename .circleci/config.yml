@@ -36,11 +36,7 @@ jobs:
     executor: win/default
     steps:
       - checkout
-      - run: npm --add-python-to-path install --global --production windows-build-tools --vs2015
-      - run: Clear-BCCache
-      - run: yarn
-      - run: yarn add electron-builder --dev
-      - run: yarn run dist --win
+      - run: ./.circleci/workflow.ps1
       - store_artifacts:
           path: /home/circleci/project/dist/
 
