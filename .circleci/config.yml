@@ -35,10 +35,11 @@ jobs:
   build_windows:
     executor: win/default
     steps:
+      - checkout
       - run: npm install yarn -g
       - run: yarn
       - run: yarn add electron-builder --dev
-      - run: Start-Process -FilePath ./scripts/code.bat
+      - run: ./scripts/code.bat
       - run: 
           command: yarn run dist --win
           when: always
