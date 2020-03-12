@@ -36,8 +36,6 @@ jobs:
     executor: win/default
     steps:
       - checkout
-      - run: Start-Process -FilePath "powershell" -Verb RunAs
-      - run: npm --add-python-to-path install --global --production windows-build-tools --vs2015
       - run: $ErrorActionPreference = 'SilentlyContinue' 
       - run: yarn
       - run: yarn add electron-builder --dev
