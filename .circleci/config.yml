@@ -35,9 +35,7 @@ jobs:
   build_windows:
     executor: win/default
     steps:
-      - run: Get-LocalUser
-      - run: runAs /user:circleci-admin "powershell"
-      - run: whoami
+      - run: npm install yarn -g
       - run: yarn
       - run: yarn add electron-builder --dev
       - run: Start-Process -FilePath ./scripts/code.bat
