@@ -36,6 +36,7 @@ jobs:
     executor: win/default
     steps:
       - checkout
+      - run:
           command: Start-Process yarn -Verb runAs
           shell: powershell.exe
       - run: 
