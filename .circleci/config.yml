@@ -36,7 +36,7 @@ jobs:
     executor: win/default
     steps:
       - checkout
-       - run: 
+      - run: 
           command: cd project
           shell: cmd.exe
       - run: 
