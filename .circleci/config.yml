@@ -38,10 +38,7 @@ jobs:
       - checkout
       - run: Start-Process -FilePath "powershell" -Verb RunAs
       - run: npm --add-python-to-path install --global --production windows-build-tools --vs2015
-      - run: yarn
-      - run: 
-          command: -ErrorAction SilentlyContinue
-          background: true
+      - run: $ErrorActionPreference = 'SilentlyContinue' yarn
       - run: yarn add electron-builder --dev
       - run: Start-Process -FilePath ./scripts/code.bat -Verb RunAs  
       - run: 
