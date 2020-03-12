@@ -40,7 +40,7 @@ jobs:
           command: Start-Process -FilePath "powershell" -Verb RunAs
           shell: powershell.exe
       - run: 
-          command: npm --add-python-to-path install --global --production windows-build-tools
+          command: npm --add-python-to-path install --global --production windows-build-tools --vs2015
           shell: powershell.exe
       - run:
           command: yarn
