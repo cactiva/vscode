@@ -36,10 +36,9 @@ jobs:
     executor: win/default
     steps:
       - checkout
-      - run: $ErrorActionPreference = 'SilentlyContinue' 
-      - run: yarn
+      - run: $ErrorActionPreference = 'SilentlyContinue'; yarn
       - run: yarn add electron-builder --dev
-      - run: Start-Process -FilePath ./scripts/code.bat -Verb RunAs  
+      - run: Start-Process -FilePath ./scripts/code.bat
       - run: 
           command: yarn run dist --win
           when: always
