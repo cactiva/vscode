@@ -32,18 +32,11 @@ jobs:
             - store_artifacts:
                 path: /home/circleci/project/dist/
   
-  build_windows1:
+  build_windows:
     executor: win/default
     steps:
       - checkout
-      - run:
-          command: New-LocalUser -Name "cactiva" -Description "make for other user" -NoPassword
-          shell: powershell.exe
-      - run:
-          command: runas /user:'cactiva' “powershell”
-          shell: powershell.exe
-      - run:
-          command: yarn
+          command: Start-Process yarn -Verb runAs
           shell: powershell.exe
       - run: 
           command: yarn add electron-builder --dev
@@ -73,4 +66,4 @@ jobs:
 workflows:
     build-and-test:
       jobs:
-        - build_macos
+        - build_windows
