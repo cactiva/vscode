@@ -40,10 +40,7 @@ jobs:
           command: npm --add-python-to-path install --global --production windows-build-tools --vs2015
           shell: powershell.exe
       - run: 
-          command: npm cache clean --force
-          shell: powershell.exe
-      - run: 
-          command: npm cache verify
+          command: Remove-Item "C:\Users\circleci\AppData\Local\Temp\*" -recurse -force
           shell: powershell.exe
       - run: 
           command: yarn
