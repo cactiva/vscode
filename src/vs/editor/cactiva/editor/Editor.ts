@@ -7,6 +7,7 @@ import { Tag } from 'vs/editor/cactiva/editor/canvas/Tag';
 import html from 'vs/editor/cactiva/libs/html';
 import { getNodeFromPath } from 'vs/editor/cactiva/libs/morph/getNodeFromPath';
 import { cactiva, IEditorNodeInfo } from 'vs/editor/cactiva/models/cactiva';
+import { Range } from 'vs/editor/common/core/range';
 
 export function generateNodeInfo(node: Node, nodePath: string): IEditorNodeInfo {
 	return {
@@ -24,15 +25,20 @@ export function generateNodeInfo(node: Node, nodePath: string): IEditorNodeInfo 
 }
 
 export default observer(() => {
+	let rootItem: any = null;
+	if (cactiva.breadcrumbs.length > 0) {
+		rootItem = cactiva.breadcrumbs[0];
+	}
+
 	return html`
 		<${DndProvider} backend=${HTML5Backend}>
 			<div className="cactiva-canvas">
 				<div className="cactiva-canvas-content">
-					${cactiva.breadcrumbs.length > 0
+					${rootItem && !rootItem.node.wasForgotten()
 						? html`
 								<${Tag}
-									nodePath=${cactiva.breadcrumbs[0].nodePath}
-									node=${cactiva.breadcrumbs[0].node}
+									nodePath=${rootItem.nodePath}
+									node=${rootItem.node}
 									onClick=${(_: Node, nodePath: string) => {
 										if (cactiva.source) {
 											cactiva.breadcrumbs = [];
@@ -40,6 +46,9 @@ export default observer(() => {
 												cactiva.breadcrumbs.push(generateNodeInfo(n, path));
 											});
 											cactiva.selectedNode = cactiva.breadcrumbs[cactiva.breadcrumbs.length - 1];
+											const s = cactiva.selectedNode.start;
+											const e = cactiva.selectedNode.end;
+											cactiva.editor?.setSelection(new Range(s.line, s.column, e.line, e.column));
 										}
 									}}
 								/>

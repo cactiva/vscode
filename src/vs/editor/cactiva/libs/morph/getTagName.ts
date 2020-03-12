@@ -10,7 +10,7 @@ export function getTagName(node: Node): string {
 			break;
 		case node instanceof JsxExpression:
 			n = node as JsxFragment;
-			tagName = '{…} ';
+			tagName = '{…}';
 			break;
 		case node instanceof JsxFragment:
 			n = node as JsxFragment;

@@ -31,10 +31,6 @@ export class CanvasPane extends Pane implements IView {
 		});
 		cactiva.modelData = modelData;
 		this._selectFirstNode();
-
-		// if (list.length === 1 && cactiva.breadcrumbs.length === 0) {
-		// 	this.selectNode(list[0]);
-		// }
 	}
 
 	constructor(options: IPaneOptions) {

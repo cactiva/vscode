@@ -2,12 +2,15 @@
  *  Copyright (c) Cactiva. All rights reserved.
  *--------------------------------------------------------------------------------------------*/
 
+import { debounce } from 'lodash';
 import { Pane } from 'vs/base/browser/ui/splitview/paneview';
 import { IView, Orientation, Sizing, SplitView } from 'vs/base/browser/ui/splitview/splitview';
 import 'vs/css!./media/editor';
 import { ICodeEditorService } from 'vs/editor/browser/services/codeEditorService';
 import { CodeEditorWidget, ICodeEditorWidgetOptions } from 'vs/editor/browser/widget/codeEditorWidget';
 import { CanvasPane } from 'vs/editor/cactiva/CanvasPane';
+import { syncSource } from 'vs/editor/cactiva/libs/morph/syncSource';
+import { cactiva } from 'vs/editor/cactiva/models/cactiva';
 import { IEditorConstructionOptions } from 'vs/editor/common/config/editorOptions';
 import * as editorCommon from 'vs/editor/common/editorCommon';
 import { ITextModel } from 'vs/editor/common/model';
@@ -17,7 +20,6 @@ import { IContextKeyService } from 'vs/platform/contextkey/common/contextkey';
 import { IInstantiationService } from 'vs/platform/instantiation/common/instantiation';
 import { INotificationService } from 'vs/platform/notification/common/notification';
 import { IThemeService } from 'vs/platform/theme/common/themeService';
-import { cactiva } from 'vs/editor/cactiva/models/cactiva';
 
 export class CodePane extends Pane implements IView {
 	protected renderHeader(container: HTMLElement): void {}
@@ -77,6 +79,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 		@ICommandService commandService: ICommandService,
 		@IContextKeyService contextKeyService: IContextKeyService,
 		@IThemeService themeService: IThemeService,
+		// @IExtHostDocumentsAndEditors extHost: IExtHostDocumentsAndEditors,
 		@INotificationService notificationService: INotificationService,
 		@IAccessibilityService accessibilityService: IAccessibilityService
 	) {
@@ -100,6 +103,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 		);
 
 		cactiva.editorOptions = options;
+		cactiva.editor = this;
 
 		this._paneMode = 'horizontal';
 		this._domEl = domElement;
@@ -133,6 +137,23 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 				this.onDidChangeModelLanguage(e => {
 					this._changeLanguageTo(e.newLanguage);
 				})
+			);
+			this._modelData?.listenersToRemove.push(
+				this.onDidChangeModelContent(
+					debounce(
+						e => {
+							const model = this._modelData?.model;
+							if (model) {
+								cactiva.source = cactiva.project.createSourceFile(model.uri.fsPath, model.getValue(), {
+									overwrite: true
+								});
+								syncSource();
+							}
+						},
+						100,
+						{ trailing: true }
+					)
+				)
 			);
 		}
 	}

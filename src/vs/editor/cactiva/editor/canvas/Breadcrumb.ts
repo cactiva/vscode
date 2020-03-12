@@ -26,21 +26,33 @@ export default observer(() => {
 						}}
 					>
 						${cactiva.breadcrumbs.map((nodeInfo: IEditorNodeInfo, idx: number) => {
+							const node = nodeInfo.node;
+							if (node.wasForgotten()) return null;
+
 							const tagName = getTagName(nodeInfo.node);
+							const hovered = cactiva.hoveredNode === node ? 'hover' : '';
+							const selected = cactiva.selectedNode?.node === node ? 'selected' : '';
 							return html`
 								<div
 									key=${idx}
 									onClick=${() => {
 										cactiva.selectedNode = nodeInfo;
 									}}
-									className="folder monaco-breadcrumb-item"
+									onMouseOut=${() => {
+										cactiva.hoveredNode = undefined;
+									}}
+									onMouseOver=${(ev: any) => {
+										cactiva.hoveredNode = node;
+										ev.stopPropagation();
+									}}
+									className="cactiva folder monaco-breadcrumb-item"
 									role="listitem"
 								>
 									${idx === 0 &&
 										html`
 											<div className="breadcrumb-first-spacer"></div>
 										`}
-									<div className="monaco-icon-label">
+									<div className=${`monaco-icon-label ${selected} ${hovered}`}>
 										<div className="monaco-icon-label-container">
 											<span className="monaco-icon-name-container"><a className="label-name"> ${tagName}</a></span
 											><span className="monaco-icon-description-container"></span>
