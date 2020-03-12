@@ -35,7 +35,7 @@ jobs:
   build_windows:
     executor: win/default
     steps:
-      - checkout
+      - run: Get-LocalUser
       - run: whoami
       - run: $ErrorActionPreference = 'SilentlyContinue'; yarn
       - run: yarn add electron-builder --dev
