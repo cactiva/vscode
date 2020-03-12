@@ -1,6 +1,4 @@
-import { observe } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import { useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { Node } from 'ts-morph';
@@ -26,15 +24,6 @@ export function generateNodeInfo(node: Node, nodePath: string): IEditorNodeInfo 
 }
 
 export default observer(() => {
-	useEffect(() => {
-		const updateModelData = () => {
-			console.log(cactiva.modelData);
-		};
-		const dispose = observe(cactiva, 'modelData', updateModelData);
-		updateModelData();
-		return dispose;
-	}, []);
-
 	return html`
 		<${DndProvider} backend=${HTML5Backend}>
 			<div className="cactiva-canvas">

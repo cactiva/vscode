@@ -22,7 +22,6 @@ export class CanvasPane extends Pane implements IView {
 			getNodeFromPath(cactiva.source, '0', (n, path) => {
 				cactiva.breadcrumbs.push(generateNodeInfo(n, path));
 			});
-			cactiva.selectedNode = cactiva.breadcrumbs[cactiva.breadcrumbs.length - 1];
 		}
 	}
 

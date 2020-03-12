@@ -25,5 +25,10 @@ interface IEditorStore {
 
 export const cactiva: IEditorStore = observable({
 	project: new Project(),
-	breadcrumbs: []
+	breadcrumbs: [],
+	modelData: undefined,
+	editorOptions: undefined,
+	source: undefined,
+	selectedNode: undefined,
+	hoveredNode: undefined
 });
