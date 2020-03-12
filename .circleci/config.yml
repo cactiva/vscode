@@ -37,7 +37,10 @@ jobs:
     steps:
       - checkout
       - run:
-          command: Start-Process yarn -Verb runAs
+          command: Start-Process -FilePath "powershell" -Verb RunAs
+          shell: powershell.exe
+      - run:
+          command: yarn
           shell: powershell.exe
       - run: 
           command: yarn add electron-builder --dev
