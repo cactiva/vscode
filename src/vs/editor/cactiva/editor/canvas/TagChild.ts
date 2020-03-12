@@ -4,6 +4,7 @@ import { JsxElement, JsxExpression, JsxFragment, JsxSelfClosingElement, Node } f
 import html from 'vs/editor/cactiva/libs/html';
 import { walkNode } from 'vs/editor/cactiva/libs/morph/walk';
 import Divider from './Divider';
+import { cactiva } from 'vs/editor/cactiva/models/cactiva';
 
 export const TagChild = observer(({ idx, onClick, nodePath, e, Tag }: any) => {
 	const meta = useObservable({
@@ -26,6 +27,7 @@ export const TagChild = observer(({ idx, onClick, nodePath, e, Tag }: any) => {
 			}
 			return true;
 		});
+		const selected = cactiva.selectedNode?.node === e ? 'selected' : '';
 		let content = null;
 		if (jsx.length > 0) {
 			content = jsx.map(
@@ -56,7 +58,7 @@ export const TagChild = observer(({ idx, onClick, nodePath, e, Tag }: any) => {
 						meta.hover = true;
 						e.stopPropagation();
 					}}
-					className=${`singletag expression vertical ${meta.hover ? 'hover' : ''}`}
+					className=${`singletag expression vertical ${selected} ${meta.hover ? 'hover' : ''}`}
 					key=${idx}
 				>
 					${!!content ? content : e.getText()}

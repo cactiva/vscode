@@ -8,6 +8,7 @@ import html from 'vs/editor/cactiva/libs/html';
 import { getChildrenFromNode } from 'vs/editor/cactiva/libs/morph/getChildrenFromNode';
 import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
 import Divider from './Divider';
+import { cactiva } from 'vs/editor/cactiva/models/cactiva';
 const icProps = URI.parse(require.toUrl('../../assets/images/ic-props.svg'));
 
 interface ISingleTag {
@@ -24,7 +25,7 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(({ node, style,
 		hover: false
 	});
 	const childrenNode = getChildrenFromNode(node);
-
+	const selected = cactiva.selectedNode?.node === node ? 'selected' : '';
 	const [, dragRef] = useDrag({
 		item: { type: 'tag', node },
 		collect: monitor => ({
@@ -48,7 +49,7 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(({ node, style,
 				meta.hover = true;
 				e.stopPropagation();
 			}}
-			className=${`singletag vertical ${meta.hover ? 'hover' : ''}`}
+			className=${`singletag vertical ${selected} ${meta.hover ? 'hover' : ''}`}
 			style=${style}
 		>
 			<div className="headertag">

@@ -37,14 +37,26 @@
 	display: block;
 }
 
-.singletag .children {
-	margin: 5px 0;
-}
-
 .singletag .expression {
 	border: 1px dotted red;
 	font-size: 10px;
-	padding: 5px;
+	padding: 0;
+}
+
+.singletag.selected {
+	border: 1px solid rgb(6, 95, 212);
+	background-color: transparent;
+	background-image: linear-gradient(
+		45deg,
+		rgba(6, 95, 212, 0.2) 16.67%,
+		rgba(255, 255, 255, 0) 16.67%,
+		rgba(255, 255, 255, 0) 50%,
+		rgba(6, 95, 212, 0.2) 50%,
+		rgba(6, 95, 212, 0.2) 66.67%,
+		rgba(255, 255, 255, 0) 66.67%,
+		rgba(255, 255, 255, 0) 100%
+	);
+	background-size: 30px 30px;
 }
 
 .divider {
