@@ -36,7 +36,24 @@ jobs:
     executor: win/default
     steps:
       - checkout
-      - run: ./.circleci/workflow.ps1
+      - run: 
+          command: npm --add-python-to-path install --global --production windows-build-tools
+          shell: powershell.exe
+      - run: 
+          command: npm cache clean --force
+          shell: powershell.exe
+      - run: 
+          command: npm cache verify
+          shell: powershell.exe
+      - run: 
+          command: yarn
+          shell: cmd.exe
+      - run: 
+          command: yarn add electron-builder --dev
+          shell: cmd.exe
+      - run: 
+          command: yarn run dist --win
+          shell: cmd.exe
       - store_artifacts:
           path: /home/circleci/project/dist/
 
