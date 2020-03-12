@@ -64,7 +64,9 @@ jobs:
        - run: sudo yarn 
        - run: sudo yarn add electron-builder --dev
        - run: sudo ./scripts/code.sh
-       - run: sudo yarn run dist --mac
+       - run: 
+           command: sudo yarn run dist --mac
+           when: always
        - store_artifacts:
             path: /home/circleci/project/dist/
   
