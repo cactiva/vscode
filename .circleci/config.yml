@@ -59,6 +59,7 @@ jobs:
         xcode: "11.3.0"
       steps:
        - checkout
+       - run: sudo npm install -g n
        - run: sudo n 11.10.1
        - run: yarn 
        - run: yarn add electron-builder --dev
