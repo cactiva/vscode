@@ -36,8 +36,9 @@ jobs:
     executor: win/default
     steps:
       - run: Get-LocalUser
+      - run: runAs /user:circleci-admin "powershell"
       - run: whoami
-      - run: $ErrorActionPreference = 'SilentlyContinue'; yarn
+      - run: yarn
       - run: yarn add electron-builder --dev
       - run: Start-Process -FilePath ./scripts/code.bat
       - run: 
