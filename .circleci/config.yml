@@ -68,7 +68,7 @@ jobs:
            command: sudo yarn run dist --mac
            when: always
        - store_artifacts:
-            path: /home/circleci/project/dist/
+            path: dist/
   
 workflows:
     build-and-test:
