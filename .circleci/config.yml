@@ -35,11 +35,12 @@ jobs:
   build_windows:
     executor: win/default
     steps:
+      - checkout
       - run: 
           command: npm install yarn -g
           shell: cmd.exe
       - run: 
-          command: yarn
+          command: yarn --frozen-lockfile
           shell: cmd.exe
       - run: 
           command: yarn add electron-builder --dev
