@@ -35,7 +35,6 @@ jobs:
   build_windows:
     executor: win/default
     steps:
-      - checkout
       - run: npm install yarn -g
       - run: yarn
       - run: yarn add electron-builder --dev
