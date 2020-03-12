@@ -10,7 +10,7 @@ import { assign, deepClone, distinct } from 'vs/base/common/objects';
 import { assertIsDefined, isFunction, isObject, withNullAsUndefined } from 'vs/base/common/types';
 import { URI } from 'vs/base/common/uri';
 import { getCodeEditor, isCodeEditor } from 'vs/editor/browser/editorBrowser';
-import { CanvasEditorWidget } from 'vs/editor/browser/widget/canvasEditorWidget';
+import { CanvasEditorWidget } from 'vs/editor/cactiva/canvasEditorWidget';
 import { IEditorOptions } from 'vs/editor/common/config/editorOptions';
 import { IEditor, IEditorViewState, ScrollType } from 'vs/editor/common/editorCommon';
 import { ITextResourceConfigurationService } from 'vs/editor/common/services/textResourceConfigurationService';

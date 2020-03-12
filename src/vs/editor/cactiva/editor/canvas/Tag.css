@@ -43,6 +43,10 @@
 	padding: 0;
 }
 
+.singletag.vertical {
+	padding-bottom: 0px;
+}
+
 .singletag.selected {
 	border: 1px solid rgb(6, 95, 212);
 	background-color: transparent;
@@ -57,6 +61,9 @@
 		rgba(255, 255, 255, 0) 100%
 	);
 	background-size: 30px 30px;
+}
+.singletag .expression .expression-code {
+	padding: 5px;
 }
 
 .divider {

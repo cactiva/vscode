@@ -1,6 +1,6 @@
 import { JsxElement, JsxFragment, JsxSelfClosingElement, Node, JsxExpression, JsxText } from 'ts-morph';
 
-export const getTagName = (node: Node): string => {
+export function getTagName(node: Node): string {
 	let n: any;
 	let tagName = '';
 	switch (true) {
@@ -33,4 +33,4 @@ export const getTagName = (node: Node): string => {
 		console.log(node);
 	}
 	return tagName;
-};
+}

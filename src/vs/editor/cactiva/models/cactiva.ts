@@ -3,7 +3,9 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { observable } from 'mobx';
-import { SourceFile, Project, Node } from 'ts-morph';
+import { Node, Project, SourceFile } from 'ts-morph';
+import { ModelData } from 'vs/editor/browser/widget/codeEditorWidget';
+import { IEditorConstructionOptions } from 'vs/editor/common/config/editorOptions';
 
 export interface IEditorNodeInfo {
 	node: Node;
@@ -11,10 +13,17 @@ export interface IEditorNodeInfo {
 	start: { line: number; column: number };
 	end: { line: number; column: number };
 }
+interface IEditorStore {
+	project: Project;
+	breadcrumbs: IEditorNodeInfo[];
+	modelData?: ModelData;
+	editorOptions?: IEditorConstructionOptions;
+	source?: SourceFile;
+	selectedNode?: IEditorNodeInfo;
+	hoveredNode?: Node;
+}
 
-export const cactiva = observable({
+export const cactiva: IEditorStore = observable({
 	project: new Project(),
-	breadcrumbs: [] as IEditorNodeInfo[],
-	source: null as SourceFile | null,
-	selectedNode: undefined as IEditorNodeInfo | undefined
+	breadcrumbs: []
 });

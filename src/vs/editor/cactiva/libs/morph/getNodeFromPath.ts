@@ -1,7 +1,11 @@
 import { Node } from 'ts-morph';
 import { getChildrenFromNode } from 'vs/editor/cactiva/libs/morph/getChildrenFromNode';
 
-export const getNodeFromPath = (source: Node | null, nodePath: string, whenEachFound?: (node: Node, path: string) => void) => {
+export function getNodeFromPath(
+	source: Node | null,
+	nodePath: string,
+	whenEachFound?: (node: Node, path: string) => void
+): Node | null {
 	if (!nodePath || !source) return source;
 
 	const lastPath: string[] = [];
@@ -25,4 +29,4 @@ export const getNodeFromPath = (source: Node | null, nodePath: string, whenEachF
 		}
 	});
 	return lastNode;
-};
+}

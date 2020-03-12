@@ -1,6 +1,4 @@
-import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import { Node } from 'ts-morph';
 import html from 'vs/editor/cactiva/libs/html';
 import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
 import { cactiva, IEditorNodeInfo } from 'vs/editor/cactiva/models/cactiva';

@@ -1,7 +1,7 @@
 import { walkNode } from 'vs/editor/cactiva/libs/morph/walk';
 import { JsxSelfClosingElement, JsxExpression, JsxElement, JsxFragment, JsxText, Node } from 'ts-morph';
 
-export const getChildrenFromNode = (node: Node): Node[] => {
+export function getChildrenFromNode(node: Node): Node[] {
 	const list = [] as Node[];
 	walkNode(node, (node: Node) => {
 		if (
@@ -17,4 +17,4 @@ export const getChildrenFromNode = (node: Node): Node[] => {
 		return true;
 	});
 	return list;
-};
+}

@@ -3,14 +3,12 @@
  *--------------------------------------------------------------------------------------------*/
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Pane, IPaneOptions } from 'vs/base/browser/ui/splitview/paneview';
+import { IPaneOptions, Pane } from 'vs/base/browser/ui/splitview/paneview';
 import { IView } from 'vs/base/browser/ui/splitview/splitview';
 import { ModelData } from 'vs/editor/browser/widget/codeEditorWidget';
 import Editor, { generateNodeInfo } from 'vs/editor/cactiva/editor/Editor';
-import { cactiva } from 'vs/editor/cactiva/models/cactiva';
-import { walkNode } from 'vs/editor/cactiva/libs/morph/walk';
-import { JsxSelfClosingElement, JsxExpression, JsxElement, JsxFragment, JsxText, Node } from 'ts-morph';
 import { getNodeFromPath } from 'vs/editor/cactiva/libs/morph/getNodeFromPath';
+import { cactiva } from 'vs/editor/cactiva/models/cactiva';
 
 export class CanvasPane extends Pane implements IView {
 	private _sidebarMutationObserver = {
@@ -20,17 +18,19 @@ export class CanvasPane extends Pane implements IView {
 
 	private _selectFirstNode() {
 		cactiva.breadcrumbs = [];
-		getNodeFromPath(cactiva.source, '0', (n, path) => {
-			cactiva.breadcrumbs.push(generateNodeInfo(n, path));
-		});
-		cactiva.selectedNode = cactiva.breadcrumbs[cactiva.breadcrumbs.length - 1];
+		if (cactiva.source) {
+			getNodeFromPath(cactiva.source, '0', (n, path) => {
+				cactiva.breadcrumbs.push(generateNodeInfo(n, path));
+			});
+			cactiva.selectedNode = cactiva.breadcrumbs[cactiva.breadcrumbs.length - 1];
+		}
 	}
 
 	public updateModelData(modelData: ModelData) {
 		cactiva.source = cactiva.project.createSourceFile(modelData.model.uri.fsPath, modelData.model.getValue(), {
 			overwrite: true
 		});
-
+		cactiva.modelData = modelData;
 		this._selectFirstNode();
 
 		// if (list.length === 1 && cactiva.breadcrumbs.length === 0) {

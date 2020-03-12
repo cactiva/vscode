@@ -1,16 +1,12 @@
-import { observer, useObservable } from 'mobx-react-lite';
+import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { JsxElement, JsxExpression, JsxFragment, JsxSelfClosingElement, Node } from 'ts-morph';
 import html from 'vs/editor/cactiva/libs/html';
 import { walkNode } from 'vs/editor/cactiva/libs/morph/walk';
-import Divider from './Divider';
 import { cactiva } from 'vs/editor/cactiva/models/cactiva';
+import Divider from './Divider';
 
 export const TagChild = observer(({ idx, onClick, nodePath, e, Tag }: any) => {
-	const meta = useObservable({
-		hover: false
-	});
-
 	if (e instanceof JsxFragment || e instanceof JsxSelfClosingElement || e instanceof JsxElement) {
 		return html`
 			<${React.Fragment} key=${idx}>
@@ -28,6 +24,7 @@ export const TagChild = observer(({ idx, onClick, nodePath, e, Tag }: any) => {
 			return true;
 		});
 		const selected = cactiva.selectedNode?.node === e ? 'selected' : '';
+		const hovered = cactiva.hoveredNode === e ? 'hover' : '';
 		let content = null;
 		if (jsx.length > 0) {
 			content = jsx.map(
@@ -42,6 +39,13 @@ export const TagChild = observer(({ idx, onClick, nodePath, e, Tag }: any) => {
 				`
 			);
 		}
+
+		const expressionProps = {
+			style: {
+				fontFamily: cactiva.editorOptions?.fontFamily,
+				font: cactiva.editorOptions?.fontSize
+			}
+		};
 		return html`
 			<${React.Fragment} key=${idx}>
 				<div
@@ -52,16 +56,20 @@ export const TagChild = observer(({ idx, onClick, nodePath, e, Tag }: any) => {
 						}
 					}}
 					onMouseOut=${() => {
-						meta.hover = false;
+						cactiva.hoveredNode = undefined;
 					}}
-					onMouseOver=${(e: any) => {
-						meta.hover = true;
-						e.stopPropagation();
+					onMouseOver=${(ev: any) => {
+						cactiva.hoveredNode = e;
+						ev.stopPropagation();
 					}}
-					className=${`singletag expression vertical ${selected} ${meta.hover ? 'hover' : ''}`}
+					className=${`singletag expression vertical ${selected} ${hovered}`}
 					key=${idx}
 				>
-					${!!content ? content : e.getText()}
+					${!!content
+						? content
+						: html`
+								<div ...${expressionProps} className="expression-code">${e.getText()}</div>
+						  `}
 				</div>
 				<${Divider} position="after" node=${e as Node} index=${idx} />
 			<//>

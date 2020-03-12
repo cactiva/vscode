@@ -7,6 +7,7 @@ import { IView, Orientation, Sizing, SplitView } from 'vs/base/browser/ui/splitv
 import 'vs/css!./media/editor';
 import { ICodeEditorService } from 'vs/editor/browser/services/codeEditorService';
 import { CodeEditorWidget, ICodeEditorWidgetOptions } from 'vs/editor/browser/widget/codeEditorWidget';
+import { CanvasPane } from 'vs/editor/cactiva/CanvasPane';
 import { IEditorConstructionOptions } from 'vs/editor/common/config/editorOptions';
 import * as editorCommon from 'vs/editor/common/editorCommon';
 import { ITextModel } from 'vs/editor/common/model';
@@ -16,7 +17,7 @@ import { IContextKeyService } from 'vs/platform/contextkey/common/contextkey';
 import { IInstantiationService } from 'vs/platform/instantiation/common/instantiation';
 import { INotificationService } from 'vs/platform/notification/common/notification';
 import { IThemeService } from 'vs/platform/theme/common/themeService';
-import { CanvasPane } from 'vs/editor/cactiva/CanvasPane';
+import { cactiva } from 'vs/editor/cactiva/models/cactiva';
 
 export class CodePane extends Pane implements IView {
 	protected renderHeader(container: HTMLElement): void {}
@@ -42,7 +43,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			if (this._splitView.length > 1) {
 				this.superLayout({
 					...dimension,
-					width: (this._firstPaneSize || dimension.width / 2)
+					width: this._firstPaneSize || dimension.width / 2
 				});
 			} else {
 				this.superLayout(dimension);
@@ -97,6 +98,8 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			notificationService,
 			accessibilityService
 		);
+
+		cactiva.editorOptions = options;
 
 		this._paneMode = 'horizontal';
 		this._domEl = domElement;
