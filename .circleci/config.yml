@@ -59,7 +59,7 @@ jobs:
         xcode: "11.3.0"
       steps:
        - checkout
-       - run: xcode-select --install
+       - run: Software Update
        - run: yarn 
        - run: yarn add electron-builder --dev
        - run: ./scripts/code.sh
