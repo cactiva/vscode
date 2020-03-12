@@ -12,10 +12,6 @@
 	min-width: 200px;
 }
 
-.singletag:hover {
-	background-color: rgb(6, 95, 212, 0.1);
-}
-
 .singletag .headertag {
 	display: flex;
 	justify-content: space-between;
@@ -27,18 +23,31 @@
 	font-size: 11px;
 }
 
-.singletag:hover .headertag .tagname {
-	color: #717171;
-}
-
 .singletag .headertag .props {
 	display: none;
 }
 
-.singletag:hover > .headertag > .props {
+.singletag.hover {
+	background-color: rgb(6, 95, 212, 0.1);
+}
+.singletag.hover .headertag .tagname {
+	color: #717171;
+}
+.singletag.hover > .headertag > .props {
 	display: block;
 }
 
 .singletag .children {
 	margin: 5px 0;
+}
+
+.singletag .expression {
+	border: 1px dotted red;
+	font-size: 10px;
+	padding: 5px;
+}
+
+.divider {
+	flex: 1;
+	padding: 3px;
 }

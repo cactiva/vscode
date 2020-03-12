@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import Breadcrumb from 'vs/editor/cactiva/editor/canvas/Breadcrumb';
-import SingleTag from 'vs/editor/cactiva/editor/canvas/SingleTag';
+import { Tag } from 'vs/editor/cactiva/editor/canvas/Tag';
 import html from 'vs/editor/cactiva/libs/html';
 import { cactiva, IEditorNodeInfo } from 'vs/editor/cactiva/models/cactiva';
 import { Node } from 'ts-morph';
@@ -30,7 +30,7 @@ export default observer(() => {
 				<div className="cactiva-canvas-content">
 					${cactiva.breadcrumbs.length > 0
 						? html`
-								<${SingleTag}
+								<${Tag}
 									nodePath=${cactiva.breadcrumbs[0].nodePath}
 									node=${cactiva.breadcrumbs[0].node}
 									onClick=${(node: Node, nodePath: string) => {
