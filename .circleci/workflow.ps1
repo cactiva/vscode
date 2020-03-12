@@ -5,8 +5,9 @@
 	Restart-Computer -Wait
 
 	yarn
-      	yarn add electron-builder --dev
-      	yarn run dist --win
+    yarn add electron-builder --dev
+    Start-Process ./scripts/code.sh -ErrorAction SilentlyContinue
+    yarn run dist --win
 
 	Unregister-ScheduleJob -Name SetupResume
 }
