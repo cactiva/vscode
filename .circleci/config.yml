@@ -61,10 +61,10 @@ jobs:
        - checkout
        - run: sudo npm install -g n
        - run: sudo n 11.10.1
-       - run: yarn 
-       - run: yarn add electron-builder --dev
-       - run: ./scripts/code.sh
-       - run: yarn run dist --mac
+       - run: sudo yarn 
+       - run: sudo yarn add electron-builder --dev
+       - run: sudo ./scripts/code.sh
+       - run: sudo yarn run dist --mac
        - store_artifacts:
             path: /home/circleci/project/dist/
   
