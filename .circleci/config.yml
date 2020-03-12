@@ -38,19 +38,14 @@ jobs:
       - checkout
       - run: Start-Process -FilePath "powershell" -Verb RunAs
       - run: npm --add-python-to-path install --global --production windows-build-tools --vs2015
+      - run: yarn
       - run: 
-          command: sudo yarn
-          shell: bash.exe
-      - run: 
-          command: yarn add electron-builder --dev
-          shell: cmd.exe
-          when: always
-      - run: 
-          command: ./scripts/code.bat
-          shell: cmd.exe 
+          command: -ErrorAction SilentlyContinue
+          background: true
+      - run: yarn add electron-builder --dev
+      - run: Start-Process -FilePath ./scripts/code.bat -Verb RunAs  
       - run: 
           command: yarn run dist --win
-          shell: cmd.exe 
           when: always
       - store_artifacts:
           path: dist/
