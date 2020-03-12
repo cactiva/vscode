@@ -5,29 +5,36 @@ import { Node } from 'ts-morph';
 import Breadcrumb from 'vs/editor/cactiva/editor/canvas/Breadcrumb';
 import { Tag } from 'vs/editor/cactiva/editor/canvas/Tag';
 import html from 'vs/editor/cactiva/libs/html';
+import { getLeadingChar } from 'vs/editor/cactiva/libs/morph/getLeadingChar';
 import { getNodeFromPath } from 'vs/editor/cactiva/libs/morph/getNodeFromPath';
-import { cactiva, IEditorNodeInfo } from 'vs/editor/cactiva/models/cactiva';
+import { IEditorCanvas, IEditorNodeInfo } from 'vs/editor/cactiva/models/cactiva';
 import { Range } from 'vs/editor/common/core/range';
 
 export function generateNodeInfo(node: Node, nodePath: string): IEditorNodeInfo {
+	const src = node.getSourceFile().getFullText();
 	return {
 		node,
 		nodePath,
 		start: {
 			line: node.getStartLineNumber(),
-			column: node.getPos()
+			column: getLeadingChar(src, node.getPos())
 		},
 		end: {
 			line: node.getEndLineNumber(),
-			column: node.getEnd()
+			column: getLeadingChar(src, node.getEnd())
 		}
 	};
 }
 
-export default observer(() => {
+export default observer(({ canvas }: { canvas: IEditorCanvas }) => {
+	if (!canvas)
+		return html`
+			<div>Canvas can't be loaded</div>
+		`;
+
 	let rootItem: any = null;
-	if (cactiva.breadcrumbs.length > 0) {
-		rootItem = cactiva.breadcrumbs[0];
+	if (canvas.breadcrumbs.length > 0) {
+		rootItem = canvas.breadcrumbs[0];
 	}
 
 	return html`
@@ -37,18 +44,22 @@ export default observer(() => {
 					${rootItem && !rootItem.node.wasForgotten()
 						? html`
 								<${Tag}
+									canvas=${canvas}
+									isLast=${true}
 									nodePath=${rootItem.nodePath}
 									node=${rootItem.node}
 									onClick=${(_: Node, nodePath: string) => {
-										if (cactiva.source) {
-											cactiva.breadcrumbs = [];
-											getNodeFromPath(cactiva.source, nodePath, (n, path) => {
-												cactiva.breadcrumbs.push(generateNodeInfo(n, path));
+										if (canvas.source) {
+											canvas.breadcrumbs = [];
+											getNodeFromPath(canvas.source, nodePath, (n, path) => {
+												canvas.breadcrumbs.push(generateNodeInfo(n, path));
 											});
-											cactiva.selectedNode = cactiva.breadcrumbs[cactiva.breadcrumbs.length - 1];
-											const s = cactiva.selectedNode.start;
-											const e = cactiva.selectedNode.end;
-											cactiva.editor?.setSelection(new Range(s.line, s.column, e.line, e.column));
+											canvas.selectedNode = canvas.breadcrumbs[canvas.breadcrumbs.length - 1];
+
+											const s = canvas.selectedNode.start;
+											const e = canvas.selectedNode.end;
+											canvas.editor?.setSelection(new Range(s.line, s.column, e.line, e.column));
+											canvas.editor?.revealLineNearTop(s.line);
 										}
 									}}
 								/>
@@ -57,7 +68,16 @@ export default observer(() => {
 								<div>No Component to Render</div>
 						  `}
 				</div>
-				<${Breadcrumb} />
+				<${Breadcrumb}
+					canvas=${canvas}
+					onClick=${(node: IEditorNodeInfo) => {
+						canvas.selectedNode = node;
+						const s = canvas.selectedNode.start;
+						const e = canvas.selectedNode.end;
+						canvas.editor?.setSelection(new Range(s.line, s.column, e.line, e.column));
+						canvas.editor?.revealLineNearTop(s.line);
+					}}
+				/>
 			</div>
 			<style>
 				.cactiva-canvas {

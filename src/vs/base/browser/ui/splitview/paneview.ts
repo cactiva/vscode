@@ -43,7 +43,6 @@ export interface IPaneStyles {
  * before the `render()` call, thus forbiding their use.
  */
 export abstract class Pane extends Disposable implements IView {
-
 	private static readonly HEADER_SIZE = 22;
 
 	readonly element: HTMLElement;
@@ -125,9 +124,10 @@ export abstract class Pane extends Disposable implements IView {
 		super();
 		this._expanded = typeof options.expanded === 'undefined' ? true : !!options.expanded;
 		this._orientation = typeof options.orientation === 'undefined' ? Orientation.VERTICAL : options.orientation;
-		this.ariaHeaderLabel = localize('viewSection', "{0} Section", options.title);
+		this.ariaHeaderLabel = localize('viewSection', '{0} Section', options.title);
 		this._minimumBodySize = typeof options.minimumBodySize === 'number' ? options.minimumBodySize : 120;
-		this._maximumBodySize = typeof options.maximumBodySize === 'number' ? options.maximumBodySize : Number.POSITIVE_INFINITY;
+		this._maximumBodySize =
+			typeof options.maximumBodySize === 'number' ? options.maximumBodySize : Number.POSITIVE_INFINITY;
 
 		this.element = $('.pane');
 	}
@@ -189,22 +189,24 @@ export abstract class Pane extends Disposable implements IView {
 
 		this.updateHeader();
 
-
 		if (!this._preventCollapse) {
-			const onHeaderKeyDown = Event.chain(domEvent(this.header, 'keydown'))
-				.map(e => new StandardKeyboardEvent(e));
+			const onHeaderKeyDown = Event.chain(domEvent(this.header, 'keydown')).map(e => new StandardKeyboardEvent(e));
 
-			this._register(onHeaderKeyDown.filter(e => e.keyCode === KeyCode.Enter || e.keyCode === KeyCode.Space)
-				.event(() => this.setExpanded(!this.isExpanded()), null));
+			this._register(
+				onHeaderKeyDown
+					.filter(e => e.keyCode === KeyCode.Enter || e.keyCode === KeyCode.Space)
+					.event(() => this.setExpanded(!this.isExpanded()), null)
+			);
 
-			this._register(onHeaderKeyDown.filter(e => e.keyCode === KeyCode.LeftArrow)
-				.event(() => this.setExpanded(false), null));
+			this._register(
+				onHeaderKeyDown.filter(e => e.keyCode === KeyCode.LeftArrow).event(() => this.setExpanded(false), null)
+			);
 
-			this._register(onHeaderKeyDown.filter(e => e.keyCode === KeyCode.RightArrow)
-				.event(() => this.setExpanded(true), null));
+			this._register(
+				onHeaderKeyDown.filter(e => e.keyCode === KeyCode.RightArrow).event(() => this.setExpanded(true), null)
+			);
 
-			this._register(domEvent(this.header, 'click')
-				(() => this.setExpanded(!this.isExpanded()), null));
+			this._register(domEvent(this.header, 'click')(() => this.setExpanded(!this.isExpanded()), null));
 		}
 
 		this.body = append(this.element, $('.pane-body'));
@@ -258,12 +260,11 @@ interface IDndContext {
 }
 
 class PaneDraggable extends Disposable {
-
 	private static readonly DefaultDragOverBackgroundColor = new Color(new RGBA(128, 128, 128, 0.5));
 
 	private dragOverCounter = 0; // see https://github.com/Microsoft/vscode/issues/14470
 
-	private _onDidDrop = this._register(new Emitter<{ from: Pane, to: Pane }>());
+	private _onDidDrop = this._register(new Emitter<{ from: Pane; to: Pane }>());
 	readonly onDidDrop = this._onDidDrop.event;
 
 	constructor(private pane: Pane, private dnd: IPaneDndController, private context: IDndContext) {
@@ -371,7 +372,6 @@ export interface IPaneDndController {
 }
 
 export class DefaultPaneDndController implements IPaneDndController {
-
 	canDrag(pane: Pane): boolean {
 		return true;
 	}
@@ -392,7 +392,6 @@ interface IPaneItem {
 }
 
 export class PaneView extends Disposable {
-
 	private dnd: IPaneDndController | undefined;
 	private dndContext: IDndContext = { draggable: null };
 	private el: HTMLElement;
@@ -402,8 +401,8 @@ export class PaneView extends Disposable {
 	private orientation: Orientation;
 	private animationTimer: number | undefined = undefined;
 
-	private _onDidDrop = this._register(new Emitter<{ from: Pane, to: Pane }>());
-	readonly onDidDrop: Event<{ from: Pane, to: Pane }> = this._onDidDrop.event;
+	private _onDidDrop = this._register(new Emitter<{ from: Pane; to: Pane }>());
+	readonly onDidDrop: Event<{ from: Pane; to: Pane }> = this._onDidDrop.event;
 
 	readonly onDidSashChange: Event<number>;
 

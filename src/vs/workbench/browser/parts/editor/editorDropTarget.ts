@@ -556,7 +556,10 @@ export class EditorDropTarget extends Themable {
 		if (
 			!this.editorTransfer.hasData(DraggedEditorIdentifier.prototype) &&
 			!this.groupTransfer.hasData(DraggedEditorGroupIdentifier.prototype) &&
-			event.dataTransfer && !event.dataTransfer.types.length // see https://github.com/Microsoft/vscode/issues/25789
+			event.dataTransfer && (
+				!event.dataTransfer.types.length // see https://github.com/Microsoft/vscode/issues/25789
+			|| (event.dataTransfer.types.length === 1 && event.dataTransfer.types[0].indexOf('json') > 0)
+			)
 		) {
 			event.dataTransfer.dropEffect = 'none';
 			return; // unsupported transfer

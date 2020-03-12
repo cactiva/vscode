@@ -1,11 +1,12 @@
 import { Node } from 'ts-morph';
 
-export const walkNode: any = (root: Node, f: (node: Node) => boolean) => {
+export const walkNode: any = (root: Node, f: (node: Node, meta?: any) => boolean, prevMeta?:any) => {
 	if (!!root && root.forEachChild) {
 		root.forEachChild(e => {
-			if (f(e)) {
+			const result = f(e, prevMeta);
+			if (result) {
 				if (e && e.forEachChild) {
-					walkNode(e, f);
+					walkNode(e, f, result);
 				}
 			}
 		});

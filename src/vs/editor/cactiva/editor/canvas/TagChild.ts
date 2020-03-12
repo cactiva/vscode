@@ -1,19 +1,17 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
-import { JsxElement, JsxExpression, JsxFragment, JsxSelfClosingElement, Node, JsxText } from 'ts-morph';
+import { JsxElement, JsxExpression, JsxFragment, JsxSelfClosingElement, JsxText, Node } from 'ts-morph';
 import html from 'vs/editor/cactiva/libs/html';
 import { walkNode } from 'vs/editor/cactiva/libs/morph/walk';
-import { cactiva } from 'vs/editor/cactiva/models/cactiva';
 import Divider from './Divider';
 
-export const TagChild = observer(({ idx, onClick, nodePath, e, Tag }: any) => {
+export const TagChild = observer(({ canvas, idx, onClick, nodePath, e, Tag, isLast }: any) => {
 	if (!e || (e && e.wasForgotten())) return null;
-
 	if (e instanceof JsxFragment || e instanceof JsxSelfClosingElement || e instanceof JsxElement) {
 		return html`
 			<${React.Fragment} key=${idx}>
-				<${Tag} onClick=${onClick} node=${e} nodePath=${`${nodePath}.${idx}`} />
-				<${Divider} position="after" node=${e as Node} index=${idx} />
+				<${Tag} canvas=${canvas} onClick=${onClick} isLast=${isLast} node=${e} nodePath=${`${nodePath}.${idx}`} />
+				<${Divider} position="after" bubbleHover=${isLast} node=${e as Node} index=${idx} />
 			<//>
 		`;
 	} else if (e instanceof JsxText || e instanceof JsxExpression) {
@@ -31,8 +29,10 @@ export const TagChild = observer(({ idx, onClick, nodePath, e, Tag }: any) => {
 				content = jsx.map(
 					(j, jix) => html`
 						<${Tag}
+							canvas=${canvas}
 							onClick=${onClick}
 							node=${j}
+							isLast=${jix === jsx.length - 1}
 							nodePath=${`${nodePath}.${idx}.${jix}`}
 							key=${jix}
 							style=${{ border: 0, borderTop: jix > 0 ? '1px dashed red' : 0 }}
@@ -45,8 +45,8 @@ export const TagChild = observer(({ idx, onClick, nodePath, e, Tag }: any) => {
 		if (!content && e instanceof JsxText) {
 			const expressionProps = {
 				style: {
-					fontFamily: cactiva.editorOptions?.fontFamily,
-					font: cactiva.editorOptions?.fontSize
+					fontFamily: canvas.editorOptions?.fontFamily,
+					font: canvas.editorOptions?.fontSize
 				}
 			};
 			if (e.getText().trim()) {
@@ -57,8 +57,9 @@ export const TagChild = observer(({ idx, onClick, nodePath, e, Tag }: any) => {
 		}
 
 		if (content) {
-			const selected = cactiva.selectedNode?.node === e ? 'selected' : '';
-			const hovered = cactiva.hoveredNode === e ? 'hover' : '';
+			const selected = canvas.selectedNode?.node === e ? 'selected' : '';
+			const hovered = canvas.hoveredNode === e ? 'hover' : '';
+			const type = e instanceof JsxText ? '' : 'expression';
 			return html`
 				<${React.Fragment} key=${idx}>
 					<div
@@ -69,18 +70,18 @@ export const TagChild = observer(({ idx, onClick, nodePath, e, Tag }: any) => {
 							}
 						}}
 						onMouseOut=${() => {
-							cactiva.hoveredNode = undefined;
+							canvas.hoveredNode = undefined;
 						}}
 						onMouseOver=${(ev: any) => {
-							cactiva.hoveredNode = e;
+							canvas.hoveredNode = e;
 							ev.stopPropagation();
 						}}
-						className=${`singletag expression vertical ${selected} ${hovered}`}
+						className=${`singletag vertical ${type} ${selected} ${hovered}`}
 						key=${idx}
 					>
 						${content}
 					</div>
-					<${Divider} position="after" node=${e as Node} index=${idx} />
+					<${Divider} position="after" bubbleHover=${isLast} node=${e as Node} index=${idx} />
 				<//>
 			`;
 		}

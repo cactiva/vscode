@@ -26,7 +26,9 @@ export class CodePane extends Pane implements IView {
 	protected renderBody(container: HTMLElement): void {}
 	protected layoutBody(height: number, width: number): void {
 		const sidebar = document.getElementById('workbench.parts.sidebar');
-		let border = sidebar?.style.borderRight ? `border-right: ${sidebar?.style.borderRight}` : ``;
+		let border = sidebar?.style.borderRight
+			? `border-right: ${sidebar?.style.borderRight}`
+			: `border-right: 1px solid #ccc`;
 		this.element.setAttribute('style', `width: 100%;height:100%;${border};box-sizing:border-box;`);
 	}
 }
@@ -63,7 +65,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 				this._paneMode === 'horizontal'
 					? this._codePane.element.style.borderRightWidth
 					: this._codePane.element.style.borderTopWidth;
-			const borderOffset = parseInt(border) || 0;
+			const borderOffset = parseInt(border) || 1;
 			super.layout({ ...dimension, width: dimension.width - borderOffset });
 		} else {
 			super.layout();
@@ -102,8 +104,17 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			accessibilityService
 		);
 
-		cactiva.editorOptions = options;
-		cactiva.editor = this;
+		if (this._modelData && !cactiva.canvas[this._modelData?.model.id]) {
+			cactiva.canvas[this._modelData?.model.id] = {
+				breadcrumbs: [],
+				modelData: undefined,
+				editor: this,
+				editorOptions: options,
+				source: undefined,
+				selectedNode: undefined,
+				hoveredNode: undefined
+			};
+		}
 
 		this._paneMode = 'horizontal';
 		this._domEl = domElement;
@@ -130,7 +141,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 		super._attachModel(model);
 		if (!!model) {
 			if (this._modelData) {
-				this._canvasPane.updateModelData(this._modelData);
+				this._canvasPane.updateModelData(this._modelData, this);
 			}
 			this._changeLanguageTo(model?.getLanguageIdentifier().language);
 			this._modelData?.listenersToRemove.push(
@@ -144,10 +155,10 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 						e => {
 							const model = this._modelData?.model;
 							if (model) {
-								cactiva.source = cactiva.project.createSourceFile(model.uri.fsPath, model.getValue(), {
+								cactiva.canvas[model.id].source = cactiva.project.createSourceFile(model.uri.fsPath, model.getValue(), {
 									overwrite: true
 								});
-								syncSource();
+								syncSource(cactiva.canvas[model.id]);
 							}
 						},
 						100,

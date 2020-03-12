@@ -14,8 +14,7 @@ export interface IEditorNodeInfo {
 	start: { line: number; column: number };
 	end: { line: number; column: number };
 }
-interface IEditorStore {
-	project: Project;
+export interface IEditorCanvas {
 	breadcrumbs: IEditorNodeInfo[];
 	modelData?: ModelData;
 	editor?: CanvasEditorWidget;
@@ -24,14 +23,12 @@ interface IEditorStore {
 	selectedNode?: IEditorNodeInfo;
 	hoveredNode?: Node;
 }
+interface IEditorStore {
+	project: Project;
+	canvas: { [key: string]: IEditorCanvas };
+}
 
 export const cactiva: IEditorStore = observable({
 	project: new Project(),
-	breadcrumbs: [],
-	modelData: undefined,
-	editor: undefined,
-	editorOptions: undefined,
-	source: undefined,
-	selectedNode: undefined,
-	hoveredNode: undefined
+	canvas: {}
 });

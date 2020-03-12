@@ -75,6 +75,10 @@
 	padding: 3px;
 }
 
+.divider.red {
+	background: red;
+}
+
 .cactiva .monaco-icon-label {
 	padding: 0px;
 	font-size: 85%;

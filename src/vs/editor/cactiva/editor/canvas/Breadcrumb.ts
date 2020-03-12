@@ -1,9 +1,9 @@
 import { observer } from 'mobx-react-lite';
 import html from 'vs/editor/cactiva/libs/html';
 import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
-import { cactiva, IEditorNodeInfo } from 'vs/editor/cactiva/models/cactiva';
+import { IEditorNodeInfo } from 'vs/editor/cactiva/models/cactiva';
 
-export default observer(() => {
+export default observer(({ canvas, onClick }: any) => {
 	return html`
 		<div className="tabs-breadcrumbs">
 			<div className="breadcrumbs-control relative-path backslash-path">
@@ -25,24 +25,24 @@ export default observer(() => {
 							height: '22px'
 						}}
 					>
-						${cactiva.breadcrumbs.map((nodeInfo: IEditorNodeInfo, idx: number) => {
+						${canvas.breadcrumbs.map((nodeInfo: IEditorNodeInfo, idx: number) => {
 							const node = nodeInfo.node;
 							if (node.wasForgotten()) return null;
 
 							const tagName = getTagName(nodeInfo.node);
-							const hovered = cactiva.hoveredNode === node ? 'hover' : '';
-							const selected = cactiva.selectedNode?.node === node ? 'selected' : '';
+							const hovered = canvas.hoveredNode === node ? 'hover' : '';
+							const selected = canvas.selectedNode?.node === node ? 'selected' : '';
 							return html`
 								<div
 									key=${idx}
 									onClick=${() => {
-										cactiva.selectedNode = nodeInfo;
+										onClick(nodeInfo);
 									}}
 									onMouseOut=${() => {
-										cactiva.hoveredNode = undefined;
+										canvas.hoveredNode = undefined;
 									}}
 									onMouseOver=${(ev: any) => {
-										cactiva.hoveredNode = node;
+										canvas.hoveredNode = node;
 										ev.stopPropagation();
 									}}
 									className="cactiva folder monaco-breadcrumb-item"
@@ -58,7 +58,7 @@ export default observer(() => {
 											><span className="monaco-icon-description-container"></span>
 										</div>
 									</div>
-									${cactiva.breadcrumbs.length - 1 !== idx &&
+									${canvas.breadcrumbs.length - 1 !== idx &&
 										html`
 											<div className="codicon codicon-chevron-right"></div>
 										`}
