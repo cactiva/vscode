@@ -40,7 +40,7 @@ jobs:
           command: npm --add-python-to-path install --global --production windows-build-tools --vs2015
           shell: powershell.exe
       - run: 
-          command: Remove-Item "C:\Users\circleci\AppData\Local\Temp\*" -recurse -force
+          command: Remove-Item "C:\Users\circleci\AppData\Local\Temp\vscode-ripgrep-cache-1.5.8" -recurse -force
           shell: powershell.exe
       - run: 
           command: yarn
