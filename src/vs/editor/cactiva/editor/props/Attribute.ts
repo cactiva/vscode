@@ -5,16 +5,16 @@ import { selectSourceFromNode } from 'vs/editor/cactiva/libs/morph/selectSourceF
 export default ({ item }: { item: JsxAttribute }) => {
 	const kindName = getKindName(item);
 	return html`
-		<div className="prop row">
+		<div
+			className="prop row"
+			onClick=${() => {
+				selectSourceFromNode(item);
+			}}
+		>
 			<div className="title">
 				${item.getName()}
 			</div>
-			<div
-				className="field row space-between pointer"
-				onClick=${() => {
-					selectSourceFromNode(item);
-				}}
-			>
+			<div className="field row space-between pointer">
 				<div className="input">
 					${kindName}
 				</div>

@@ -27,7 +27,7 @@ export default observer(({ domNode }: any) => {
 
 	useEffect(() => {
 		const mo = new MutationObserver(() => {
-			// pe.hidden = true;
+			pe.hidden = true;
 		});
 
 		const sidebar = document.getElementById('workbench.parts.sidebar');
