@@ -36,8 +36,9 @@
   },
  "build": {
     "appId": "com.cactiva.app",
-    "asar":true,
+    "asar":false,
     "productName": "Cactiva",
+    "artifactName": "Cactiva",
     "copyright": "Copyright © 2020 Cactiva",
     "detectUpdateChannel": true,
     "generateUpdatesFilesForAllChannels": true,
