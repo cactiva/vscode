@@ -22,6 +22,7 @@ export class CanvasPane extends Pane implements IView {
 		if (canvas.source) {
 			getNodeFromPath(canvas.source, '0', (n, path) => {
 				canvas.breadcrumbs.push(generateNodeInfo(n, path));
+				cactiva.propsEditor.nodeInfo = canvas.breadcrumbs[0];
 			});
 		}
 	}
@@ -40,6 +41,7 @@ export class CanvasPane extends Pane implements IView {
 		canvas.source = cactiva.project.createSourceFile(modelData.model.uri.fsPath, modelData.model.getValue(), {
 			overwrite: true
 		});
+		(canvas.source as any).editorId = id;
 		canvas.editor = editor;
 		canvas.modelData = modelData;
 		this._selectFirstNode();

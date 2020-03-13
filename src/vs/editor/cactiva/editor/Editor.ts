@@ -1,15 +1,15 @@
 import { observer } from 'mobx-react-lite';
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import { Node, JsxElement } from 'ts-morph';
+import { JsxElement, Node } from 'ts-morph';
 import Breadcrumb from 'vs/editor/cactiva/editor/canvas/Breadcrumb';
 import { Tag } from 'vs/editor/cactiva/editor/canvas/Tag';
+import PropsEditor from 'vs/editor/cactiva/editor/props/PropsEditor';
 import html from 'vs/editor/cactiva/libs/html';
 import { getLeadingChar } from 'vs/editor/cactiva/libs/morph/getLeadingChar';
-import { getNodeFromPath } from 'vs/editor/cactiva/libs/morph/getNodeFromPath';
-import { IEditorCanvas, IEditorNodeInfo, cactiva } from 'vs/editor/cactiva/models/cactiva';
+import { selectNode } from 'vs/editor/cactiva/libs/morph/selectNode';
+import { cactiva, IEditorCanvas, IEditorNodeInfo } from 'vs/editor/cactiva/models/cactiva';
 import { Range } from 'vs/editor/common/core/range';
-import PropsEditor from 'vs/editor/cactiva/editor/PropsEditor';
 
 export function generateNodeInfo(node: Node, nodePath: string): IEditorNodeInfo {
 	const src = node.getSourceFile().getFullText();
@@ -47,17 +47,7 @@ export default observer(({ canvas }: { canvas: IEditorCanvas }) => {
 	const sidebarEl = cactiva.propsEditor.el;
 	const tagClicked = (_: Node, nodePath: string) => {
 		if (canvas.source) {
-			canvas.breadcrumbs = [];
-			getNodeFromPath(canvas.source, nodePath, (n, path) => {
-				canvas.breadcrumbs.push(generateNodeInfo(n, path));
-			});
-			canvas.selectedNode = canvas.breadcrumbs[canvas.breadcrumbs.length - 1];
-			cactiva.propsEditor.nodeInfo = canvas.selectedNode;
-
-			const s = canvas.selectedNode.start;
-			const e = canvas.selectedNode.end;
-			canvas.editor?.setSelection(new Range(s.line, s.column, e.line, e.column));
-			canvas.editor?.revealLineNearTop(s.line);
+			selectNode(canvas, nodePath, true);
 		}
 	};
 	const breadcrumbClicked = (node: IEditorNodeInfo) => {

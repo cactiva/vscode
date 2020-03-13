@@ -37,6 +37,9 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(
 		const childrenNode = getChildrenFromNode(node);
 		const hovered = canvas.hoveredNode === node ? 'hover' : '';
 		const selected = canvas.selectedNode?.node === node ? 'selected' : '';
+
+		(node.compilerNode as any).cactivaPath = nodePath;
+
 		return html`
 			<div
 				ref=${dragRef}

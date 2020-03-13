@@ -9,9 +9,11 @@ import { ICodeEditorService } from 'vs/editor/browser/services/codeEditorService
 import { CodeEditorWidget, ICodeEditorWidgetOptions } from 'vs/editor/browser/widget/codeEditorWidget';
 import { CanvasPane } from 'vs/editor/cactiva/CanvasPane';
 import { CodePane } from 'vs/editor/cactiva/CodePane';
+import { selectNode } from 'vs/editor/cactiva/libs/morph/selectNode';
 import { syncSource } from 'vs/editor/cactiva/libs/morph/syncSource';
 import { cactiva } from 'vs/editor/cactiva/models/cactiva';
 import { IEditorConstructionOptions } from 'vs/editor/common/config/editorOptions';
+import { Range } from 'vs/editor/common/core/range';
 import * as editorCommon from 'vs/editor/common/editorCommon';
 import { ITextModel } from 'vs/editor/common/model';
 import { IAccessibilityService } from 'vs/platform/accessibility/common/accessibility';
@@ -137,6 +139,41 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 				})
 			);
 			this._modelData?.listenersToRemove.push(
+				this.onDidChangeCursorPosition(
+					debounce(
+						e => {
+							const id = this._modelData?.model.id;
+							if (id) {
+								const canvas = cactiva.canvas[id];
+								const source = canvas.source;
+								if (source) {
+									const range = new Range(0, 0, e.position.lineNumber, e.position.column);
+									let src = this._modelData?.viewModel.getPlainTextToCopy([range], false, false);
+									if (src) {
+										if (Array.isArray(src)) {
+											src = src.join('\n');
+										}
+										const rawNode = source.getDescendantAtPos(src.length);
+										const node = rawNode?.compilerNode;
+										if (node) {
+											let cursor = node;
+											while (cursor !== undefined && !(cursor as any).cactivaPath) {
+												cursor = cursor.parent;
+											}
+											if (cursor && (cursor as any).cactivaPath) {
+												selectNode(canvas, (cursor as any).cactivaPath, false);
+											}
+										}
+									}
+								}
+							}
+						},
+						200,
+						{ trailing: true }
+					)
+				)
+			);
+			this._modelData?.listenersToRemove.push(
 				this.onDidChangeModelContent(
 					debounce(
 						e => {
@@ -148,7 +185,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 								syncSource(cactiva.canvas[model.id]);
 							}
 						},
-						100,
+						200,
 						{ trailing: true }
 					)
 				)
