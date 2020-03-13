@@ -25,6 +25,7 @@ export interface IEditorCanvas {
 }
 interface IEditorStore {
 	project: Project;
+	sidebarStyle?: CSSStyleDeclaration;
 	canvas: { [key: string]: IEditorCanvas };
 }
 

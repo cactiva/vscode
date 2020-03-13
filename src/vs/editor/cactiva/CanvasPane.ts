@@ -31,6 +31,10 @@ export class CanvasPane extends Pane implements IView {
 		}
 	}
 
+	private _updateSidebarStyle(e: any) {
+		console.log(e);
+	}
+
 	public updateModelData(modelData: ModelData, editor: CanvasEditorWidget) {
 		const id = modelData.model.id;
 		if (!cactiva.canvas[id]) {
@@ -69,11 +73,7 @@ export class CanvasPane extends Pane implements IView {
 	}
 
 	private _updateStyle(): HTMLElement | null {
-		// const sidebar = document.getElementById('workbench.parts.sidebar');
-		const style = `
-		background:transparent;
-		`;
-		this.element.setAttribute('style', `${style};width: 100%;height:100%;`);
+		this.element.setAttribute('style', `background:transparent;;width: 100%;height:100%;`);
 		return null;
 	}
 	protected renderHeader(container: HTMLElement): void {}
@@ -90,14 +90,13 @@ export class CanvasPane extends Pane implements IView {
 	}
 	protected layoutBody(height: number, width: number): void {
 		this._updateStyle();
-		// if (sidebar) {
-		// 	this.disposeSidebarMutationObserver();
-		// 	var obs = new MutationObserver(() => {
-		// 		this._updateStyle();
-		// 	});
-		// 	obs.observe(sidebar, { attributeFilter: ['style'] });
-		// 	this._sidebarMutationObserver.obs = obs;
-		// 	this._sidebarMutationObserver.el = sidebar;
-		// }
+		const sidebar = document.getElementById('workbench.parts.sidebar');
+		if (sidebar) {
+			this.disposeSidebarMutationObserver();
+			var obs = new MutationObserver(this._updateSidebarStyle);
+			obs.observe(sidebar, { attributeFilter: ['style'] });
+			this._sidebarMutationObserver.obs = obs;
+			this._sidebarMutationObserver.el = sidebar;
+		}
 	}
 }
