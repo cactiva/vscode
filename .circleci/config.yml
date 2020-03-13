@@ -29,6 +29,14 @@ jobs:
             - run: 
                 command: sudo yarn run dist --linux
                 when: always
+            - run: sudo git clone https://github.com/cactiva/release
+            - run: sudo cd release
+            - run: sudo cp dist/Cactiva.deb
+            - run: sudo git add Cactiva.deb .
+            - run: sudo cp dist/Cactiva.rpm
+            - run: sudo git add Cactiva.rpm .
+            - run: sudo git commit -m "build dari circleci"
+            - run: git push
             - store_artifacts:
                 path: /home/circleci/project/dist/
   
@@ -75,10 +83,17 @@ jobs:
        - run: 
            command: sudo yarn run dist --mac
            when: always
+       - run: sudo git clone https://github.com/cactiva/release
+       - run: sudo cd release
+       - run: sudo cp dist/Cactiva.dmg
+       - run: sudo git add Cactiva.dmg .
+       - run: sudo git commit -m "Macos, build dari circleci"
+       - run: git push
        - store_artifacts:
-            path: dist/
+            path: dist/Cactiva.dmg
   
 workflows:
     build-and-test:
       jobs:
-        - build_windows
+        - build_linux
+        - build_macos
