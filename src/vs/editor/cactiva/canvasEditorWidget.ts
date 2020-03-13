@@ -3,12 +3,12 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { debounce } from 'lodash';
-import { Pane } from 'vs/base/browser/ui/splitview/paneview';
-import { IView, Orientation, Sizing, SplitView } from 'vs/base/browser/ui/splitview/splitview';
+import { Orientation, Sizing, SplitView } from 'vs/base/browser/ui/splitview/splitview';
 import 'vs/css!./media/editor';
 import { ICodeEditorService } from 'vs/editor/browser/services/codeEditorService';
 import { CodeEditorWidget, ICodeEditorWidgetOptions } from 'vs/editor/browser/widget/codeEditorWidget';
 import { CanvasPane } from 'vs/editor/cactiva/CanvasPane';
+import { CodePane } from 'vs/editor/cactiva/CodePane';
 import { syncSource } from 'vs/editor/cactiva/libs/morph/syncSource';
 import { cactiva } from 'vs/editor/cactiva/models/cactiva';
 import { IEditorConstructionOptions } from 'vs/editor/common/config/editorOptions';
@@ -20,18 +20,6 @@ import { IContextKeyService } from 'vs/platform/contextkey/common/contextkey';
 import { IInstantiationService } from 'vs/platform/instantiation/common/instantiation';
 import { INotificationService } from 'vs/platform/notification/common/notification';
 import { IThemeService } from 'vs/platform/theme/common/themeService';
-
-export class CodePane extends Pane implements IView {
-	protected renderHeader(container: HTMLElement): void {}
-	protected renderBody(container: HTMLElement): void {}
-	protected layoutBody(height: number, width: number): void {
-		const sidebar = document.getElementById('workbench.parts.sidebar');
-		let border = sidebar?.style.borderRight
-			? `border-right: ${sidebar?.style.borderRight}`
-			: `border-right: 1px solid #ccc`;
-		this.element.setAttribute('style', `width: 100%;height:100%;${border};box-sizing:border-box;`);
-	}
-}
 
 export class CanvasEditorWidget extends CodeEditorWidget {
 	private readonly _domEl: HTMLElement;
@@ -81,7 +69,6 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 		@ICommandService commandService: ICommandService,
 		@IContextKeyService contextKeyService: IContextKeyService,
 		@IThemeService themeService: IThemeService,
-		// @IExtHostDocumentsAndEditors extHost: IExtHostDocumentsAndEditors,
 		@INotificationService notificationService: INotificationService,
 		@IAccessibilityService accessibilityService: IAccessibilityService
 	) {

@@ -23,13 +23,21 @@ export interface IEditorCanvas {
 	selectedNode?: IEditorNodeInfo;
 	hoveredNode?: Node;
 }
+
+interface IEditorProps {
+	el?: HTMLElement;
+	nodeInfo?: IEditorNodeInfo;
+	hidden?: boolean;
+}
+
 interface IEditorStore {
 	project: Project;
-	sidebarStyle?: CSSStyleDeclaration;
+	propsEditor: IEditorProps;
 	canvas: { [key: string]: IEditorCanvas };
 }
 
 export const cactiva: IEditorStore = observable({
 	project: new Project(),
+	propsEditor: {},
 	canvas: {}
 });

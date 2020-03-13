@@ -14,11 +14,6 @@ import { observable } from 'mobx';
 import { CanvasEditorWidget } from 'vs/editor/cactiva/canvasEditorWidget';
 
 export class CanvasPane extends Pane implements IView {
-	private _sidebarMutationObserver = {
-		obs: null as any,
-		el: null as any
-	};
-
 	private _canvas = observable({ id: '', data: null as IEditorCanvas | null });
 	private _selectFirstNode() {
 		const canvas = this._canvas.data;
@@ -29,10 +24,6 @@ export class CanvasPane extends Pane implements IView {
 				canvas.breadcrumbs.push(generateNodeInfo(n, path));
 			});
 		}
-	}
-
-	private _updateSidebarStyle(e: any) {
-		console.log(e);
 	}
 
 	public updateModelData(modelData: ModelData, editor: CanvasEditorWidget) {
@@ -72,31 +63,9 @@ export class CanvasPane extends Pane implements IView {
 		);
 	}
 
-	private _updateStyle(): HTMLElement | null {
-		this.element.setAttribute('style', `background:transparent;;width: 100%;height:100%;`);
-		return null;
-	}
 	protected renderHeader(container: HTMLElement): void {}
 	protected renderBody(container: HTMLElement): void {}
-
-	dispose() {
-		this.disposeSidebarMutationObserver();
-	}
-
-	disposeSidebarMutationObserver() {
-		if (document.body.contains(this._sidebarMutationObserver.el) && this._sidebarMutationObserver.obs) {
-			this._sidebarMutationObserver.obs.disconnect();
-		}
-	}
 	protected layoutBody(height: number, width: number): void {
-		this._updateStyle();
-		const sidebar = document.getElementById('workbench.parts.sidebar');
-		if (sidebar) {
-			this.disposeSidebarMutationObserver();
-			var obs = new MutationObserver(this._updateSidebarStyle);
-			obs.observe(sidebar, { attributeFilter: ['style'] });
-			this._sidebarMutationObserver.obs = obs;
-			this._sidebarMutationObserver.el = sidebar;
-		}
+		this.element.setAttribute('style', 'width: 100%;height:100%;');
 	}
 }
