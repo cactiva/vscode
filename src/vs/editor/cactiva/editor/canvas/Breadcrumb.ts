@@ -26,10 +26,10 @@ export default observer(({ canvas, onClick }: any) => {
 						}}
 					>
 						${canvas.breadcrumbs.map((nodeInfo: IEditorNodeInfo, idx: number) => {
-							const node = nodeInfo.node;
+							const node = nodeInfo.node.get();
 							if (node.wasForgotten()) return null;
 
-							const tagName = getTagName(nodeInfo.node);
+							const tagName = getTagName(node);
 							const hovered = canvas.hoveredNode === node ? 'hover' : '';
 							const selected = canvas.selectedNode?.node === node ? 'selected' : '';
 							return html`

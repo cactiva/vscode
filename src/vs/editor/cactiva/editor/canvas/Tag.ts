@@ -9,6 +9,7 @@ import { getChildrenFromNode } from 'vs/editor/cactiva/libs/morph/getChildrenFro
 import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
 import { IEditorCanvas } from 'vs/editor/cactiva/models/cactiva';
 import Divider from './Divider';
+import { useRef } from 'react';
 const icProps = URI.parse(require.toUrl('../../assets/images/ic-props.svg'));
 
 interface ISingleTag {
@@ -36,13 +37,16 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(
 		let tagName = getTagName(node);
 		const childrenNode = getChildrenFromNode(node);
 		const hovered = canvas.hoveredNode === node ? 'hover' : '';
-		const selected = canvas.selectedNode?.node === node ? 'selected' : '';
+		const selected = canvas.selectedNode?.node.get() === node ? 'selected' : '';
 
 		(node.compilerNode as any).cactivaPath = nodePath;
+		(node.compilerNode as any).domRef = useRef(undefined as HTMLElement | undefined);
+
+		dragRef((node.compilerNode as any).domRef);
 
 		return html`
 			<div
-				ref=${dragRef}
+				ref=${(node.compilerNode as any).domRef}
 				onClick=${(e: any) => {
 					if (onClick) {
 						onClick(node, nodePath);

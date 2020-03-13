@@ -8,6 +8,7 @@ import { getNodeAttributes } from 'vs/editor/cactiva/libs/morph/getNodeAttribute
 import { List } from 'office-ui-fabric-react';
 import { JsxAttributeLike } from 'ts-morph';
 import Attribute from 'vs/editor/cactiva/editor/props/Attribute';
+import { debounce } from 'lodash';
 
 export default observer(({ domNode }: any) => {
 	let bgColor = 'white';
@@ -26,11 +27,26 @@ export default observer(({ domNode }: any) => {
 	}, [pe.nodeInfo]);
 
 	useEffect(() => {
-		const mo = new MutationObserver(() => {
-			pe.hidden = true;
-		});
-
+		let sidebarClass = '';
 		const sidebar = document.getElementById('workbench.parts.sidebar');
+		const observerChanged = debounce(
+			() => {
+				const sidebarContent = sidebar?.querySelector('.content > .composite.viewlet');
+				if (sidebarContent) {
+					if (sidebarClass === '' || sidebarClass !== sidebarContent.className) {
+						pe.hidden = true;
+					}
+					sidebarClass = sidebarContent.className;
+				}
+			},
+			100,
+			{
+				trailing: true
+			}
+		);
+		observerChanged();
+		const mo = new MutationObserver(observerChanged);
+
 		if (sidebar) {
 			mo.observe(sidebar, { childList: true, subtree: true });
 		}
@@ -41,12 +57,14 @@ export default observer(({ domNode }: any) => {
 
 	if (!pe.nodeInfo) return null;
 
-	const attributes = getNodeAttributes(pe.nodeInfo.node);
+	const node = pe.nodeInfo.node.get();
+	if (node.wasForgotten()) return null;
+	const attributes = getNodeAttributes(node);
 	return ReactDOM.createPortal(
 		html`
 			<div className="cactiva-props-editor" style=${{ display: pe.hidden ? 'none' : 'flex' }}>
 				<div className="title row pad space-between">
-					<div>${getTagName(pe.nodeInfo.node)}</div>
+					<div>${getTagName(node)}</div>
 					<div
 						className="close-btn center"
 						onClick=${() => {
@@ -78,7 +96,9 @@ export default observer(({ domNode }: any) => {
 						display: flex;
 						flex-direction: column;
 					}
-
+					.cactiva-props-editor .highlight:active {
+						background: rgba(255, 255, 0, 0.3);
+					}
 					.cactiva-props-editor div {
 						display: flex;
 						flex-direction: column;

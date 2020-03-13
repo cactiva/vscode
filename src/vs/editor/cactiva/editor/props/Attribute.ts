@@ -3,10 +3,11 @@ import html from 'vs/editor/cactiva/libs/html';
 import { selectSourceFromNode } from 'vs/editor/cactiva/libs/morph/selectSourceFromNode';
 
 export default ({ item }: { item: JsxAttribute }) => {
+	if (!item || (item && item.wasForgotten())) return null;
 	const kindName = getKindName(item);
 	return html`
 		<div
-			className="prop row"
+			className="prop row pointer highlight"
 			onClick=${() => {
 				selectSourceFromNode(item);
 			}}
@@ -14,7 +15,7 @@ export default ({ item }: { item: JsxAttribute }) => {
 			<div className="title">
 				${item.getName()}
 			</div>
-			<div className="field row space-between pointer">
+			<div className="field row space-between">
 				<div className="input">
 					${kindName}
 				</div>

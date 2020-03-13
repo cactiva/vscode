@@ -29,8 +29,5 @@ export function getTagName(node: Node): string {
 			break;
 	}
 
-	if (tagName === '') {
-		console.log(node);
-	}
 	return tagName;
 }

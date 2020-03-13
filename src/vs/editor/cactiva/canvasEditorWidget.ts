@@ -22,6 +22,9 @@ import { IContextKeyService } from 'vs/platform/contextkey/common/contextkey';
 import { IInstantiationService } from 'vs/platform/instantiation/common/instantiation';
 import { INotificationService } from 'vs/platform/notification/common/notification';
 import { IThemeService } from 'vs/platform/theme/common/themeService';
+import { getRootNodes } from 'vs/editor/cactiva/libs/morph/getRootNodes';
+import { Node } from 'ts-morph';
+import { selectRootNode } from 'vs/editor/cactiva/libs/morph/selectRootNode';
 
 export class CanvasEditorWidget extends CodeEditorWidget {
 	private readonly _domEl: HTMLElement;
@@ -141,11 +144,18 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			this._modelData?.listenersToRemove.push(
 				this.onDidChangeCursorPosition(
 					debounce(
-						e => {
+						async e => {
 							const id = this._modelData?.model.id;
 							if (id) {
 								const canvas = cactiva.canvas[id];
 								const source = canvas.source;
+
+								// prevent selecting loop between select from canvas and select from code editor.
+								if (canvas.selectingFromCanvas) {
+									canvas.selectingFromCanvas = false;
+									return;
+								}
+
 								if (source) {
 									const range = new Range(0, 0, e.position.lineNumber, e.position.column);
 									let src = this._modelData?.viewModel.getPlainTextToCopy([range], false, false);
@@ -155,13 +165,24 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 										}
 										const rawNode = source.getDescendantAtPos(src.length);
 										const node = rawNode?.compilerNode;
-										if (node) {
+										if (node && canvas.source) {
 											let cursor = node;
+											let rootIndex = -1;
+											const rootNodes = getRootNodes(canvas.source).map(e => e.compilerNode);
+
 											while (cursor !== undefined && !(cursor as any).cactivaPath) {
+												rootIndex = rootNodes.indexOf(cursor as any);
+												if (rootIndex >= 0) {
+													break;
+												}
 												cursor = cursor.parent;
 											}
-											if (cursor && (cursor as any).cactivaPath) {
-												selectNode(canvas, (cursor as any).cactivaPath, false);
+											if (cursor) {
+												if ((cursor as any).cactivaPath) {
+													selectNode(canvas, (cursor as any).cactivaPath, 'code');
+												} else {
+													await selectRootNode(canvas, rootIndex);
+												}
 											}
 										}
 									}
@@ -179,10 +200,12 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 						e => {
 							const model = this._modelData?.model;
 							if (model) {
-								cactiva.canvas[model.id].source = cactiva.project.createSourceFile(model.uri.fsPath, model.getValue(), {
+								const canvas = cactiva.canvas[model.id];
+								canvas.source = cactiva.project.createSourceFile(model.uri.fsPath, model.getValue(), {
 									overwrite: true
 								});
 								syncSource(cactiva.canvas[model.id]);
+								cactiva.propsEditor.nodeInfo = undefined;
 							}
 						},
 						200,

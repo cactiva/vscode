@@ -49,18 +49,8 @@
 
 .singletag.selected {
 	border: 1px solid rgb(6, 95, 212);
-	background-color: transparent;
-	background-image: linear-gradient(
-		45deg,
-		rgba(6, 95, 212, 0.2) 16.67%,
-		rgba(255, 255, 255, 0) 16.67%,
-		rgba(255, 255, 255, 0) 50%,
-		rgba(6, 95, 212, 0.2) 50%,
-		rgba(6, 95, 212, 0.2) 66.67%,
-		rgba(255, 255, 255, 0) 66.67%,
-		rgba(255, 255, 255, 0) 100%
-	);
 	background-size: 30px 30px;
+	box-shadow: inset 0 0 3px 0px rgb(6, 95, 212);
 }
 .singletag .expression .expression-code {
 	padding: 5px;
@@ -94,15 +84,5 @@
 	box-shadow: inset 0 0 0 1px rgb(6, 95, 212);
 	background-color: transparent;
 	border-radius: 3px;
-	background-image: linear-gradient(
-		45deg,
-		rgba(6, 95, 212, 0.1) 16.67%,
-		rgba(255, 255, 255, 0) 16.67%,
-		rgba(255, 255, 255, 0) 50%,
-		rgba(6, 95, 212, 0.1) 50%,
-		rgba(6, 95, 212, 0.1) 66.67%,
-		rgba(255, 255, 255, 0) 66.67%,
-		rgba(255, 255, 255, 0) 100%
-	);
 	background-size: 30px 30px;
 }
