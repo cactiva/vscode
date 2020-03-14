@@ -9,6 +9,7 @@ import html from 'vs/editor/cactiva/libs/html';
 import { selectNode } from 'vs/editor/cactiva/libs/morph/selectNode';
 import { cactiva, IEditorCanvas, IEditorNodeInfo } from 'vs/editor/cactiva/models/cactiva';
 import { Range } from 'vs/editor/common/core/range';
+import 'vs/css!./Editor';
 
 export default observer(({ canvas }: { canvas: IEditorCanvas }) => {
 	if (!canvas)
@@ -61,26 +62,6 @@ export default observer(({ canvas }: { canvas: IEditorCanvas }) => {
 				</div>
 				<${Breadcrumb} canvas=${canvas} onClick=${breadcrumbClicked} />
 			</div>
-			<style>
-				.cactiva-canvas {
-					display: flex;
-					flex-direction: column;
-					width: 100%;
-					height: 100%;
-				}
-
-				.cactiva-canvas-content {
-					display: flex;
-					flex-direction: column;
-					flex: 1;
-					background: white;
-					margin: 5px;
-					margin-bottom: 2px;
-					border-radius: 5px;
-					padding: 10px;
-					overflow-y: auto;
-				}
-			</style>
 		<//>
 	`;
 });
