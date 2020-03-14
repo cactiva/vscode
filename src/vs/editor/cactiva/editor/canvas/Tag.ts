@@ -66,7 +66,7 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(
 				<div className="headertag">
 					<span className="tagname"> ${tagName} </span>
 					<div className="btn props">
-						<img src=${icProps} className="ic-props" height="20" width="20" />
+						<img src=${icProps} className="ic-props" height="16" width="16" />
 					</div>
 				</div>
 				${childrenNode.length > 0 &&

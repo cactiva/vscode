@@ -15,3 +15,8 @@
 	padding: 10px;
 	overflow-y: auto;
 }
+
+.expression-code {
+	margin-bottom: 3px;
+	color: #333;
+}
