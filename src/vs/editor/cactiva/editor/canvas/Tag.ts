@@ -7,9 +7,10 @@ import { TagChild } from 'vs/editor/cactiva/editor/canvas/TagChild';
 import html from 'vs/editor/cactiva/libs/html';
 import { getChildrenFromNode } from 'vs/editor/cactiva/libs/morph/getChildrenFromNode';
 import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
-import { IEditorCanvas } from 'vs/editor/cactiva/models/cactiva';
+import { IEditorCanvas, cactiva } from 'vs/editor/cactiva/models/cactiva';
 import Divider from './Divider';
 import { useRef } from 'react';
+import { TagPreview } from 'vs/editor/cactiva/editor/canvas/TagPreview';
 const icProps = URI.parse(require.toUrl('../../assets/images/ic-props.svg'));
 
 interface ISingleTag {
@@ -69,6 +70,7 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(
 						<img src=${icProps} className="ic-props" height="20" width="20" />
 					</div>
 				</div>
+				<${TagPreview} node=${node} />
 				${childrenNode.length > 0 &&
 					html`
 						<div className="children">
