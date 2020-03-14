@@ -1,9 +1,18 @@
 import { observer } from 'mobx-react-lite';
 import html from 'vs/editor/cactiva/libs/html';
 import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
-import { IEditorNodeInfo } from 'vs/editor/cactiva/models/cactiva';
+import { IEditorNodeInfo, cactiva } from 'vs/editor/cactiva/models/cactiva';
+import { URI } from 'vs/base/common/uri';
+import 'vs/css!./Breadcrumb';
+
+const icLayout = URI.parse(require.toUrl('../../assets/images/ic-layout.svg'));
+const icPreview = URI.parse(require.toUrl('../../assets/images/ic-preview.svg'));
 
 export default observer(({ canvas, onClick }: any) => {
+	const mode = cactiva.mode;
+	const changeMode = (mode: 'preview' | 'layout') => {
+		cactiva.mode = mode;
+	};
 	return html`
 		<div className="tabs-breadcrumbs">
 			<div className="breadcrumbs-control relative-path backslash-path">
@@ -66,14 +75,28 @@ export default observer(({ canvas, onClick }: any) => {
 							`;
 						})}
 					</div>
+					<div className="canvas-toolbar">
+						<div
+							className=${`btn btn-toolbar btn-layout ${mode === 'preview' ? 'active' : ''}`}
+							onClick=${() => {
+								changeMode('preview');
+							}}
+						>
+							<img src=${icPreview} className="ic ic-preview" height="14" width="14" />
+						</div>
+						<div
+							className=${`btn btn-toolbar btn-preview ${mode === 'layout' ? 'active' : ''}`}
+							onClick=${() => {
+								changeMode('layout');
+							}}
+						>
+							<img src=${icLayout} className="ic ic-layout" height="14" width="14" />
+						</div>
+					</div>
+					<div className="breadcrumb-first-spacer"></div>
 				</div>
 			</div>
-			<style>
-				.breadcrumb-first-spacer {
-					width: 8px;
-					height: 22pc;
-				}
-			</style>
+			<style></style>
 		</div>
 	`;
 });
