@@ -13,7 +13,7 @@ export function selectRootNode(canvas: IEditorCanvas, index: number): Promise<IE
 			getNodeFromPath(canvas.source, index.toString(), (n, path) => {
 				const result = generateNodeInfo(n, path);
 				canvas.breadcrumbs.push(result);
-				cactiva.propsEditor.nodeInfo = canvas.breadcrumbs[0];
+				cactiva.propsEditor.hidden = true;
 				resolve(result);
 			});
 		}

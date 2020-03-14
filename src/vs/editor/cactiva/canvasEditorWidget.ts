@@ -9,7 +9,9 @@ import { ICodeEditorService } from 'vs/editor/browser/services/codeEditorService
 import { CodeEditorWidget, ICodeEditorWidgetOptions } from 'vs/editor/browser/widget/codeEditorWidget';
 import { CanvasPane } from 'vs/editor/cactiva/CanvasPane';
 import { CodePane } from 'vs/editor/cactiva/CodePane';
+import { getRootNodes } from 'vs/editor/cactiva/libs/morph/getRootNodes';
 import { selectNode } from 'vs/editor/cactiva/libs/morph/selectNode';
+import { selectRootNode } from 'vs/editor/cactiva/libs/morph/selectRootNode';
 import { syncSource } from 'vs/editor/cactiva/libs/morph/syncSource';
 import { cactiva } from 'vs/editor/cactiva/models/cactiva';
 import { IEditorConstructionOptions } from 'vs/editor/common/config/editorOptions';
@@ -22,9 +24,6 @@ import { IContextKeyService } from 'vs/platform/contextkey/common/contextkey';
 import { IInstantiationService } from 'vs/platform/instantiation/common/instantiation';
 import { INotificationService } from 'vs/platform/notification/common/notification';
 import { IThemeService } from 'vs/platform/theme/common/themeService';
-import { getRootNodes } from 'vs/editor/cactiva/libs/morph/getRootNodes';
-import { Node } from 'ts-morph';
-import { selectRootNode } from 'vs/editor/cactiva/libs/morph/selectRootNode';
 
 export class CanvasEditorWidget extends CodeEditorWidget {
 	private readonly _domEl: HTMLElement;

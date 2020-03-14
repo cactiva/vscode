@@ -8,11 +8,20 @@ import * as nls from 'vs/nls';
 import { Registry } from 'vs/platform/registry/common/platform';
 import { Action } from 'vs/base/common/actions';
 import { CompositePart } from 'vs/workbench/browser/parts/compositePart';
-import { Viewlet, ViewletRegistry, Extensions as ViewletExtensions, ViewletDescriptor } from 'vs/workbench/browser/viewlet';
+import {
+	Viewlet,
+	ViewletRegistry,
+	Extensions as ViewletExtensions,
+	ViewletDescriptor
+} from 'vs/workbench/browser/viewlet';
 import { IWorkbenchActionRegistry, Extensions as ActionExtensions } from 'vs/workbench/common/actions';
 import { SyncActionDescriptor } from 'vs/platform/actions/common/actions';
 import { IViewletService } from 'vs/workbench/services/viewlet/browser/viewlet';
-import { IWorkbenchLayoutService, Parts, Position as SideBarPosition } from 'vs/workbench/services/layout/browser/layoutService';
+import {
+	IWorkbenchLayoutService,
+	Parts,
+	Position as SideBarPosition
+} from 'vs/workbench/services/layout/browser/layoutService';
 import { IViewlet, SidebarFocusContext, ActiveViewletContext } from 'vs/workbench/common/viewlet';
 import { IStorageService } from 'vs/platform/storage/common/storage';
 import { IContextMenuService } from 'vs/platform/contextview/browser/contextView';
@@ -23,7 +32,12 @@ import { IInstantiationService } from 'vs/platform/instantiation/common/instanti
 import { Event, Emitter } from 'vs/base/common/event';
 import { IThemeService } from 'vs/platform/theme/common/themeService';
 import { contrastBorder } from 'vs/platform/theme/common/colorRegistry';
-import { SIDE_BAR_TITLE_FOREGROUND, SIDE_BAR_BACKGROUND, SIDE_BAR_FOREGROUND, SIDE_BAR_BORDER } from 'vs/workbench/common/theme';
+import {
+	SIDE_BAR_TITLE_FOREGROUND,
+	SIDE_BAR_BACKGROUND,
+	SIDE_BAR_FOREGROUND,
+	SIDE_BAR_BORDER
+} from 'vs/workbench/common/theme';
 import { INotificationService } from 'vs/platform/notification/common/notification';
 import { EventType, addDisposableListener, trackFocus } from 'vs/base/browser/dom';
 import { StandardMouseEvent } from 'vs/base/browser/mouseEvent';
@@ -36,9 +50,9 @@ import { assertIsDefined } from 'vs/base/common/types';
 import { LocalSelectionTransfer } from 'vs/workbench/browser/dnd';
 import { DraggedViewIdentifier } from 'vs/workbench/browser/parts/views/viewPaneContainer';
 import { DraggedCompositeIdentifier } from 'vs/workbench/browser/parts/compositeBarActions';
+import { cactiva } from 'vs/editor/cactiva/models/cactiva';
 
 export class SidebarPart extends CompositePart<Viewlet> implements IViewletService {
-
 	_serviceBrand: undefined;
 
 	static readonly activeViewletSettingsKey = 'workbench.sidebar.activeviewletid';
@@ -71,13 +85,19 @@ export class SidebarPart extends CompositePart<Viewlet> implements IViewletServi
 
 	//#endregion
 
-	get onDidViewletRegister(): Event<ViewletDescriptor> { return <Event<ViewletDescriptor>>this.viewletRegistry.onDidRegister; }
+	get onDidViewletRegister(): Event<ViewletDescriptor> {
+		return <Event<ViewletDescriptor>>this.viewletRegistry.onDidRegister;
+	}
 
 	private _onDidViewletDeregister = this._register(new Emitter<ViewletDescriptor>());
 	readonly onDidViewletDeregister = this._onDidViewletDeregister.event;
 
-	get onDidViewletOpen(): Event<IViewlet> { return Event.map(this.onDidCompositeOpen.event, compositeEvent => <IViewlet>compositeEvent.composite); }
-	get onDidViewletClose(): Event<IViewlet> { return this.onDidCompositeClose.event as Event<IViewlet>; }
+	get onDidViewletOpen(): Event<IViewlet> {
+		return Event.map(this.onDidCompositeOpen.event, compositeEvent => <IViewlet>compositeEvent.composite);
+	}
+	get onDidViewletClose(): Event<IViewlet> {
+		return this.onDidCompositeClose.event as Event<IViewlet>;
+	}
 
 	private viewletRegistry: ViewletRegistry;
 	private sideBarFocusContextKey: IContextKey<boolean>;
@@ -112,7 +132,7 @@ export class SidebarPart extends CompositePart<Viewlet> implements IViewletServi
 			'viewlet',
 			SIDE_BAR_TITLE_FOREGROUND,
 			Parts.SIDEBAR_PART,
-			{ hasTitle: true, borderWidth: () => (this.getColor(SIDE_BAR_BORDER) || this.getColor(contrastBorder)) ? 1 : 0 }
+			{ hasTitle: true, borderWidth: () => (this.getColor(SIDE_BAR_BORDER) || this.getColor(contrastBorder) ? 1 : 0) }
 		);
 
 		this.viewletRegistry = Registry.as<ViewletRegistry>(ViewletExtensions.Viewlets);
@@ -124,29 +144,34 @@ export class SidebarPart extends CompositePart<Viewlet> implements IViewletServi
 	}
 
 	private registerListeners(): void {
-
 		// Viewlet open
-		this._register(this.onDidViewletOpen(viewlet => {
-			this.activeViewletContextKey.set(viewlet.getId());
-		}));
+		this._register(
+			this.onDidViewletOpen(viewlet => {
+				this.activeViewletContextKey.set(viewlet.getId());
+			})
+		);
 
 		// Viewlet close
-		this._register(this.onDidViewletClose(viewlet => {
-			if (this.activeViewletContextKey.get() === viewlet.getId()) {
-				this.activeViewletContextKey.reset();
-			}
-		}));
+		this._register(
+			this.onDidViewletClose(viewlet => {
+				if (this.activeViewletContextKey.get() === viewlet.getId()) {
+					this.activeViewletContextKey.reset();
+				}
+			})
+		);
 
 		// Viewlet deregister
-		this._register(this.registry.onDidDeregister(async (viewletDescriptor: ViewletDescriptor) => {
-			const activeViewlet = this.getActiveViewlet();
-			if (!activeViewlet || activeViewlet.getId() === viewletDescriptor.id) {
-				await this.openViewlet(this.getDefaultViewletId());
-			}
+		this._register(
+			this.registry.onDidDeregister(async (viewletDescriptor: ViewletDescriptor) => {
+				const activeViewlet = this.getActiveViewlet();
+				if (!activeViewlet || activeViewlet.getId() === viewletDescriptor.id) {
+					await this.openViewlet(this.getDefaultViewletId());
+				}
 
-			this.removeComposite(viewletDescriptor.id);
-			this._onDidViewletDeregister.fire(viewletDescriptor);
-		}));
+				this.removeComposite(viewletDescriptor.id);
+				this._onDidViewletDeregister.fire(viewletDescriptor);
+			})
+		);
 	}
 
 	create(parent: HTMLElement): void {
@@ -162,32 +187,48 @@ export class SidebarPart extends CompositePart<Viewlet> implements IViewletServi
 	createTitleArea(parent: HTMLElement): HTMLElement {
 		const titleArea = super.createTitleArea(parent);
 
-		this._register(addDisposableListener(titleArea, EventType.CONTEXT_MENU, e => {
-			this.onTitleAreaContextMenu(new StandardMouseEvent(e));
-		}));
+		this._register(
+			addDisposableListener(titleArea, EventType.CONTEXT_MENU, e => {
+				this.onTitleAreaContextMenu(new StandardMouseEvent(e));
+			})
+		);
 
 		this.titleLabelElement!.draggable = true;
-		this._register(addDisposableListener(this.titleLabelElement!, EventType.DRAG_START, e => {
-			const activeViewlet = this.getActiveViewlet();
-			if (activeViewlet) {
-				const visibleViews = activeViewlet.getViewPaneContainer().views.filter(v => v.isVisible());
-				if (visibleViews.length === 1) {
-					LocalSelectionTransfer.getInstance<DraggedViewIdentifier>().setData([new DraggedViewIdentifier(visibleViews[0].id)], DraggedViewIdentifier.prototype);
-				} else {
-					LocalSelectionTransfer.getInstance<DraggedCompositeIdentifier>().setData([new DraggedCompositeIdentifier(activeViewlet.getId())], DraggedCompositeIdentifier.prototype);
+		this._register(
+			addDisposableListener(this.titleLabelElement!, EventType.DRAG_START, e => {
+				const activeViewlet = this.getActiveViewlet();
+				if (activeViewlet) {
+					const visibleViews = activeViewlet.getViewPaneContainer().views.filter(v => v.isVisible());
+					if (visibleViews.length === 1) {
+						LocalSelectionTransfer.getInstance<DraggedViewIdentifier>().setData(
+							[new DraggedViewIdentifier(visibleViews[0].id)],
+							DraggedViewIdentifier.prototype
+						);
+					} else {
+						LocalSelectionTransfer.getInstance<DraggedCompositeIdentifier>().setData(
+							[new DraggedCompositeIdentifier(activeViewlet.getId())],
+							DraggedCompositeIdentifier.prototype
+						);
+					}
 				}
-			}
-		}));
+			})
+		);
 
-		this._register(addDisposableListener(this.titleLabelElement!, EventType.DRAG_END, e => {
-			if (LocalSelectionTransfer.getInstance<DraggedViewIdentifier>().hasData(DraggedViewIdentifier.prototype)) {
-				LocalSelectionTransfer.getInstance<DraggedViewIdentifier>().clearData(DraggedViewIdentifier.prototype);
-			}
+		this._register(
+			addDisposableListener(this.titleLabelElement!, EventType.DRAG_END, e => {
+				if (LocalSelectionTransfer.getInstance<DraggedViewIdentifier>().hasData(DraggedViewIdentifier.prototype)) {
+					LocalSelectionTransfer.getInstance<DraggedViewIdentifier>().clearData(DraggedViewIdentifier.prototype);
+				}
 
-			if (LocalSelectionTransfer.getInstance<DraggedCompositeIdentifier>().hasData(DraggedCompositeIdentifier.prototype)) {
-				LocalSelectionTransfer.getInstance<DraggedCompositeIdentifier>().clearData(DraggedCompositeIdentifier.prototype);
-			}
-		}));
+				if (
+					LocalSelectionTransfer.getInstance<DraggedCompositeIdentifier>().hasData(DraggedCompositeIdentifier.prototype)
+				) {
+					LocalSelectionTransfer.getInstance<DraggedCompositeIdentifier>().clearData(
+						DraggedCompositeIdentifier.prototype
+					);
+				}
+			})
+		);
 
 		return titleArea;
 	}
@@ -284,11 +325,15 @@ export class SidebarPart extends CompositePart<Viewlet> implements IViewletServi
 			}
 		}
 
+		cactiva.propsEditor.hidden = true;
+
 		return this.openComposite(id, focus) as Viewlet;
 	}
 
 	protected getTitleAreaDropDownAnchorAlignment(): AnchorAlignment {
-		return this.layoutService.getSideBarPosition() === SideBarPosition.LEFT ? AnchorAlignment.LEFT : AnchorAlignment.RIGHT;
+		return this.layoutService.getSideBarPosition() === SideBarPosition.LEFT
+			? AnchorAlignment.LEFT
+			: AnchorAlignment.RIGHT;
 	}
 
 	private onTitleAreaContextMenu(event: StandardMouseEvent): void {
@@ -296,7 +341,7 @@ export class SidebarPart extends CompositePart<Viewlet> implements IViewletServi
 		if (activeViewlet) {
 			const contextMenuActions = activeViewlet ? activeViewlet.getContextMenuActions() : [];
 			if (contextMenuActions.length) {
-				const anchor: { x: number, y: number } = { x: event.posx, y: event.posy };
+				const anchor: { x: number; y: number } = { x: event.posx, y: event.posy };
 				this.contextMenuService.showContextMenu({
 					getAnchor: () => anchor,
 					getActions: () => contextMenuActions,
@@ -315,9 +360,8 @@ export class SidebarPart extends CompositePart<Viewlet> implements IViewletServi
 }
 
 class FocusSideBarAction extends Action {
-
 	static readonly ID = 'workbench.action.focusSideBar';
-	static readonly LABEL = nls.localize('focusSideBar', "Focus into Side Bar");
+	static readonly LABEL = nls.localize('focusSideBar', 'Focus into Side Bar');
 
 	constructor(
 		id: string,
@@ -329,7 +373,6 @@ class FocusSideBarAction extends Action {
 	}
 
 	async run(): Promise<void> {
-
 		// Show side bar
 		if (!this.layoutService.isVisible(Parts.SIDEBAR_PART)) {
 			this.layoutService.setSideBarHidden(false);
@@ -345,8 +388,12 @@ class FocusSideBarAction extends Action {
 }
 
 const registry = Registry.as<IWorkbenchActionRegistry>(ActionExtensions.WorkbenchActions);
-registry.registerWorkbenchAction(SyncActionDescriptor.create(FocusSideBarAction, FocusSideBarAction.ID, FocusSideBarAction.LABEL, {
-	primary: KeyMod.CtrlCmd | KeyCode.KEY_0
-}), 'View: Focus into Side Bar', nls.localize('viewCategory', "View"));
+registry.registerWorkbenchAction(
+	SyncActionDescriptor.create(FocusSideBarAction, FocusSideBarAction.ID, FocusSideBarAction.LABEL, {
+		primary: KeyMod.CtrlCmd | KeyCode.KEY_0
+	}),
+	'View: Focus into Side Bar',
+	nls.localize('viewCategory', 'View')
+);
 
 registerSingleton(IViewletService, SidebarPart);

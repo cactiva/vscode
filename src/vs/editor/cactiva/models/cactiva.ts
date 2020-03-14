@@ -3,7 +3,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { IObservableValue, observable } from 'mobx';
-import { MutableRefObject } from 'react';
 import { Node, Project, SourceFile } from 'ts-morph';
 import { ModelData } from 'vs/editor/browser/widget/codeEditorWidget';
 import { CanvasEditorWidget } from 'vs/editor/cactiva/canvasEditorWidget';

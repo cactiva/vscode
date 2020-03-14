@@ -1,14 +1,13 @@
 import { observer } from 'mobx-react-lite';
-import html from 'vs/editor/cactiva/libs/html';
-import * as ReactDOM from 'react-dom';
-import { useEffect } from 'react';
-import { cactiva } from 'vs/editor/cactiva/models/cactiva';
-import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
-import { getNodeAttributes } from 'vs/editor/cactiva/libs/morph/getNodeAttributes';
 import { List } from 'office-ui-fabric-react';
+import { useEffect } from 'react';
+import * as ReactDOM from 'react-dom';
 import { JsxAttributeLike } from 'ts-morph';
 import Attribute from 'vs/editor/cactiva/editor/props/Attribute';
-import { debounce } from 'lodash';
+import html from 'vs/editor/cactiva/libs/html';
+import { getNodeAttributes } from 'vs/editor/cactiva/libs/morph/getNodeAttributes';
+import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
+import { cactiva } from 'vs/editor/cactiva/models/cactiva';
 
 export default observer(({ domNode }: any) => {
 	let bgColor = 'white';
@@ -25,35 +24,6 @@ export default observer(({ domNode }: any) => {
 	useEffect(() => {
 		pe.hidden = false;
 	}, [pe.nodeInfo]);
-
-	useEffect(() => {
-		let sidebarClass = '';
-		const sidebar = document.getElementById('workbench.parts.sidebar');
-		const observerChanged = debounce(
-			() => {
-				const sidebarContent = sidebar?.querySelector('.content > .composite.viewlet');
-				if (sidebarContent) {
-					if (sidebarClass === '' || sidebarClass !== sidebarContent.className) {
-						pe.hidden = true;
-					}
-					sidebarClass = sidebarContent.className;
-				}
-			},
-			100,
-			{
-				trailing: true
-			}
-		);
-		observerChanged();
-		const mo = new MutationObserver(observerChanged);
-
-		if (sidebar) {
-			mo.observe(sidebar, { childList: true, subtree: true });
-		}
-		return () => {
-			mo.disconnect();
-		};
-	}, []);
 
 	if (!pe.nodeInfo) return null;
 

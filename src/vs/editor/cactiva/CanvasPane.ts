@@ -1,19 +1,17 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Cactiva. All rights reserved.
  *--------------------------------------------------------------------------------------------*/
+import { observable } from 'mobx';
+import { observer } from 'mobx-react-lite';
 import * as ReactDOM from 'react-dom';
 import { IPaneOptions, Pane } from 'vs/base/browser/ui/splitview/paneview';
 import { IView } from 'vs/base/browser/ui/splitview/splitview';
 import { ModelData } from 'vs/editor/browser/widget/codeEditorWidget';
+import { CanvasEditorWidget } from 'vs/editor/cactiva/canvasEditorWidget';
 import Editor from 'vs/editor/cactiva/editor/Editor';
 import html from 'vs/editor/cactiva/libs/html';
-import { getNodeFromPath } from 'vs/editor/cactiva/libs/morph/getNodeFromPath';
-import { cactiva, IEditorCanvas } from 'vs/editor/cactiva/models/cactiva';
-import { observer } from 'mobx-react-lite';
-import { observable } from 'mobx';
-import { CanvasEditorWidget } from 'vs/editor/cactiva/canvasEditorWidget';
-import { generateNodeInfo } from 'vs/editor/cactiva/libs/morph/generateNodeInfo';
 import { selectRootNode } from 'vs/editor/cactiva/libs/morph/selectRootNode';
+import { cactiva, IEditorCanvas } from 'vs/editor/cactiva/models/cactiva';
 
 export class CanvasPane extends Pane implements IView {
 	private _canvas = observable({ id: '', data: null as IEditorCanvas | null });
