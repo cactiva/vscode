@@ -1,16 +1,16 @@
 import { observer } from 'mobx-react-lite';
+import { useRef } from 'react';
 import { useDrag } from 'react-dnd';
 import { Node } from 'ts-morph';
 import { URI } from 'vs/base/common/uri';
 import 'vs/css!./Tag';
 import { TagChild } from 'vs/editor/cactiva/editor/canvas/TagChild';
+import { TagPreview } from 'vs/editor/cactiva/editor/canvas/TagPreview';
 import html from 'vs/editor/cactiva/libs/html';
 import { getChildrenFromNode } from 'vs/editor/cactiva/libs/morph/getChildrenFromNode';
 import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
-import { IEditorCanvas, cactiva } from 'vs/editor/cactiva/models/cactiva';
+import { IEditorCanvas } from 'vs/editor/cactiva/models/cactiva';
 import Divider from './Divider';
-import { useRef } from 'react';
-import { TagPreview } from 'vs/editor/cactiva/editor/canvas/TagPreview';
 const icProps = URI.parse(require.toUrl('../../assets/images/ic-props.svg'));
 
 interface ISingleTag {

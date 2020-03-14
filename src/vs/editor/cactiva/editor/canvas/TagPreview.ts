@@ -1,11 +1,10 @@
 import { observer } from 'mobx-react-lite';
-import html from 'vs/editor/cactiva/libs/html';
-import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
 import { Node } from 'ts-morph';
+import html from 'vs/editor/cactiva/libs/html';
 import { getImportClause } from 'vs/editor/cactiva/libs/morph/getNodeImport';
-import * as Tags from 'vs/editor/cactiva/libs/TagsPreview/index';
 import getStyle from 'vs/editor/cactiva/libs/morph/getStyle';
-import { getChildrenFromNode } from 'vs/editor/cactiva/libs/morph/getChildrenFromNode';
+import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
+import * as Tags from 'vs/editor/cactiva/libs/TagsPreview/index';
 
 interface ITagPreview {
 	children?: any;
@@ -20,7 +19,6 @@ export const TagPreview: React.FunctionComponent<ITagPreview> = observer((props:
 	if (!node || (node && node.wasForgotten())) return null;
 	let tagName = getTagName(node);
 	let style = getStyle(node);
-	const childrenNode = getChildrenFromNode(node);
 	let importClause = '';
 	switch (getImportClause(node)) {
 		case 'react-native':
