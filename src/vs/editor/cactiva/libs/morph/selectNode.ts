@@ -16,9 +16,15 @@ export function selectNode(canvas: IEditorCanvas, nodePath: string, selector: 'c
 		canvas.selectedNode = canvas.breadcrumbs[canvas.breadcrumbs.length - 1];
 
 		if (selector === 'code') {
+			// only show propsEditor when it's not hidden
 			if (!cactiva.propsEditor.hidden) {
 				cactiva.propsEditor.nodeInfo = canvas.selectedNode;
 			}
+
+			// always show propsEditor on code select
+			cactiva.propsEditor.hidden = true;
+			cactiva.propsEditor.nodeInfo = canvas.selectedNode;
+
 			const cnode = canvas.selectedNode.node.get().compilerNode;
 			const dom = (cnode as any).domRef;
 			if (dom && dom.current) {
@@ -35,6 +41,7 @@ export function selectNode(canvas: IEditorCanvas, nodePath: string, selector: 'c
 			canvas.selectingFromCanvas = true;
 			canvas.editor?.setSelection(new Range(s.line, s.column, e.line, e.column));
 			canvas.editor?.revealLineNearTop(s.line);
+			canvas.editor?.focus();
 		}
 	}
 }

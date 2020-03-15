@@ -1,8 +1,8 @@
-import { observer } from 'mobx-react-lite';
+import { observer, useObservable } from 'mobx-react-lite';
 import { List } from 'office-ui-fabric-react';
 import { useEffect } from 'react';
 import * as ReactDOM from 'react-dom';
-import { JsxAttributeLike } from 'ts-morph';
+import { JsxAttributeLike, JsxAttribute } from 'ts-morph';
 import Attribute from 'vs/editor/cactiva/editor/props/Attribute';
 import html from 'vs/editor/cactiva/libs/html';
 import { getNodeAttributes } from 'vs/editor/cactiva/libs/morph/getNodeAttributes';
@@ -20,21 +20,27 @@ export default observer(({ domNode }: any) => {
 		bgColor = sidebar.style.backgroundColor;
 		fontColor = sidebar.style.color;
 	}
+	const meta = useObservable({
+		tagName: '',
+		attributes: [] as JsxAttributeLike[]
+	});
 
 	useEffect(() => {
 		pe.hidden = false;
+		if (pe.nodeInfo) {
+			const node = pe.nodeInfo.node.get();
+			if (!node.wasForgotten()) {
+				meta.tagName = getTagName(node);
+				meta.attributes = getNodeAttributes(node);
+			}
+		}
 	}, [pe.nodeInfo]);
 
-	if (!pe.nodeInfo) return null;
-
-	const node = pe.nodeInfo.node.get();
-	if (node.wasForgotten()) return null;
-	const attributes = getNodeAttributes(node);
 	return ReactDOM.createPortal(
 		html`
 			<div className="cactiva-props-editor" style=${{ display: pe.hidden ? 'none' : 'flex' }}>
 				<div className="title row pad space-between">
-					<div>${getTagName(node)}</div>
+					<div>${meta.tagName}</div>
 					<div
 						className="close-btn center"
 						onClick=${() => {
@@ -46,7 +52,7 @@ export default observer(({ domNode }: any) => {
 				</div>
 				<div>
 					<${List}
-						items=${attributes}
+						items=${meta.attributes}
 						onRenderCell=${(item: JsxAttributeLike, index: number): JSX.Element => {
 							return html`
 								<${Attribute} item=${item} />
@@ -83,7 +89,7 @@ export default observer(({ domNode }: any) => {
 						flex: 1;
 					}
 					.cactiva-props-editor .row {
-						align-items: center;
+						align-items: stretch;
 						flex-direction: row;
 					}
 					.cactiva-props-editor .center {
@@ -132,6 +138,20 @@ export default observer(({ domNode }: any) => {
 					.cactiva-props-editor .prop .field,
 					.cactiva-props-editor .prop .field .input {
 						flex: 1;
+						position: relative;
+					}
+
+					.cactiva-props-editor .prop .field .input {
+						overflow: hidden;
+					}
+
+					.cactiva-props-editor .prop .field .input .overflow {
+						position: absolute;
+						top: 0;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						white-space: nowrap;
 					}
 
 					.cactiva-props-editor .prop .field .goto-source {

@@ -70,27 +70,28 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(
 						<img src=${icProps} className="ic-props" height="20" width="20" />
 					</div>
 				</div>
-				<${TagPreview} node=${node} />
-				${childrenNode.length > 0 &&
-					html`
-						<div className="children">
-							<${Divider} position="before" node=${childrenNode[0]} index=${0} />
-							${childrenNode.map((e, idx) => {
-								return html`
-									<${TagChild}
-										canvas=${canvas}
-										Tag=${Tag}
-										isLast=${idx === childrenNode.length - 1}
-										key=${idx}
-										e=${e}
-										idx=${idx}
-										onClick=${onClick}
-										nodePath=${nodePath}
-									/>
-								`;
-							})}
-						</div>
-					`}
+				<${TagPreview} node=${node}>
+					${childrenNode.length > 0 &&
+						html`
+							<div className="children">
+								<${Divider} position="before" node=${childrenNode[0]} index=${0} />
+								${childrenNode.map((e, idx) => {
+									return html`
+										<${TagChild}
+											canvas=${canvas}
+											Tag=${Tag}
+											isLast=${idx === childrenNode.length - 1}
+											key=${idx}
+											e=${e}
+											idx=${idx}
+											onClick=${onClick}
+											nodePath=${nodePath}
+										/>
+									`;
+								})}
+							</div>
+						`}
+				<//>
 			</div>
 		`;
 	}

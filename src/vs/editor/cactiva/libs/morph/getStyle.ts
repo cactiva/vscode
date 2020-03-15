@@ -9,7 +9,7 @@ import {
 	PropertyAssignment
 } from 'ts-morph';
 
-export default (node: Node) => {
+export function getStyle(node: Node) {
 	let style = {};
 	if (node instanceof JsxSelfClosingElement) {
 		const attr = node.getAttribute('style');
@@ -33,7 +33,7 @@ export default (node: Node) => {
 		}
 	}
 	return style;
-};
+}
 
 const parseStyle = (expression: Expression) => {
 	let style: any = {};

@@ -1,4 +1,4 @@
-import { JsxAttribute, JsxExpression } from 'ts-morph';
+import { JsxAttribute, JsxExpression, StringLiteral } from 'ts-morph';
 import html from 'vs/editor/cactiva/libs/html';
 import { selectSourceFromNode } from 'vs/editor/cactiva/libs/morph/selectSourceFromNode';
 
@@ -9,7 +9,21 @@ export default ({ item }: { item: JsxAttribute }) => {
 		<div
 			className="prop row pointer highlight"
 			onClick=${() => {
-				selectSourceFromNode(item);
+				const izer = item.getInitializer();
+				if (izer) {
+					if (izer instanceof JsxExpression) {
+						const exp = izer.getExpression();
+						if (exp) {
+							if (exp instanceof StringLiteral) {
+								selectSourceFromNode(exp, true, 1);
+							} else {
+								selectSourceFromNode(exp, true);
+							}
+						}
+					} else if (izer instanceof StringLiteral) {
+						selectSourceFromNode(izer, true, 1);
+					}
+				}
 			}}
 		>
 			<div className="title">
@@ -17,7 +31,9 @@ export default ({ item }: { item: JsxAttribute }) => {
 			</div>
 			<div className="field row space-between">
 				<div className="input">
-					${kindName}
+					<div className="overflow">
+						${kindName}
+					</div>
 				</div>
 				<div className="goto-source row center ">
 					▸
@@ -30,21 +46,23 @@ export default ({ item }: { item: JsxAttribute }) => {
 function getKindName(item: JsxAttribute) {
 	const izer = item.getInitializer();
 	let result = '';
+	let text = '';
 	if (izer) {
 		if (izer instanceof JsxExpression) {
 			const exp = izer.getExpression();
 			if (exp) {
 				result = exp.getKindName();
+				text = exp.getText();
 			}
 		} else {
 			result = izer.getKindName();
+			text = izer.getText();
 		}
 	}
 
 	const niceName = {
-		ObjectLiteralExpression: '{ object }',
-		StringLiteral: '...string...'
+		ObjectLiteralExpression: '{ object }'
 	} as any;
 
-	return niceName[result] || result;
+	return niceName[result] || text;
 }
