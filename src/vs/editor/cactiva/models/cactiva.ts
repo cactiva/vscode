@@ -42,5 +42,5 @@ export const cactiva: IEditorStore = observable({
 	project: new Project(),
 	propsEditor: {},
 	canvas: {},
-	mode: 'preview'
+	mode: 'layout'
 });

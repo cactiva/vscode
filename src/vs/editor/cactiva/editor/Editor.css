@@ -10,9 +10,13 @@
 	flex-direction: column;
 	flex: 1;
 	background: white;
-	margin: 5px;
-	margin-bottom: 2px;
+	margin: 0 5px;
 	border-radius: 5px;
 	padding: 10px;
 	overflow-y: auto;
+}
+
+.expression-code {
+	margin-bottom: 3px;
+	color: #333;
 }

@@ -2,7 +2,7 @@ import { observer, useObservable } from 'mobx-react-lite';
 import { List } from 'office-ui-fabric-react';
 import { useEffect } from 'react';
 import * as ReactDOM from 'react-dom';
-import { JsxAttributeLike, JsxAttribute } from 'ts-morph';
+import { JsxAttributeLike } from 'ts-morph';
 import Attribute from 'vs/editor/cactiva/editor/props/Attribute';
 import html from 'vs/editor/cactiva/libs/html';
 import { getNodeAttributes } from 'vs/editor/cactiva/libs/morph/getNodeAttributes';

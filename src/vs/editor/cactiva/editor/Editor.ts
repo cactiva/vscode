@@ -2,14 +2,15 @@ import { observer } from 'mobx-react-lite';
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { Node } from 'ts-morph';
+import 'vs/css!./Editor';
 import Breadcrumb from 'vs/editor/cactiva/editor/canvas/Breadcrumb';
 import { Tag } from 'vs/editor/cactiva/editor/canvas/Tag';
+import { TagPreview } from 'vs/editor/cactiva/editor/canvas/TagPreview';
 import PropsEditor from 'vs/editor/cactiva/editor/props/PropsEditor';
 import html from 'vs/editor/cactiva/libs/html';
 import { selectNode } from 'vs/editor/cactiva/libs/morph/selectNode';
 import { cactiva, IEditorCanvas, IEditorNodeInfo } from 'vs/editor/cactiva/models/cactiva';
 import { Range } from 'vs/editor/common/core/range';
-import 'vs/css!./Editor';
 
 export default observer(({ canvas }: { canvas: IEditorCanvas }) => {
 	if (!canvas)
@@ -48,13 +49,25 @@ export default observer(({ canvas }: { canvas: IEditorCanvas }) => {
 				<div className="cactiva-canvas-content">
 					${rootItem && !rootItem.node.get().wasForgotten()
 						? html`
-								<${Tag}
-									canvas=${canvas}
-									isLast=${true}
-									nodePath=${rootItem.nodePath}
-									node=${rootItem.node.get()}
-									onClick=${tagClicked}
-								/>
+								${cactiva.mode === 'preview'
+									? html`
+											<${TagPreview}
+												canvas=${canvas}
+												isLast=${true}
+												nodePath=${rootItem.nodePath}
+												node=${rootItem.node.get()}
+												onClick=${tagClicked}
+											/>
+									  `
+									: html`
+											<${Tag}
+												canvas=${canvas}
+												isLast=${true}
+												nodePath=${rootItem.nodePath}
+												node=${rootItem.node.get()}
+												onClick=${tagClicked}
+											/>
+									  `}
 						  `
 						: html`
 								<div>No Component to Render</div>

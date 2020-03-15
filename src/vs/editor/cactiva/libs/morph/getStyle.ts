@@ -43,10 +43,19 @@ const parseStyle = (expression: Expression) => {
 			if (!!property && property instanceof PropertyAssignment) {
 				const initializer = property.getInitializer();
 				if (initializer) {
-					style[property?.getName()] = initializer.compilerNode.getText();
+					style[property?.getName()] = parseValue(initializer.compilerNode.kind, initializer.compilerNode.getText());
 				}
 			}
 		}
 	}
 	return style;
+};
+
+const parseValue = (kind: number, text: string) => {
+	switch (kind) {
+		case 10:
+			return text.substr(1, text.length - 2);
+		default:
+			return text;
+	}
 };

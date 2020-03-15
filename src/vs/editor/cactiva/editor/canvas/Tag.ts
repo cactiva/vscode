@@ -5,12 +5,12 @@ import { Node } from 'ts-morph';
 import { URI } from 'vs/base/common/uri';
 import 'vs/css!./Tag';
 import { TagChild } from 'vs/editor/cactiva/editor/canvas/TagChild';
-import { TagPreview } from 'vs/editor/cactiva/editor/canvas/TagPreview';
 import html from 'vs/editor/cactiva/libs/html';
 import { getChildrenFromNode } from 'vs/editor/cactiva/libs/morph/getChildrenFromNode';
 import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
 import { IEditorCanvas } from 'vs/editor/cactiva/models/cactiva';
 import Divider from './Divider';
+import { TagPreview } from 'vs/editor/cactiva/editor/canvas/TagPreview';
 const icProps = URI.parse(require.toUrl('../../assets/images/ic-props.svg'));
 
 interface ISingleTag {
@@ -67,7 +67,7 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(
 				<div className="headertag">
 					<span className="tagname"> ${tagName} </span>
 					<div className="btn props">
-						<img src=${icProps} className="ic-props" height="20" width="20" />
+						<img src=${icProps} className="ic-props" height="16" width="16" />
 					</div>
 				</div>
 				<${TagPreview} node=${node}>
