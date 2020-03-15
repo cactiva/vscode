@@ -26,7 +26,6 @@ export default observer(({ domNode }: any) => {
 	});
 
 	useEffect(() => {
-		pe.hidden = false;
 		if (pe.nodeInfo) {
 			const node = pe.nodeInfo.node.get();
 			if (!node.wasForgotten()) {

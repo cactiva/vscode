@@ -5,25 +5,24 @@ import { Node } from 'ts-morph';
 import { URI } from 'vs/base/common/uri';
 import 'vs/css!./Tag';
 import { TagChild } from 'vs/editor/cactiva/editor/canvas/TagChild';
+import { TagPreview } from 'vs/editor/cactiva/editor/canvas/TagPreview';
 import html from 'vs/editor/cactiva/libs/html';
 import { getChildrenFromNode } from 'vs/editor/cactiva/libs/morph/getChildrenFromNode';
 import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
-import { IEditorCanvas, cactiva } from 'vs/editor/cactiva/models/cactiva';
+import { cactiva, IEditorCanvas } from 'vs/editor/cactiva/models/cactiva';
 import Divider from './Divider';
-import { TagPreview } from 'vs/editor/cactiva/editor/canvas/TagPreview';
-const icProps = URI.parse(require.toUrl('../../assets/images/ic-props.svg'));
+const icProps = URI.parse(require.toUrl('../../media/ic-props.svg'));
 
 interface ISingleTag {
 	canvas: IEditorCanvas;
 	node: Node;
 	nodePath: string;
 	style?: any;
-	isLast?: boolean;
 	onClick?: (node: Node, nodePath: string) => void;
 }
 
 export const Tag: React.FunctionComponent<ISingleTag> = observer(
-	({ canvas, node, style, onClick, nodePath, isLast }: ISingleTag) => {
+	({ canvas, node, style, onClick, nodePath }: ISingleTag) => {
 		const [, dragRef] = useDrag({
 			item: { type: 'cactiva-tag', node, dropEffect: 'none' },
 			canDrag: monitor => {
@@ -45,7 +44,7 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(
 		(node.compilerNode as any).domRef = useRef(undefined as HTMLElement | undefined);
 
 		dragRef((node.compilerNode as any).domRef);
-
+		const hasChildren = childrenNode.length > 0;
 		return html`
 			<div
 				ref=${(node.compilerNode as any).domRef}
@@ -69,18 +68,15 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(
 					html`
 						<div className="headertag">
 							<span className="tagname"> ${tagName} </span>
-							<div className="btn props">
-								<img src=${icProps} className="ic-props" height="16" width="16" />
-							</div>
 						</div>
 					`}
-				<${TagPreview} className="children" node=${node}>
-					${childrenNode.length > 0 &&
+				<${TagPreview} className="children" node=${node} tagName=${tagName}>
+					${hasChildren &&
 						mode !== 'preview' &&
 						html`
 							<${Divider} position="before" node=${childrenNode[0]} index=${0} />
 						`}
-					${childrenNode.length > 0 &&
+					${hasChildren &&
 						html`
 							${childrenNode.map((e, idx) => {
 								return html`

@@ -1,19 +1,18 @@
 import { observer } from 'mobx-react-lite';
+import 'vs/css!./Breadcrumb';
+import IconHybrid from 'vs/editor/cactiva/editor/icons/IconHybrid';
+import IconLayout from 'vs/editor/cactiva/editor/icons/IconLayout';
+import IconPreview from 'vs/editor/cactiva/editor/icons/IconPreview';
 import html from 'vs/editor/cactiva/libs/html';
 import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
-import { IEditorNodeInfo, cactiva } from 'vs/editor/cactiva/models/cactiva';
-import { URI } from 'vs/base/common/uri';
-import 'vs/css!./Breadcrumb';
-
-const icHybrid = URI.parse(require.toUrl('../../assets/images/ic-hybrid.svg'));
-const icLayout = URI.parse(require.toUrl('../../assets/images/ic-layout.svg'));
-const icPreview = URI.parse(require.toUrl('../../assets/images/ic-preview.svg'));
+import { cactiva, IEditorNodeInfo } from 'vs/editor/cactiva/models/cactiva';
 
 export default observer(({ canvas, onClick }: any) => {
 	const mode = cactiva.mode;
 	const changeMode = (mode: 'preview' | 'layout' | 'hybrid') => {
 		cactiva.mode = mode;
 	};
+
 	return html`
 		<div className="tabs-breadcrumbs">
 			<div className="breadcrumbs-control relative-path backslash-path">
@@ -83,7 +82,7 @@ export default observer(({ canvas, onClick }: any) => {
 								changeMode('preview');
 							}}
 						>
-							<img src=${icPreview} className="ic ic-preview" height="14" width="14" />
+							<${IconPreview} size=${14} color=${cactiva.color} />
 						</div>
 						<div
 							className=${`btn btn-toolbar btn-preview ${mode === 'hybrid' ? 'active' : ''}`}
@@ -91,7 +90,7 @@ export default observer(({ canvas, onClick }: any) => {
 								changeMode('hybrid');
 							}}
 						>
-							<img src=${icHybrid} className="ic ic-hybrid" height="14" width="14" />
+							<${IconHybrid} size=${14} color=${cactiva.color} />
 						</div>
 						<div
 							className=${`btn btn-toolbar btn-preview ${mode === 'layout' ? 'active' : ''}`}
@@ -99,7 +98,7 @@ export default observer(({ canvas, onClick }: any) => {
 								changeMode('layout');
 							}}
 						>
-							<img src=${icLayout} className="ic ic-layout" height="14" width="14" />
+							<${IconLayout} size=${14} color=${cactiva.color} />
 						</div>
 					</div>
 					<div className="breadcrumb-first-spacer"></div>

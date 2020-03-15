@@ -8,7 +8,8 @@ import { cactiva } from 'vs/editor/cactiva/models/cactiva';
 
 export const TagChild = observer(({ canvas, idx, onClick, nodePath, e, Tag, isLast }: any) => {
 	if (!e || (e && e.wasForgotten())) return null;
-	let mode = cactiva.mode;
+
+	const mode = cactiva.mode;
 	if (e instanceof JsxFragment || e instanceof JsxSelfClosingElement || e instanceof JsxElement) {
 		return html`
 			<${React.Fragment} key=${idx}>

@@ -15,7 +15,6 @@
 	display: flex;
 	justify-content: space-between;
 	height: 20px;
-	cursor: pointer;
 }
 
 .singletag .headertag .tagname {
@@ -66,7 +65,6 @@
 }
 
 .divider {
-	flex: 1;
 	padding: 3px;
 }
 

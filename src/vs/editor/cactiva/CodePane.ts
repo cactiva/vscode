@@ -19,6 +19,14 @@ export class CodePane extends Pane implements IView {
 			cactiva.propsEditor.el = el;
 		}
 
+		const bench = document.getElementsByClassName('monaco-workbench');
+		if (bench.length > 0 && bench[0] instanceof HTMLElement) {
+			const color = window.getComputedStyle(bench[0], null).getPropertyValue('color');
+			if (cactiva.color != color) {
+				cactiva.color = color;
+			}
+		}
+
 		const activitybar = document.getElementById('workbench.parts.statusbar');
 		let border = sidebar?.style.borderRight
 			? `border-right: ${sidebar?.style.borderRight}`

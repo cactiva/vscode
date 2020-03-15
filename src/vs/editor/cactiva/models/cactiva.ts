@@ -34,6 +34,7 @@ interface IEditorProps {
 interface IEditorStore {
 	project: Project;
 	propsEditor: IEditorProps;
+	color: string;
 	canvas: { [key: string]: IEditorCanvas };
 	mode: 'layout' | 'hybrid' | 'preview';
 }
@@ -41,6 +42,7 @@ interface IEditorStore {
 export const cactiva: IEditorStore = observable({
 	project: new Project(),
 	propsEditor: {},
+	color: '#fff',
 	canvas: {},
 	mode: 'layout'
 });

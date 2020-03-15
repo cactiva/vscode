@@ -12,7 +12,6 @@
 }
 
 .canvas-toolbar > .btn-toolbar {
-	cursor: pointer;
 	padding: 4px;
 	display: flex;
 	justify-content: center;
@@ -25,7 +24,7 @@
 
 .btn-toolbar:hover,
 .btn-toolbar.active {
-	background: #ffffff24;
+	opacity: 0.5;
 }
 
 .btn-toolbar.active .ic {

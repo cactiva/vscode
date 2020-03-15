@@ -37,6 +37,9 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 	public layout(dimension?: editorCommon.IDimension): void {
 		if (dimension) {
 			if (this._splitView.length > 1) {
+				if (this._codePane.element.clientWidth > 250) {
+					this._firstPaneSize = this._codePane.element.clientWidth;
+				}
 				this.superLayout({
 					...dimension,
 					width: this._firstPaneSize || dimension.width / 2

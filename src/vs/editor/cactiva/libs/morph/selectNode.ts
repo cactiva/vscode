@@ -3,16 +3,17 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { getNodeFromPath } from 'vs/editor/cactiva/libs/morph/getNodeFromPath';
-import { cactiva, IEditorCanvas } from 'vs/editor/cactiva/models/cactiva';
+import { cactiva, IEditorCanvas, IEditorNodeInfo } from 'vs/editor/cactiva/models/cactiva';
 import { Range } from 'vs/editor/common/core/range';
 import { generateNodeInfo } from 'vs/editor/cactiva/libs/morph/generateNodeInfo';
 
-export function selectNode(canvas: IEditorCanvas, nodePath: string, selector: 'canvas' | 'code') {
+export function selectNode(canvas: IEditorCanvas, nodePath: string, selector: 'canvas' | 'code' | 'breadcrumb') {
 	if (canvas) {
-		canvas.breadcrumbs = [];
+		const breadrumbs: IEditorNodeInfo[] = [];
 		getNodeFromPath(canvas.source, nodePath, (n, path) => {
-			canvas.breadcrumbs.push(generateNodeInfo(n, path));
+			breadrumbs.push(generateNodeInfo(n, path));
 		});
+		canvas.breadcrumbs = breadrumbs;
 		canvas.selectedNode = canvas.breadcrumbs[canvas.breadcrumbs.length - 1];
 
 		if (selector === 'code') {
@@ -22,8 +23,8 @@ export function selectNode(canvas: IEditorCanvas, nodePath: string, selector: 'c
 			}
 
 			// always show propsEditor on code select
-			cactiva.propsEditor.hidden = true;
-			cactiva.propsEditor.nodeInfo = canvas.selectedNode;
+			// cactiva.propsEditor.hidden = false;
+			// cactiva.propsEditor.nodeInfo = canvas.selectedNode;
 
 			const cnode = canvas.selectedNode.node.get().compilerNode;
 			const dom = (cnode as any).domRef;
@@ -34,7 +35,8 @@ export function selectNode(canvas: IEditorCanvas, nodePath: string, selector: 'c
 					inline: 'center'
 				});
 			}
-		} else if (selector === 'canvas') {
+		} else if (selector === 'canvas' || selector === 'breadcrumb') {
+			cactiva.propsEditor.hidden = false;
 			cactiva.propsEditor.nodeInfo = canvas.selectedNode;
 			const s = canvas.selectedNode.start;
 			const e = canvas.selectedNode.end;

@@ -1,12 +1,13 @@
-import { observer } from 'mobx-react-lite';
+import { observable, toJS } from 'mobx';
+import { observer, useObservable } from 'mobx-react-lite';
+import { useEffect } from 'react';
 import { Node } from 'ts-morph';
 import 'vs/css!./TagPreview';
 import html from 'vs/editor/cactiva/libs/html';
 import { getImportClause } from 'vs/editor/cactiva/libs/morph/getNodeImport';
 import { getStyle } from 'vs/editor/cactiva/libs/morph/getStyle';
-import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
 import * as Tags from 'vs/editor/cactiva/libs/TagsPreview/index';
-import { IEditorCanvas, cactiva } from 'vs/editor/cactiva/models/cactiva';
+import { cactiva, IEditorCanvas } from 'vs/editor/cactiva/models/cactiva';
 
 interface ITagPreview {
 	canvas: IEditorCanvas;
@@ -17,31 +18,43 @@ interface ITagPreview {
 	children?: any;
 	onClick?: (node: Node, nodePath: string) => void;
 	className?: string;
+	tagName: string;
 }
 
 export const TagPreview: React.FunctionComponent<ITagPreview> = observer(
-	({ node, children, className }: ITagPreview) => {
-		if (!node || (node && node.wasForgotten())) return null;
-		let tagName = getTagName(node);
-		let styleProp = cactiva.mode !== 'layout' ? getStyle(node) : {};
+	({ node, children, className, tagName }: ITagPreview) => {
+		const cache = useObservable({
+			style: observable.box(null as any),
+			import: null as any
+		});
 
-		let importClause = '';
-		switch (getImportClause(node)) {
-			case 'react-native':
-				importClause = 'ReactNative';
-				break;
-		}
-		let Component = (Tags as any)[importClause];
+		useEffect(() => {
+			if (!node || (node && node.wasForgotten())) {
+			} else {
+				cache.style.set(cactiva.mode !== 'layout' ? getStyle(node) : {});
+				let importClause = '';
+				switch (getImportClause(node)) {
+					case 'react-native':
+						importClause = 'ReactNative';
+						break;
+				}
+				cache.import = importClause;
+			}
+		}, [node, cactiva.mode]);
+		if (cache.import === null) return null;
+
+		const style = toJS(cache.style.get());
+		const Component = (Tags as any)[cache.import];
 		if (!!Component && !!Component[tagName]) {
 			return html`
-				<${Component[tagName]} className=${`tag-preview ${className}`} style=${styleProp}>
+				<${Component[tagName]} className=${`tag-preview ${className}`} style=${style}>
 					${children}
 				<//>
 			`;
 		}
 
 		return html`
-			<div className=${`tag-preview ${className}`} style=${styleProp}>
+			<div className=${`tag-preview ${className}`} style=${style}>
 				${children}
 			</div>
 		`;

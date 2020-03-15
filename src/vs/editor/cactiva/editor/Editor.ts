@@ -9,7 +9,6 @@ import PropsEditor from 'vs/editor/cactiva/editor/props/PropsEditor';
 import html from 'vs/editor/cactiva/libs/html';
 import { selectNode } from 'vs/editor/cactiva/libs/morph/selectNode';
 import { cactiva, IEditorCanvas, IEditorNodeInfo } from 'vs/editor/cactiva/models/cactiva';
-import { Range } from 'vs/editor/common/core/range';
 
 export default observer(({ canvas }: { canvas: IEditorCanvas }) => {
 	if (!canvas)
@@ -22,27 +21,21 @@ export default observer(({ canvas }: { canvas: IEditorCanvas }) => {
 		rootItem = canvas.breadcrumbs[0];
 	}
 
-	const sidebarEl = cactiva.propsEditor.el;
+	const propsEditor = cactiva.propsEditor.el;
 	const tagClicked = (_: Node, nodePath: string) => {
 		if (canvas.source) {
 			selectNode(canvas, nodePath, 'canvas');
 		}
 	};
 	const breadcrumbClicked = (node: IEditorNodeInfo) => {
-		canvas.selectedNode = node;
-		cactiva.propsEditor.nodeInfo = canvas.selectedNode;
-
-		const s = canvas.selectedNode.start;
-		const e = canvas.selectedNode.end;
-		canvas.editor?.setSelection(new Range(s.line, s.column, e.line, e.column));
-		canvas.editor?.revealLineNearTop(s.line);
+		selectNode(canvas, node.nodePath, 'breadcrumb');
 	};
 
 	return html`
 		<${DndProvider} backend=${HTML5Backend}>
-			${sidebarEl &&
+			${propsEditor &&
 				html`
-					<${PropsEditor} domNode=${sidebarEl} />
+					<${PropsEditor} domNode=${propsEditor} />
 				`}
 			<div className="cactiva-canvas">
 				<div className="cactiva-canvas-content">
