@@ -15,3 +15,8 @@
 	padding: 10px;
 	overflow-y: auto;
 }
+
+/* Tabs hack, because of overflowing bug: tab is smaller than it supposed to be */
+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container {
+	width: 100%;
+}
