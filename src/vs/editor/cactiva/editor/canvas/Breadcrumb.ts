@@ -5,12 +5,13 @@ import { IEditorNodeInfo, cactiva } from 'vs/editor/cactiva/models/cactiva';
 import { URI } from 'vs/base/common/uri';
 import 'vs/css!./Breadcrumb';
 
+const icHybrid = URI.parse(require.toUrl('../../assets/images/ic-hybrid.svg'));
 const icLayout = URI.parse(require.toUrl('../../assets/images/ic-layout.svg'));
 const icPreview = URI.parse(require.toUrl('../../assets/images/ic-preview.svg'));
 
 export default observer(({ canvas, onClick }: any) => {
 	const mode = cactiva.mode;
-	const changeMode = (mode: 'preview' | 'layout') => {
+	const changeMode = (mode: 'preview' | 'layout' | 'hybrid') => {
 		cactiva.mode = mode;
 	};
 	return html`
@@ -83,6 +84,14 @@ export default observer(({ canvas, onClick }: any) => {
 							}}
 						>
 							<img src=${icPreview} className="ic ic-preview" height="14" width="14" />
+						</div>
+						<div
+							className=${`btn btn-toolbar btn-preview ${mode === 'hybrid' ? 'active' : ''}`}
+							onClick=${() => {
+								changeMode('hybrid');
+							}}
+						>
+							<img src=${icHybrid} className="ic ic-hybrid" height="14" width="14" />
 						</div>
 						<div
 							className=${`btn btn-toolbar btn-preview ${mode === 'layout' ? 'active' : ''}`}

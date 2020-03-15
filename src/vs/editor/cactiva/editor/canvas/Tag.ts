@@ -8,7 +8,7 @@ import { TagChild } from 'vs/editor/cactiva/editor/canvas/TagChild';
 import html from 'vs/editor/cactiva/libs/html';
 import { getChildrenFromNode } from 'vs/editor/cactiva/libs/morph/getChildrenFromNode';
 import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
-import { IEditorCanvas } from 'vs/editor/cactiva/models/cactiva';
+import { IEditorCanvas, cactiva } from 'vs/editor/cactiva/models/cactiva';
 import Divider from './Divider';
 import { TagPreview } from 'vs/editor/cactiva/editor/canvas/TagPreview';
 const icProps = URI.parse(require.toUrl('../../assets/images/ic-props.svg'));
@@ -35,6 +35,7 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(
 		});
 		if (!node || (node && node.wasForgotten())) return null;
 
+		let mode = cactiva.mode;
 		let tagName = getTagName(node);
 		const childrenNode = getChildrenFromNode(node);
 		const hovered = canvas.hoveredNode === node ? 'hover' : '';
@@ -61,35 +62,40 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(
 					canvas.hoveredNode = node;
 					e.stopPropagation();
 				}}
-				className=${`singletag vertical ${selected} ${hovered}`}
+				className=${`singletag vertical ${selected} ${hovered} ${mode}`}
 				style=${style}
 			>
-				<div className="headertag">
-					<span className="tagname"> ${tagName} </span>
-					<div className="btn props">
-						<img src=${icProps} className="ic-props" height="16" width="16" />
-					</div>
-				</div>
-				<${TagPreview} node=${node}>
+				${mode !== 'preview' &&
+					html`
+						<div className="headertag">
+							<span className="tagname"> ${tagName} </span>
+							<div className="btn props">
+								<img src=${icProps} className="ic-props" height="16" width="16" />
+							</div>
+						</div>
+					`}
+				<${TagPreview} className="children" node=${node}>
+					${childrenNode.length > 0 &&
+						mode !== 'preview' &&
+						html`
+							<${Divider} position="before" node=${childrenNode[0]} index=${0} />
+						`}
 					${childrenNode.length > 0 &&
 						html`
-							<div className="children">
-								<${Divider} position="before" node=${childrenNode[0]} index=${0} />
-								${childrenNode.map((e, idx) => {
-									return html`
-										<${TagChild}
-											canvas=${canvas}
-											Tag=${Tag}
-											isLast=${idx === childrenNode.length - 1}
-											key=${idx}
-											e=${e}
-											idx=${idx}
-											onClick=${onClick}
-											nodePath=${nodePath}
-										/>
-									`;
-								})}
-							</div>
+							${childrenNode.map((e, idx) => {
+								return html`
+									<${TagChild}
+										canvas=${canvas}
+										Tag=${Tag}
+										isLast=${idx === childrenNode.length - 1}
+										key=${idx}
+										e=${e}
+										idx=${idx}
+										onClick=${onClick}
+										nodePath=${nodePath}
+									/>
+								`;
+							})}
 						`}
 				<//>
 			</div>

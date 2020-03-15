@@ -6,7 +6,7 @@ import { getImportClause } from 'vs/editor/cactiva/libs/morph/getNodeImport';
 import { getStyle } from 'vs/editor/cactiva/libs/morph/getStyle';
 import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
 import * as Tags from 'vs/editor/cactiva/libs/TagsPreview/index';
-import { IEditorCanvas } from 'vs/editor/cactiva/models/cactiva';
+import { IEditorCanvas, cactiva } from 'vs/editor/cactiva/models/cactiva';
 
 interface ITagPreview {
 	canvas: IEditorCanvas;
@@ -16,33 +16,34 @@ interface ITagPreview {
 	isLast?: boolean;
 	children?: any;
 	onClick?: (node: Node, nodePath: string) => void;
+	className?: string;
 }
 
-export const TagPreview: React.FunctionComponent<ITagPreview> = observer(({ node, children }: ITagPreview) => {
-	if (!node || (node && node.wasForgotten())) return null;
-	let tagName = getTagName(node);
-	let styleProp = getStyle(node);
+export const TagPreview: React.FunctionComponent<ITagPreview> = observer(
+	({ node, children, className }: ITagPreview) => {
+		if (!node || (node && node.wasForgotten())) return null;
+		let tagName = getTagName(node);
+		let styleProp = cactiva.mode !== 'layout' ? getStyle(node) : {};
 
-	let importClause = '';
-	switch (getImportClause(node)) {
-		case 'react-native':
-			importClause = 'ReactNative';
-			break;
-	}
-	let Component = (Tags as any)[importClause];
-	if (!!Component && !!Component[tagName]) {
-		return html`
-			<div className="tag-preview">
-				<${Component[tagName]} style=${styleProp}>
+		let importClause = '';
+		switch (getImportClause(node)) {
+			case 'react-native':
+				importClause = 'ReactNative';
+				break;
+		}
+		let Component = (Tags as any)[importClause];
+		if (!!Component && !!Component[tagName]) {
+			return html`
+				<${Component[tagName]} className=${`tag-preview ${className}`} style=${styleProp}>
 					${children}
 				<//>
+			`;
+		}
+
+		return html`
+			<div className=${`tag-preview ${className}`} style=${styleProp}>
+				${children}
 			</div>
 		`;
 	}
-
-	return html`
-		<div className="tag-preview" style=${styleProp}>
-			${children}
-		</div>
-	`;
-});
+);

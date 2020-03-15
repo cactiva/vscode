@@ -1,8 +1,8 @@
 import html from 'vs/editor/cactiva/libs/html';
 
-export default ({ style, children }: any) => {
+export default ({ style, children, className }: any) => {
 	return html`
-		<div style=${style}>
+		<div style=${style} className=${className}>
 			${children}
 		</div>
 	`;

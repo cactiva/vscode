@@ -9,13 +9,13 @@
 .singletag {
 	padding: 5px;
 	border: 1px solid #c3c3c3;
-	min-width: 200px;
 }
 
 .singletag .headertag {
 	display: flex;
 	justify-content: space-between;
 	height: 20px;
+	cursor: pointer;
 }
 
 .singletag .headertag .tagname {
@@ -58,6 +58,11 @@
 	overflow: hidden;
 	white-space: pre-wrap;
 	text-overflow: ellipsis;
+}
+
+.singletag.preview {
+	padding: 0;
+	border-width: 0;
 }
 
 .divider {
