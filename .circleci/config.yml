@@ -52,8 +52,8 @@ jobs:
             - run: 
                 command: sudo yarn run dist --linux
                 when: always
-           - store_artifacts:
-               path: dist/
+            - store_artifacts:
+                path: dist/
   
   build_windows:
     executor: win/default
