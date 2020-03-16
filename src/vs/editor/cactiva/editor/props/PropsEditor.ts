@@ -64,7 +64,7 @@ export default observer(({ domNode }: any) => {
 						position: absolute;
 						top: 0;
 						left: 0;
-						right: 0;
+						right: 1px;
 						bottom: 0;
 						z-index: 9;
 						background: ${bgColor};
