@@ -13,7 +13,7 @@ jobs:
           steps:
             - run: git clone https://github.com/cactiva/release
             - run: cd release
-             - run: 
+            - run: 
                 command: cp dist/Cactiva.deb
                 when: always
             - run: 
