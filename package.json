@@ -41,6 +41,7 @@
     "copyright": "Copyright © 2020 Cactiva",
     "detectUpdateChannel": true,
     "generateUpdatesFilesForAllChannels": true,
+    "artifactName": "${productName}.${ext}",
     "files":[
       "extensions",
       "out",
@@ -49,8 +50,7 @@
       "product.json"
     ],
     "mac": {
-      "category": "public.app-category.developer-tools",
-      "artifactName": "${productName}.${ext}"
+      "category": "public.app-category.developer-tools"
     },
     "dmg": {
       "contents": [
@@ -65,20 +65,18 @@
           "path": "/Applications"
         }
       ],
-      "icon": "src/assets/cactiva.icns",
+      "icon": "src/assets/cactiva.icns"
     },
     "linux": {
       "target": [
         "deb",
         "rpm"
       ],
-      "category": "Development",
-      "artifactName": "${productName}.${ext}"
+      "category": "Development"
     },
     "win": {
       "target": "msi",
-      "icon": "src/assets/cactiva.ico",
-      "artifactName": "${productName}.${ext}"
+      "icon": "src/assets/cactiva.ico"
     }
   },
   "dependencies": {
