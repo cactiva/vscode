@@ -72,7 +72,8 @@
         "deb",
         "rpm"
       ],
-      "category": "Development"
+      "category": "Development",
+      "executableName": "Cactiva"
     },
     "win": {
       "target": "msi",
