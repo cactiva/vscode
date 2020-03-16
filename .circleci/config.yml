@@ -46,14 +46,6 @@ jobs:
             - run: 
                 command: sudo yarn run dist --linux
                 when: always
-            - run: git clone ssh://erlanggaadikara:Capoeirabboy1297@github.com/cactiva/release
-            - run: cd release
-            - run: cp dist/Cactiva.deb
-            - run: git add Cactiva.deb .
-            - run: cp dist/Cactiva.rpm
-            - run: git add Cactiva.rpm .
-            - run: git commit -m "linux, build dari circleci"
-            - run: git push
   
   build_windows:
     executor: win/default
@@ -108,4 +100,7 @@ jobs:
 workflows:
     build-and-test:
       jobs:
-        - build_git
+        - build_git:
+            requires:
+              - build_linux
+        - build_linux
