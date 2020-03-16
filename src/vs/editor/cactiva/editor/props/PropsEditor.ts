@@ -33,7 +33,7 @@ export default observer(({ domNode }: any) => {
 				meta.attributes = getNodeAttributes(node);
 			}
 		}
-	}, [pe.nodeInfo]);
+	}, [pe.nodeInfo, cactiva.color]);
 
 	return ReactDOM.createPortal(
 		html`
@@ -132,6 +132,7 @@ export default observer(({ domNode }: any) => {
 						text-overflow: ellipsis;
 						white-space: nowrap;
 						word-break: break-all;
+						margin-right: 5px;
 					}
 
 					.cactiva-props-editor .prop .field,
