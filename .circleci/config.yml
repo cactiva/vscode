@@ -59,16 +59,22 @@ jobs:
                 command: cd release
                 when: always
             - run: 
-                command: cp dist/Cactiva.deb
+                command: cp /home/circleci/project/dist/Cactiva.deb
                 when: always
             - run: 
                 command: git add Cactiva.deb .
                 when: always
             - run: 
-                command: cp dist/Cactiva.rpm
+                command: cp /home/circleci/project/dist/Cactiva.rpm
                 when: always
             - run: 
                 command: git add Cactiva.rpm .
+                when: always
+            - run: 
+                command: git config --global user.email "erlangga@cactiva.app"
+                when: always
+            - run: 
+                command: git config --global user.name "Erlangga"
                 when: always
             - run: 
                 command: git commit -m "linux, build dari circleci"
