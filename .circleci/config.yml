@@ -53,7 +53,7 @@ jobs:
                 command: sudo yarn run dist --linux
                 when: always
            - store_artifacts:
-                path: dist/
+               path: dist/
   
   build_windows:
     executor: win/default
