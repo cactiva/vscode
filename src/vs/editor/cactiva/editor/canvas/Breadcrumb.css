@@ -18,15 +18,11 @@
 	align-items: center;
 }
 
-.ic {
-	opacity: 0.7;
-}
-
 .btn-toolbar:hover,
 .btn-toolbar.active {
-	opacity: 0.5;
+	opacity: 1;
 }
 
-.btn-toolbar.active .ic {
-	opacity: 1;
+.btn-toolbar {
+	opacity: 0.5;
 }

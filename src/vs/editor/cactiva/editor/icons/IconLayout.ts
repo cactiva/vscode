@@ -3,7 +3,7 @@ import html from 'vs/editor/cactiva/libs/html';
 export default ({ color, size }: { color: string; size: any }) => {
 	return html`
 		<svg
-			stroke-width="0"
+			strokeWidth="0"
 			stroke=${color || '#fff'}
 			width=${size || 24}
 			height=${size || 24}
