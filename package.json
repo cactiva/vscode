@@ -36,9 +36,8 @@
   },
  "build": {
     "appId": "com.cactiva.app",
-    "asar":false,
+    "asar":true,
     "productName": "Cactiva",
-    "artifactName": "Cactiva",
     "copyright": "Copyright © 2020 Cactiva",
     "detectUpdateChannel": true,
     "generateUpdatesFilesForAllChannels": true,
@@ -65,7 +64,8 @@
           "path": "/Applications"
         }
       ],
-      "icon": "src/assets/cactiva.icns"
+      "icon": "src/assets/cactiva.icns",
+      "title": "Cactiva"
     },
     "linux": {
       "target": [
@@ -77,7 +77,8 @@
     },
     "win": {
       "target": "msi",
-      "icon": "src/assets/cactiva.ico"
+      "icon": "src/assets/cactiva.ico",
+      "artifactName": "Cactiva"
     }
   },
   "dependencies": {
