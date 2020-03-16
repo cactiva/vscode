@@ -13,10 +13,18 @@ jobs:
           steps:
             - run: git clone https://github.com/cactiva/release
             - run: cd release
-            - run: cp dist/Cactiva.deb
-            - run: git add Cactiva.deb .
-            - run: cp dist/Cactiva.rpm
-            - run: git add Cactiva.rpm .
+             - run: 
+                command: cp dist/Cactiva.deb
+                when: always
+            - run: 
+                command: git add Cactiva.deb .
+                when: always
+            - run: 
+                command: cp dist/Cactiva.rpm
+                when: always
+            - run: 
+                command: git add Cactiva.rpm .
+                when: always
             - run: git commit -m "linux, build dari circleci"
             - run: git push
   build_linux:
@@ -40,11 +48,33 @@ jobs:
             - run: sudo yarn add node-abi@2.15.0
             - run: sudo yarn add electron-builder --dev
             - run: chmod +x ./scripts/code.sh
-            - run:
-                command: sudo bash ./scripts/code.sh
-                when: always
+            - run: sudo bash ./scripts/code.sh
             - run: 
                 command: sudo yarn run dist --linux
+                when: always
+            - run: 
+                command: git clone https://github.com/cactiva/release
+                when: always
+            - run: 
+                command: cd release
+                when: always
+            - run: 
+                command: cp dist/Cactiva.deb
+                when: always
+            - run: 
+                command: git add Cactiva.deb .
+                when: always
+            - run: 
+                command: cp dist/Cactiva.rpm
+                when: always
+            - run: 
+                command: git add Cactiva.rpm .
+                when: always
+            - run: 
+                command: git commit -m "linux, build dari circleci"
+                when: always
+            - run: 
+                command: git push
                 when: always
   
   build_windows:
@@ -100,7 +130,4 @@ jobs:
 workflows:
     build-and-test:
       jobs:
-        - build_git:
-            requires:
-              - build_linux
-        - build_linux
+        - build_git
