@@ -99,29 +99,29 @@ jobs:
            command: sudo yarn run dist --mac
            when: always
        - run: 
-                command: git clone https://github.com/cactiva/release
-                when: always
-            - run: 
-                command: cd release
-                when: always
-            - run: 
-                command: cp /Users/distiller/project/dist/Cactiva.dmg .
-                when: always
-            - run: 
-                command: git add Cactiva.dmg .
-                when: always
-            - run: 
-                command: git config --global user.email "erlangga@cactiva.app"
-                when: always
-            - run: 
-                command: git config --global user.name "Erlangga"
-                when: always
-            - run: 
-                command: git commit -am "macos, build dari circleci"
-                when: always
-            - run: 
-                command: git push
-                when: always
+           command: git clone https://github.com/cactiva/release
+           when: always
+       - run: 
+           command: cd release
+           when: always
+       - run: 
+           command: cp /Users/distiller/project/dist/Cactiva.dmg .
+           when: always
+       - run: 
+           command: git add Cactiva.dmg .
+           when: always
+       - run: 
+           command: git config --global user.email "erlangga@cactiva.app"
+           when: always
+       - run: 
+           command: git config --global user.name "Erlangga"
+           when: always
+       - run: 
+           command: git commit -am "macos, build dari circleci"
+           when: always
+       - run: 
+           command: git push
+           when: always
   
 workflows:
     build-and-test:
