@@ -30,6 +30,7 @@ export default observer(({ canvas }: { canvas: IEditorCanvas }) => {
 	const breadcrumbClicked = (node: IEditorNodeInfo) => {
 		selectNode(canvas, node.nodePath, 'breadcrumb');
 	};
+	const mode = cactiva.mode;
 
 	return html`
 		<${DndProvider} backend=${HTML5Backend}>
@@ -38,7 +39,7 @@ export default observer(({ canvas }: { canvas: IEditorCanvas }) => {
 					<${PropsEditor} domNode=${propsEditor} />
 				`}
 			<div className="cactiva-canvas">
-				<div className="cactiva-canvas-content">
+				<div className=${`cactiva-canvas-content ${mode}`}>
 					${rootItem && !rootItem.node.get().wasForgotten()
 						? html`
 								<${Tag}
