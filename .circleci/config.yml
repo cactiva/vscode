@@ -13,7 +13,7 @@ jobs:
           steps:
             - run: git clone https://github.com/cactiva/release
             - run: cd release
-            - run: cd ~/circleci
+            - run: cd /
             - run: pwd
   build_linux:
     executor:
