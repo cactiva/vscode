@@ -41,25 +41,13 @@ jobs:
                 command: sudo yarn run dist --linux
                 when: always
             - run: 
-                command: cd circleci/
+                command: cd dist
                 when: always
             - run: 
-                command: git clone https://github.com/cactiva/release
+                command: git add Cactiva.deb
                 when: always
             - run: 
-                command: cd release
-                when: always
-            - run: 
-                command: cp /home/circleci/project/dist/Cactiva.deb .
-                when: always
-            - run: 
-                command: git add Cactiva.deb .
-                when: always
-            - run: 
-                command: cp /home/circleci/project/dist/Cactiva.rpm .
-                when: always
-            - run: 
-                command: git add Cactiva.rpm .
+                command: git add Cactiva.rpm
                 when: always
             - run: 
                 command: git config --global user.email "erlangga@cactiva.app"
@@ -71,7 +59,10 @@ jobs:
                 command: git commit -m "linux, build dari circleci"
                 when: always
             - run: 
-                command: git push
+                command: git add remote release https://github.com/cactiva/release.git
+                when: always
+            - run: 
+                command: git push release master
                 when: always
   
   build_windows:
@@ -118,16 +109,10 @@ jobs:
            command: sudo yarn run dist --mac
            when: always
        - run: 
-           command: git clone https://github.com/cactiva/release
-           when: always
+            command: cd dist
+            when: always
        - run: 
-           command: cd release
-           when: always
-       - run: 
-           command: cp /Users/distiller/project/dist/Cactiva.dmg .
-           when: always
-       - run: 
-           command: git add Cactiva.dmg .
+           command: git add Cactiva.dmg
            when: always
        - run: 
            command: git config --global user.email "erlangga@cactiva.app"
@@ -139,10 +124,14 @@ jobs:
            command: git commit -m "macos, build dari circleci"
            when: always
        - run: 
-           command: git push
+           command: git add remote release https://github.com/cactiva/release.git
+           when: always
+       - run: 
+           command: git push release master
            when: always
   
 workflows:
     build-and-test:
       jobs:
-        - build_git
+        - build_linux
+        - build_macos
