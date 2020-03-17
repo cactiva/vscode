@@ -11,9 +11,9 @@ jobs:
       - checkout
       - node/with-cache:
           steps:
+            - run: cd ..
             - run: git clone https://github.com/cactiva/release
             - run: cd release
-            - run: cd ~
             - run: pwd
   build_linux:
     executor:
