@@ -41,13 +41,10 @@ jobs:
                 command: sudo yarn run dist --linux
                 when: always
             - run: 
-                command: cd dist
+                command: git add dist/Cactiva.deb
                 when: always
             - run: 
-                command: git add Cactiva.deb
-                when: always
-            - run: 
-                command: git add Cactiva.rpm
+                command: git add dist/Cactiva.rpm
                 when: always
             - run: 
                 command: git config --global user.email "erlangga@cactiva.app"
@@ -59,7 +56,7 @@ jobs:
                 command: git commit -m "linux, build dari circleci"
                 when: always
             - run: 
-                command: git add remote release https://github.com/cactiva/release.git
+                command: git remote add release https://github.com/cactiva/release.git
                 when: always
             - run: 
                 command: git push release master
@@ -109,10 +106,7 @@ jobs:
            command: sudo yarn run dist --mac
            when: always
        - run: 
-            command: cd dist
-            when: always
-       - run: 
-           command: git add Cactiva.dmg
+           command: git add dist/Cactiva.dmg
            when: always
        - run: 
            command: git config --global user.email "erlangga@cactiva.app"
@@ -124,7 +118,7 @@ jobs:
            command: git commit -m "macos, build dari circleci"
            when: always
        - run: 
-           command: git add remote release https://github.com/cactiva/release.git
+           command: git remote add release https://github.com/cactiva/release.git
            when: always
        - run: 
            command: git push release master
