@@ -9635,6 +9635,11 @@ typescript@^3.9.0-dev.20200313:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.0-dev.20200313.tgz#f66aeb2c08268f2b1fc6d1d96e15554c6e7ed29b"
   integrity sha512-85/IJPm1nEUbQDxK3aN+svIy4X3kPcAipihB3704NY1HXncJ1daNLJW1OktOacb8tD/URpIGs9nMgbUrKvglGg==
 
+typescript@~3.8.2:
+  version "3.8.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.8.3.tgz#409eb8544ea0335711205869ec458ab109ee1061"
+  integrity sha512-MYlEfn5VrLNsgudQTVJeNaQFUAI7DkhnOjdpAp4T+ku1TfQClewlbSuTVHiA+8skNBgaf02TL/kLOvig4y3G8w==
+
 uc.micro@^1.0.1, uc.micro@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-1.0.3.tgz#7ed50d5e0f9a9fb0a573379259f2a77458d50192"
