@@ -3,13 +3,13 @@ import { useRef } from 'react';
 import { useDrag } from 'react-dnd';
 import { Node } from 'ts-morph';
 import 'vs/css!./Tag';
-import { TagChild } from 'vs/editor/cactiva/editor/canvas/TagChild';
-import { TagPreview } from 'vs/editor/cactiva/editor/canvas/TagPreview';
+import { TagChild } from 'vs/editor/cactiva/editor/canvas/tag/TagChild';
+import { TagPreview } from 'vs/editor/cactiva/editor/canvas/tag/TagPreview';
 import html from 'vs/editor/cactiva/libs/html';
 import { getChildrenFromNode } from 'vs/editor/cactiva/libs/morph/getChildrenFromNode';
 import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
 import { cactiva, IEditorCanvas } from 'vs/editor/cactiva/models/cactiva';
-import Divider from './Divider';
+import Divider from './tag/Divider';
 
 interface ISingleTag {
 	canvas: IEditorCanvas;
@@ -51,6 +51,10 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(
 						onClick(node, nodePath);
 						e.stopPropagation();
 					}
+				}}
+				onContextMenu=${(e: any) => {
+					console.log(e);
+					e.stopPropagation();
 				}}
 				onMouseOut=${() => {
 					canvas.hoveredNode = undefined;
