@@ -55,6 +55,7 @@ import {
 	DraggedViewIdentifier,
 	DraggedCompositeIdentifier
 } from 'vs/workbench/browser/dnd';
+import { cactiva } from 'vs/editor/cactiva/models/cactiva';
 
 export class SidebarPart extends CompositePart<Viewlet> implements IViewletService {
 	_serviceBrand: undefined;
