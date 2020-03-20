@@ -31,18 +31,16 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 	private readonly _codePane: CodePane;
 	private readonly _canvasPane: CanvasPane;
 
+	private _previewPaneSize: number;
+	private _previewPaneSizeStoreKey: string;
 	private _paneMode: 'code' | 'vertical' | 'horizontal' | 'canvas';
-	private _firstPaneSize: number;
 
 	public layout(dimension?: editorCommon.IDimension): void {
 		if (dimension) {
 			if (this._splitView.length > 1) {
-				if (this._codePane.element.clientWidth > 250) {
-					this._firstPaneSize = this._codePane.element.clientWidth;
-				}
 				this.superLayout({
 					...dimension,
-					width: this._firstPaneSize || dimension.width / 2
+					width: dimension.width - this._previewPaneSize
 				});
 			} else {
 				this.superLayout(dimension);
@@ -98,6 +96,10 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			accessibilityService
 		);
 
+		this._previewPaneSizeStoreKey = `cactiva-sash-${this.getId()}`;
+		const _splitSize = localStorage[this._previewPaneSizeStoreKey];
+		this._previewPaneSize = _splitSize ? parseInt(_splitSize) : 0;
+
 		if (this._modelData && !cactiva.canvas[this._modelData?.model.id]) {
 			cactiva.canvas[this._modelData?.model.id] = {
 				breadcrumbs: [],
@@ -115,16 +117,10 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 		this._splitView = this._register(splitview);
 		this._codePane = this._register(codePane);
 		this._canvasPane = this._register(canvasPane);
-		this._firstPaneSize = 0;
 
 		this._register(
 			this._splitView.onDidSashChange(() => {
-				const size = this._splitView.getViewSize(0);
-				this._firstPaneSize = size < 200 ? this._domEl.clientWidth / 2 : size;
-				this.superLayout({
-					width: size,
-					height: this._domEl.clientHeight
-				});
+				localStorage[`cactiva-sash-${this.getId()}`] = this._splitView.getViewSize(1);
 			})
 		);
 
@@ -138,7 +134,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			}
 		});
 
-		splitview.addView(codePane, Sizing.Split(0));
+		splitview.addView(codePane, Sizing.Distribute);
 	}
 
 	protected _attachModel(model: ITextModel | null): void {
@@ -232,12 +228,9 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 
 	private _changeLanguageTo(languageId: string) {
 		if (languageId.indexOf('react') > 0 && this._splitView.length <= 1) {
-			this._splitView.addView(this._canvasPane, Sizing.Split(1));
-			this._splitView.resizeView(0, this._firstPaneSize);
-			this.layout({
-				width: this._domEl.clientWidth,
-				height: this._domEl.clientHeight
-			});
+			const domElWidth = this._domEl.clientWidth;
+			this._splitView.layout(domElWidth);
+			this._splitView.addView(this._canvasPane, this._previewPaneSize, 1);
 		} else if (this._splitView.length > 1 && languageId.indexOf('react') < 0) {
 			this._splitView.removeView(1);
 			this.layout({
