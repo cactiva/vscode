@@ -120,6 +120,10 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 
 		this._register(
 			this._splitView.onDidSashChange(() => {
+				this.superLayout({
+					width: this._splitView.getViewSize(0),
+					height: this._domEl.clientHeight
+				});
 				localStorage[`cactiva-sash-${this.getId()}`] = this._splitView.getViewSize(1);
 			})
 		);
