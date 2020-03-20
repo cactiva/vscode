@@ -2837,6 +2837,14 @@ export interface ISuggestOptions {
 	 */
 	showTypeParameters?: boolean;
 	/**
+	 * Show issue-suggestions.
+	 */
+	showIssues?: boolean;
+	/**
+	 * Show user-suggestions.
+	 */
+	showUsers?: boolean;
+	/**
 	 * Show snippet-suggestions.
 	 */
 	showSnippets?: boolean;
@@ -2890,6 +2898,8 @@ class EditorSuggest extends BaseEditorOption<EditorOption.suggest, InternalSugge
 			showFolders: true,
 			showTypeParameters: true,
 			showSnippets: true,
+			showUsers: true,
+			showIssues: true,
 			statusBar: {
 				visible: false
 			}
@@ -3078,6 +3088,16 @@ class EditorSuggest extends BaseEditorOption<EditorOption.suggest, InternalSugge
 					default: true,
 					markdownDescription: nls.localize('editor.suggest.showSnippets', "When enabled IntelliSense shows `snippet`-suggestions.")
 				},
+				'editor.suggest.showUsers': {
+					type: 'boolean',
+					default: true,
+					markdownDescription: nls.localize('editor.suggest.showUsers', "When enabled IntelliSense shows `user`-suggestions.")
+				},
+				'editor.suggest.showIssues': {
+					type: 'boolean',
+					default: true,
+					markdownDescription: nls.localize('editor.suggest.showIssues', "When enabled IntelliSense shows `issues`-suggestions.")
+				},
 				'editor.suggest.statusBar.visible': {
 					type: 'boolean',
 					default: false,
@@ -3126,6 +3146,8 @@ class EditorSuggest extends BaseEditorOption<EditorOption.suggest, InternalSugge
 			showFolders: EditorBooleanOption.boolean(input.showFolders, this.defaultValue.showFolders),
 			showTypeParameters: EditorBooleanOption.boolean(input.showTypeParameters, this.defaultValue.showTypeParameters),
 			showSnippets: EditorBooleanOption.boolean(input.showSnippets, this.defaultValue.showSnippets),
+			showUsers: EditorBooleanOption.boolean(input.showUsers, this.defaultValue.showUsers),
+			showIssues: EditorBooleanOption.boolean(input.showIssues, this.defaultValue.showIssues),
 			statusBar: {
 				visible: EditorBooleanOption.boolean(input.statusBar?.visible, !!this.defaultValue.statusBar.visible)
 			}

@@ -128,6 +128,16 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			})
 		);
 
+		const onWindowResize = () => {
+			console.log('window on resize');
+		};
+		window.addEventListener('onresize', onWindowResize);
+		this._register({
+			dispose: () => {
+				window.removeEventListener('onresize', onWindowResize);
+			}
+		});
+
 		splitview.addView(codePane, Sizing.Split(0));
 	}
 
