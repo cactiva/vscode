@@ -59,6 +59,7 @@ export class ProxyAuthHandler extends Disposable {
 			title: 'VS Code',
 			webPreferences: {
 				nodeIntegration: true,
+				nodeIntegrationInWorker: true,
 				webviewTag: true
 			}
 		};

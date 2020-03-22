@@ -5,7 +5,7 @@
 import { Pane } from 'vs/base/browser/ui/splitview/paneview';
 import { IView } from 'vs/base/browser/ui/splitview/splitview';
 import 'vs/css!./media/editor';
-import { cactiva } from 'vs/editor/cactiva/models/cactiva';
+import { cactiva } from 'vs/editor/cactiva/models/store';
 
 export class CodePane extends Pane implements IView {
 	protected renderHeader(container: HTMLElement): void {}
@@ -22,8 +22,8 @@ export class CodePane extends Pane implements IView {
 		const bench = document.getElementsByClassName('monaco-workbench');
 		if (bench.length > 0 && bench[0] instanceof HTMLElement) {
 			const color = window.getComputedStyle(bench[0], null).getPropertyValue('color');
-			if (cactiva.color != color) {
-				cactiva.color = color;
+			if (cactiva.fontColor != color) {
+				cactiva.fontColor = color;
 			}
 		}
 

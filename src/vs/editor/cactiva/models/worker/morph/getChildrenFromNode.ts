@@ -1,5 +1,5 @@
-import { walkNode } from 'vs/editor/cactiva/libs/morph/walk';
 import { JsxSelfClosingElement, JsxExpression, JsxElement, JsxFragment, JsxText, Node, JsxAttribute } from 'ts-morph';
+import { walkNode } from 'vs/editor/cactiva/models/worker/morph/walkNode';
 
 export function getChildrenFromNode(node: Node): Node[] {
 	const list = [] as Node[];

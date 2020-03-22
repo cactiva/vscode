@@ -1,57 +1,54 @@
 import { observer } from 'mobx-react-lite';
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import { Node } from 'ts-morph';
 import 'vs/css!./Editor';
-import Breadcrumb from 'vs/editor/cactiva/editor/canvas/Breadcrumb';
-import { Tag } from 'vs/editor/cactiva/editor/canvas/Tag';
 import PropsEditor from 'vs/editor/cactiva/editor/props/PropsEditor';
 import html from 'vs/editor/cactiva/libs/html';
-import { selectNode } from 'vs/editor/cactiva/libs/morph/selectNode';
-import { cactiva, IEditorCanvas, IEditorNodeInfo } from 'vs/editor/cactiva/models/cactiva';
+import EditorCanvas from 'vs/editor/cactiva/models/EditorCanvas';
+import { cactiva } from 'vs/editor/cactiva/models/store';
+import { Tag } from 'vs/editor/cactiva/editor/canvas/Tag';
+import EditorNode from 'vs/editor/cactiva/models/EditorNode';
+import Breadcrumb from 'vs/editor/cactiva/editor/canvas/Breadcrumb';
 
-export default observer(({ canvas }: { canvas: IEditorCanvas }) => {
+export default observer(({ canvas }: { canvas: EditorCanvas }) => {
 	if (!canvas)
 		return html`
 			<div>Canvas can't be loaded</div>
 		`;
 
-	let rootItem: IEditorNodeInfo | null = null;
+	let rootItem: EditorNode | undefined = undefined;
 	if (canvas.breadcrumbs.length > 0) {
 		rootItem = canvas.breadcrumbs[0];
 	}
 
-	const propsEditor = cactiva.propsEditor.el;
-	const tagClicked = (_: Node, nodePath: string) => {
+	const propsEditorEl = cactiva.propsEditor.el;
+	const mode = cactiva.mode;
+
+	const tagClicked = (node: EditorNode) => {
 		if (canvas.source) {
-			selectNode(canvas, nodePath, 'canvas');
+			canvas.selectNode(node.path, 'canvas');
 		}
 	};
-	const breadcrumbClicked = (node: IEditorNodeInfo) => {
-		selectNode(canvas, node.nodePath, 'breadcrumb');
+	const breadcrumbClicked = (node: EditorNode) => {
+		canvas.selectNode(node.path, 'canvas');
 	};
-	const mode = cactiva.mode;
 
 	return html`
 		<${DndProvider} backend=${HTML5Backend}>
-			${propsEditor &&
+			${propsEditorEl &&
 				html`
-					<${PropsEditor} domNode=${propsEditor} />
+					<${PropsEditor} domNode=${propsEditorEl} />
 				`}
 			<div className="cactiva-canvas">
 				<div className=${`cactiva-canvas-content ${mode}`}>
-					${rootItem && !rootItem.node.get().wasForgotten()
-						? html`
-								<${Tag}
-									canvas=${canvas}
-									isLast=${true}
-									nodePath=${rootItem.nodePath}
-									node=${rootItem.node.get()}
-									onClick=${tagClicked}
-								/>
-						  `
+					${!rootItem
+						? !canvas.isReady
+							? null
+							: html`
+									<div>No Component to Render</div>
+							  `
 						: html`
-								<div>No Component to Render</div>
+								<${Tag} canvas=${canvas} isLast=${true} node=${rootItem} onClick=${tagClicked} />
 						  `}
 				</div>
 				<${Breadcrumb} canvas=${canvas} onClick=${breadcrumbClicked} />

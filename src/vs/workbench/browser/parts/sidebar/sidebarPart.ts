@@ -49,7 +49,7 @@ import { registerSingleton } from 'vs/platform/instantiation/common/extensions';
 import { LayoutPriority } from 'vs/base/browser/ui/grid/grid';
 import { assertIsDefined } from 'vs/base/common/types';
 import { LocalSelectionTransfer, DraggedViewIdentifier, DraggedCompositeIdentifier } from 'vs/workbench/browser/dnd';
-import { cactiva } from 'vs/editor/cactiva/models/cactiva';
+import { cactiva } from 'vs/editor/cactiva/models/store';
 
 export class SidebarPart extends CompositePart<Viewlet> implements IViewletService {
 	_serviceBrand: undefined;

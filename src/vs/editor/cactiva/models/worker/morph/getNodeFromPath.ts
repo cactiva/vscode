@@ -1,5 +1,5 @@
 import { Node } from 'ts-morph';
-import { getChildrenFromNode } from 'vs/editor/cactiva/libs/morph/getChildrenFromNode';
+import { getChildrenFromNode } from 'vs/editor/cactiva/models/worker/morph/getChildrenFromNode';
 
 export function getNodeFromPath(
 	source: Node | undefined,

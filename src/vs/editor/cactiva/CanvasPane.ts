@@ -10,42 +10,37 @@ import { ModelData } from 'vs/editor/browser/widget/codeEditorWidget';
 import { CanvasEditorWidget } from 'vs/editor/cactiva/canvasEditorWidget';
 import Editor from 'vs/editor/cactiva/editor/Editor';
 import html from 'vs/editor/cactiva/libs/html';
-import { selectRootNode } from 'vs/editor/cactiva/libs/morph/selectRootNode';
-import { cactiva, IEditorCanvas } from 'vs/editor/cactiva/models/cactiva';
+import EditorSource from 'vs/editor/cactiva/models/EditorSource';
+import { cactiva } from 'vs/editor/cactiva/models/store';
+import EditorCanvas from 'vs/editor/cactiva/models/EditorCanvas';
 
 export class CanvasPane extends Pane implements IView {
-	private _canvas = observable({ id: '', data: null as IEditorCanvas | null });
-	private _selectFirstNode() {
-		if (this._canvas.data) selectRootNode(this._canvas.data, 0);
-	}
-
+	private _canvas = observable({ id: '', root: undefined as EditorCanvas | undefined });
 	public updateModelData(modelData: ModelData, editor: CanvasEditorWidget) {
 		const id = modelData.model.id;
 		if (!cactiva.canvas[id]) {
-			cactiva.canvas[id] = {
-				breadcrumbs: []
-			};
+			cactiva.canvas[id] = new EditorCanvas(id);
 		}
 
 		this._canvas.id = id;
-		this._canvas.data = cactiva.canvas[id];
-		const canvas = this._canvas.data;
-		canvas.source = cactiva.project.createSourceFile(modelData.model.uri.fsPath, modelData.model.getValue(), {
-			overwrite: true
-		});
-		(canvas.source as any).editorId = id;
+		this._canvas.root = cactiva.canvas[id];
+		const canvas = this._canvas.root;
+
+		if (canvas.source) {
+			canvas.source.dispose();
+		}
+		canvas.source = new EditorSource(modelData.model.uri.fsPath, modelData.model.getValue(), canvas);
 		canvas.editor = editor;
 		canvas.modelData = modelData;
-		this._selectFirstNode();
 	}
 
 	constructor(options: IPaneOptions) {
 		super(options);
 
 		const Canvas = observer(() => {
-			if (!this._canvas.data) return null;
+			if (!this._canvas.root) return null;
 			return html`
-				<${Editor} canvas=${this._canvas.data} />
+				<${Editor} canvas=${this._canvas.root} />
 			`;
 		});
 

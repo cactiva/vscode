@@ -2,18 +2,16 @@ import { observer, useObservable } from 'mobx-react-lite';
 import { List } from 'office-ui-fabric-react';
 import { useEffect } from 'react';
 import * as ReactDOM from 'react-dom';
-import { JsxAttributeLike } from 'ts-morph';
 import Attribute from 'vs/editor/cactiva/editor/props/Attribute';
 import html from 'vs/editor/cactiva/libs/html';
-import { getNodeAttributes } from 'vs/editor/cactiva/libs/morph/getNodeAttributes';
-import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
-import { cactiva } from 'vs/editor/cactiva/models/cactiva';
+import EditorNodeAttr from 'vs/editor/cactiva/models/EditorNodeAttr';
+import { cactiva } from 'vs/editor/cactiva/models/store';
 
 export default observer(({ domNode }: any) => {
 	let bgColor = 'white';
 	let fontColor = 'black';
 
-	const pe = cactiva.propsEditor;
+	const propsEditor = cactiva.propsEditor;
 	const sidebar = document.getElementById('workbench.parts.sidebar');
 
 	if (sidebar) {
@@ -22,28 +20,27 @@ export default observer(({ domNode }: any) => {
 	}
 	const meta = useObservable({
 		tagName: '',
-		attributes: [] as JsxAttributeLike[]
+		attributes: [] as EditorNodeAttr[]
 	});
 
 	useEffect(() => {
-		if (pe.nodeInfo) {
-			const node = pe.nodeInfo.node.get();
-			if (!node.wasForgotten()) {
-				meta.tagName = getTagName(node);
-				meta.attributes = getNodeAttributes(node);
+		(async () => {
+			if (propsEditor.node) {
+				meta.tagName = propsEditor.node.text;
+				meta.attributes = await propsEditor.node.getAttributes();
 			}
-		}
-	}, [pe.nodeInfo, cactiva.color]);
+		})();
+	}, [propsEditor.node, cactiva.fontColor]);
 
 	return ReactDOM.createPortal(
 		html`
-			<div className="cactiva-props-editor" style=${{ display: pe.hidden ? 'none' : 'flex' }}>
+			<div className="cactiva-props-editor" style=${{ display: propsEditor.hidden ? 'none' : 'flex' }}>
 				<div className="title row pad space-between">
 					<div>${meta.tagName}</div>
 					<div
 						className="close-btn center"
 						onClick=${() => {
-							pe.hidden = !pe.hidden;
+							propsEditor.hidden = !propsEditor.hidden;
 						}}
 					>
 						×
@@ -52,7 +49,7 @@ export default observer(({ domNode }: any) => {
 				<div>
 					<${List}
 						items=${meta.attributes}
-						onRenderCell=${(item: JsxAttributeLike, index: number): JSX.Element => {
+						onRenderCell=${(item: EditorNodeAttr, index: number): JSX.Element => {
 							return html`
 								<${Attribute} item=${item} />
 							`;
@@ -120,7 +117,7 @@ export default observer(({ domNode }: any) => {
 						overflow: hidden;
 					}
 
-					.cactiva-props-editor .ms-List-cell:first-child .prop {
+					.cactiva-props-editor .ms-List-cell:first-page .ms-List-cell:first-child .prop {
 						border-top: 1px dotted ${fontColor};
 					}
 

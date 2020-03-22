@@ -36,7 +36,7 @@ import { ILifecycleMainService } from 'vs/platform/lifecycle/electron-main/lifec
 import { IStorageMainService } from 'vs/platform/storage/node/storageMainService';
 import { IFileService } from 'vs/platform/files/common/files';
 
-const RUN_TEXTMATE_IN_WORKER = false;
+const RUN_TEXTMATE_IN_WORKER = true;
 
 export interface IWindowCreationOptions {
 	state: IWindowState;

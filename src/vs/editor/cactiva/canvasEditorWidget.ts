@@ -9,13 +9,9 @@ import { ICodeEditorService } from 'vs/editor/browser/services/codeEditorService
 import { CodeEditorWidget, ICodeEditorWidgetOptions } from 'vs/editor/browser/widget/codeEditorWidget';
 import { CanvasPane } from 'vs/editor/cactiva/CanvasPane';
 import { CodePane } from 'vs/editor/cactiva/CodePane';
-import { getRootNodes } from 'vs/editor/cactiva/libs/morph/getRootNodes';
-import { selectNode } from 'vs/editor/cactiva/libs/morph/selectNode';
-import { selectRootNode } from 'vs/editor/cactiva/libs/morph/selectRootNode';
-import { syncSource } from 'vs/editor/cactiva/libs/morph/syncSource';
-import { cactiva } from 'vs/editor/cactiva/models/cactiva';
+import EditorSource from 'vs/editor/cactiva/models/EditorSource';
+import { cactiva } from 'vs/editor/cactiva/models/store';
 import { IEditorConstructionOptions } from 'vs/editor/common/config/editorOptions';
-import { Range } from 'vs/editor/common/core/range';
 import * as editorCommon from 'vs/editor/common/editorCommon';
 import { ITextModel } from 'vs/editor/common/model';
 import { IAccessibilityService } from 'vs/platform/accessibility/common/accessibility';
@@ -24,6 +20,7 @@ import { IContextKeyService } from 'vs/platform/contextkey/common/contextkey';
 import { IInstantiationService } from 'vs/platform/instantiation/common/instantiation';
 import { INotificationService } from 'vs/platform/notification/common/notification';
 import { IThemeService } from 'vs/platform/theme/common/themeService';
+import EditorCanvas from 'vs/editor/cactiva/models/EditorCanvas';
 
 export class CanvasEditorWidget extends CodeEditorWidget {
 	private readonly _domEl: HTMLElement;
@@ -31,8 +28,8 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 	private readonly _codePane: CodePane;
 	private readonly _canvasPane: CanvasPane;
 
-	private _previewPaneSize: number;
-	private _previewPaneSizeStoreKey: string;
+	private _canvasPaneSize: number;
+	private _canvasPaneSizeStoreKey: string;
 	private _paneMode: 'code' | 'vertical' | 'horizontal' | 'canvas';
 
 	public layout(dimension?: editorCommon.IDimension): void {
@@ -40,7 +37,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			if (this._splitView.length > 1) {
 				this.superLayout({
 					...dimension,
-					width: dimension.width - this._previewPaneSize
+					width: this._splitView.getViewSize(0)
 				});
 			} else {
 				this.superLayout(dimension);
@@ -96,20 +93,12 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			accessibilityService
 		);
 
-		this._previewPaneSizeStoreKey = `cactiva-sash-${this.getId()}`;
-		const _splitSize = localStorage[this._previewPaneSizeStoreKey];
-		this._previewPaneSize = _splitSize ? parseInt(_splitSize) : 0;
+		this._canvasPaneSizeStoreKey = `cactiva-sash-${this.getId()}`;
+		const _canvasPaneSize = localStorage[this._canvasPaneSizeStoreKey];
+		this._canvasPaneSize = _canvasPaneSize ? parseInt(_canvasPaneSize) : 0;
 
 		if (this._modelData && !cactiva.canvas[this._modelData?.model.id]) {
-			cactiva.canvas[this._modelData?.model.id] = {
-				breadcrumbs: [],
-				modelData: undefined,
-				editor: this,
-				editorOptions: options,
-				source: undefined,
-				selectedNode: undefined,
-				hoveredNode: undefined
-			};
+			cactiva.canvas[this._modelData?.model.id] = new EditorCanvas(this._modelData?.model.id);
 		}
 
 		this._paneMode = 'horizontal';
@@ -169,35 +158,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 								}
 
 								if (source) {
-									const range = new Range(0, 0, e.position.lineNumber, e.position.column);
-									let src = this._modelData?.viewModel.getPlainTextToCopy([range], false, false);
-									if (src) {
-										if (Array.isArray(src)) {
-											src = src.join('\n');
-										}
-										const rawNode = source.getDescendantAtPos(src.length);
-										const node = rawNode?.compilerNode;
-										if (node && canvas.source) {
-											let cursor = node;
-											let rootIndex = -1;
-											const rootNodes = getRootNodes(canvas.source).map(e => e.compilerNode);
-
-											while (cursor !== undefined && !(cursor as any).cactivaPath) {
-												rootIndex = rootNodes.indexOf(cursor as any);
-												if (rootIndex >= 0) {
-													break;
-												}
-												cursor = cursor.parent;
-											}
-											if (cursor) {
-												if ((cursor as any).cactivaPath) {
-													selectNode(canvas, (cursor as any).cactivaPath, 'code');
-												} else {
-													await selectRootNode(canvas, rootIndex);
-												}
-											}
-										}
-									}
+									// select source in editor
 								}
 							}
 						},
@@ -214,11 +175,11 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 							if (model) {
 								const canvas = cactiva.canvas[model.id];
 								if (canvas) {
-									canvas.source = cactiva.project.createSourceFile(model.uri.fsPath, model.getValue(), {
-										overwrite: true
-									});
-									syncSource(canvas);
-									cactiva.propsEditor.nodeInfo = undefined;
+									if (canvas.source) {
+										canvas.source.dispose();
+									}
+									canvas.source = new EditorSource(model.uri.fsPath, model.getValue(), canvas);
+									cactiva.propsEditor.node = undefined;
 								}
 							}
 						},
@@ -227,16 +188,35 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 					)
 				)
 			);
+			if (this._splitView.length === 1) {
+				this.superLayout({
+					width: this._domEl.clientWidth,
+					height: this._domEl.clientHeight
+				});
+			} else {
+				this.superLayout({
+					width: this._splitView.getViewSize(0),
+					height: this._domEl.clientHeight
+				});
+			}
 		}
 	}
 
 	private _changeLanguageTo(languageId: string) {
-		if (languageId.indexOf('react') > 0 && this._splitView.length <= 1) {
-			const domElWidth = this._domEl.clientWidth;
-			this._splitView.layout(domElWidth);
-			this._splitView.addView(this._canvasPane, this._previewPaneSize, 1);
+		if (languageId.indexOf('react') > 0) {
+			if (this._splitView.length <= 1) {
+				const domElWidth = this._domEl.clientWidth;
+				this._splitView.layout(domElWidth);
+				this._splitView.addView(this._canvasPane, this._canvasPaneSize, 1);
+			} else {
+				this._splitView.setViewVisible(1, true);
+			}
+			this.superLayout({
+				width: this._splitView.getViewSize(0),
+				height: this._domEl.clientHeight
+			});
 		} else if (this._splitView.length > 1 && languageId.indexOf('react') < 0) {
-			this._splitView.removeView(1);
+			this._splitView.setViewVisible(1, false);
 			this.layout({
 				width: this._domEl.clientWidth,
 				height: this._domEl.clientHeight

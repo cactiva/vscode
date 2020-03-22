@@ -4,8 +4,8 @@ import IconHybrid from 'vs/editor/cactiva/editor/icons/IconHybrid';
 import IconLayout from 'vs/editor/cactiva/editor/icons/IconLayout';
 import IconPreview from 'vs/editor/cactiva/editor/icons/IconPreview';
 import html from 'vs/editor/cactiva/libs/html';
-import { getTagName } from 'vs/editor/cactiva/libs/morph/getTagName';
-import { cactiva, IEditorNodeInfo } from 'vs/editor/cactiva/models/cactiva';
+import { cactiva } from 'vs/editor/cactiva/models/store';
+import EditorNode from 'vs/editor/cactiva/models/EditorNode';
 
 export default observer(({ canvas, onClick }: any) => {
 	const mode = cactiva.mode;
@@ -34,18 +34,15 @@ export default observer(({ canvas, onClick }: any) => {
 							height: '22px'
 						}}
 					>
-						${canvas.breadcrumbs.map((nodeInfo: IEditorNodeInfo, idx: number) => {
-							const node = nodeInfo.node.get();
-							if (node.wasForgotten()) return null;
-
-							const tagName = getTagName(node);
+						${canvas.breadcrumbs.map((node: EditorNode, idx: number) => {
+							const tagName = node.text;
 							const hovered = canvas.hoveredNode === node ? 'hover' : '';
-							const selected = canvas.selectedNode?.node === node ? 'selected' : '';
+							const selected = canvas.selectedNode === node ? 'selected' : '';
 							return html`
 								<div
 									key=${idx}
 									onClick=${() => {
-										onClick(nodeInfo);
+										onClick(node);
 									}}
 									onMouseOut=${() => {
 										canvas.hoveredNode = undefined;
@@ -82,7 +79,7 @@ export default observer(({ canvas, onClick }: any) => {
 								changeMode('preview');
 							}}
 						>
-							<${IconPreview} size=${14} color=${cactiva.color} />
+							<${IconPreview} size=${14} color=${cactiva.fontColor} />
 						</div>
 						<div
 							className=${`btn btn-toolbar btn-preview ${mode === 'hybrid' ? 'active' : ''}`}
@@ -90,7 +87,7 @@ export default observer(({ canvas, onClick }: any) => {
 								changeMode('hybrid');
 							}}
 						>
-							<${IconHybrid} size=${14} color=${cactiva.color} />
+							<${IconHybrid} size=${14} color=${cactiva.fontColor} />
 						</div>
 						<div
 							className=${`btn btn-toolbar btn-preview ${mode === 'layout' ? 'active' : ''}`}
@@ -98,7 +95,7 @@ export default observer(({ canvas, onClick }: any) => {
 								changeMode('layout');
 							}}
 						>
-							<${IconLayout} size=${14} color=${cactiva.color} />
+							<${IconLayout} size=${13} color=${cactiva.fontColor} />
 						</div>
 					</div>
 					<div className="breadcrumb-first-spacer"></div>

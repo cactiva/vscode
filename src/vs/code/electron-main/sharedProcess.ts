@@ -43,6 +43,7 @@ export class SharedProcess implements ISharedProcess {
 			webPreferences: {
 				images: false,
 				nodeIntegration: true,
+				nodeIntegrationInWorker: true,
 				webgl: false,
 				disableBlinkFeatures: 'Auxclick' // do NOT change, allows us to identify this window as shared-process in the process explorer
 			}
