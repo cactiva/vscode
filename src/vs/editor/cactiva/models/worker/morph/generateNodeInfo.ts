@@ -4,21 +4,21 @@ import { getLeadingChar } from 'vs/editor/cactiva/models/worker/morph/getLeading
 export function generateNodeInfo(node: Node) {
 	const src = node.getSourceFile().getFullText();
 
-	let tagName: any = '';
+	let text: any = '';
 	let startPos = node.getPos();
 	if (node instanceof JsxElement) {
 		startPos = node.getOpeningElement().getPos();
-		tagName = (node.getOpeningElement().getTagNameNode() as any).compilerNode.getText();
+		text = (node.getOpeningElement().getTagNameNode() as any).compilerNode.getText();
 	} else if (node instanceof JsxSelfClosingElement) {
-		tagName = (node.getTagNameNode() as any).compilerNode.getText();
+		text = (node.getTagNameNode() as any).compilerNode.getText();
 	} else if (node instanceof JsxFragment) {
-		tagName = '</>';
+		text = '</>';
 	} else {
-		tagName = node.getText();
+		text = '{⋯}';
 	}
 
 	return {
-		text: tagName,
+		text,
 		kind: node.getKindName(),
 		start: {
 			line: node.getStartLineNumber(),
