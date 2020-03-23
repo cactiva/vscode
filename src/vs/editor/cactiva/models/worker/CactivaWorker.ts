@@ -46,7 +46,7 @@ const actions: any = {
 				const parent: Node<any> = cursor.getParent();
 				cursor = parent;
 			}
-			return cursor.cactivaPath;
+			if (cursor) return cursor.cactivaPath;
 		}
 		return '';
 	}
