@@ -32,6 +32,7 @@ export default class EditorCanvas extends EditorBase {
 		});
 	}
 
+
 	async selectRootNode(path: string) {
 		this.isReady = false;
 		this.breadcrumbs = [];

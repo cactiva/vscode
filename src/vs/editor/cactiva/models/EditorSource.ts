@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { observable, intercept } from 'mobx';
 import EditorBase from 'vs/editor/cactiva/models/EditorBase';
 import EditorNode from 'vs/editor/cactiva/models/EditorNode';
 import EditorCanvas from 'vs/editor/cactiva/models/EditorCanvas';
@@ -24,9 +24,21 @@ export default class EditorSource extends EditorBase {
 				this.rootNodes = data.map((e: any) => {
 					return new EditorNode({ ...e, source: this });
 				});
+
 				this.isReady = true;
 			});
 		}
+	}
+
+	async updateContent(content: string) {
+		this.executeInWorker('source:load', {
+			fileName: this.fileName,
+			content
+		}).then(data => {
+			this.rootNodes = data.map((e: any) => {
+				return new EditorNode({ ...e, source: this });
+			});
+		});
 	}
 
 	continueWhenReady(): Promise<boolean> {

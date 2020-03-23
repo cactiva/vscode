@@ -185,10 +185,12 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 							if (model) {
 								const canvas = cactiva.canvas[model.id];
 								if (canvas) {
-									if (canvas.source) {
+									if (canvas.source.fileName === model.uri.fsPath) {
+										canvas.source.updateContent(model.getValue());
+									} else {
 										canvas.source.dispose();
+										canvas.source = new EditorSource(model.uri.fsPath, model.getValue(), canvas);
 									}
-									canvas.source = new EditorSource(model.uri.fsPath, model.getValue(), canvas);
 									cactiva.propsEditor.node = undefined;
 								}
 							}

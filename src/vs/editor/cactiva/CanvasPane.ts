@@ -26,10 +26,13 @@ export class CanvasPane extends Pane implements IView {
 		this._canvas.root = cactiva.canvas[id];
 		const canvas = this._canvas.root;
 
-		if (canvas.source) {
+		if (canvas.source.fileName === modelData.model.uri.fsPath) {
+			canvas.source.updateContent(modelData.model.getValue());
+		} else {
 			canvas.source.dispose();
+			canvas.source = new EditorSource(modelData.model.uri.fsPath, modelData.model.getValue(), canvas);
 		}
-		canvas.source = new EditorSource(modelData.model.uri.fsPath, modelData.model.getValue(), canvas);
+
 		canvas.editor = editor;
 		canvas.modelData = modelData;
 	}
