@@ -43,11 +43,14 @@ export default class EditorCanvas extends EditorBase {
 	}
 
 	async selectNode(path: string, from: 'canvas' | 'code' | 'breadcrumb') {
-		const breadrumbs: EditorNode[] = [];
+		const breadcrumbs: EditorNode[] = [];
 		await this.source.getNodeFromPath(path, n => {
-			breadrumbs.push(n);
+			breadcrumbs.push(n);
 		});
-		this.breadcrumbs = breadrumbs;
+
+		if (breadcrumbs.length === 0) return;
+
+		this.breadcrumbs = breadcrumbs;
 		this.selectedNode = this.breadcrumbs[this.breadcrumbs.length - 1];
 
 		if (!this.selectedNode) return;

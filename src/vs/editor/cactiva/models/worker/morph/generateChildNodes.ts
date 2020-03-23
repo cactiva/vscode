@@ -11,8 +11,10 @@ export function generateChildNodes(node: Node): Node[] {
 			node instanceof JsxFragment ||
 			node instanceof JsxText
 		) {
-			if (node instanceof JsxExpression && meta && meta.isAttribute) {
-				return false;
+			if (node instanceof JsxExpression) {
+				if (meta && meta.isAttribute) {
+					return false;
+				}
 			}
 			list.push(node);
 			return false;

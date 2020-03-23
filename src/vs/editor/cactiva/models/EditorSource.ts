@@ -49,7 +49,7 @@ export default class EditorSource extends EditorBase {
 		nodePath: string,
 		whenEachFound?: (node: EditorNode, path: string) => void
 	): Promise<EditorNode | null> {
-		if (!nodePath) null;
+		if (!nodePath || typeof nodePath !== 'string') null;
 
 		if (!(await this.continueWhenReady())) return null;
 
@@ -78,5 +78,13 @@ export default class EditorSource extends EditorBase {
 
 		if (lastNode instanceof EditorNode) return lastNode;
 		return null;
+	}
+
+	async getNodePathAtPos(pos: number) {
+		const node = this.executeInWorker('node:getNodePathAtPos', {
+			pos,
+			fileName: this.fileName
+		});
+		return node;
 	}
 }

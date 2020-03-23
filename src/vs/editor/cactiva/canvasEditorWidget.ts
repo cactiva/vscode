@@ -21,6 +21,7 @@ import { IInstantiationService } from 'vs/platform/instantiation/common/instanti
 import { INotificationService } from 'vs/platform/notification/common/notification';
 import { IThemeService } from 'vs/platform/theme/common/themeService';
 import EditorCanvas from 'vs/editor/cactiva/models/EditorCanvas';
+import { Range } from 'vs/editor/common/core/range';
 
 export class CanvasEditorWidget extends CodeEditorWidget {
 	private readonly _domEl: HTMLElement;
@@ -159,6 +160,15 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 
 								if (source) {
 									// select source in editor
+									const range = new Range(0, 0, e.position.lineNumber, e.position.column);
+									let src = this._modelData?.viewModel.getPlainTextToCopy([range], false, false);
+									if (src) {
+										if (Array.isArray(src)) {
+											src = src.join('\n');
+										}
+										const nodePath = await source.getNodePathAtPos(src.length);
+										await canvas.selectNode(nodePath, 'code');
+									}
 								}
 							}
 						},

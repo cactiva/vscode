@@ -17,6 +17,9 @@ export function generateNodes(source: Node, path?: string): IEditorNodeIPC[] {
 	return rootNodes.map((e, idx) => {
 		const nodeInfo = generateNodeInfo(e);
 		const nodePath = [...pathArray, idx].join('.');
+		if (e) {
+			(e as any).cactivaPath = nodePath;
+		}
 		return {
 			...nodeInfo,
 			path: nodePath,

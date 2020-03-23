@@ -25,5 +25,5 @@ export const cactiva: IEditorStore = observable({
 	propsEditor: {},
 	fontColor: '#fff',
 	canvas: {},
-	mode: 'layout'
+	mode: localStorage.cactivaMode || 'layout'
 });

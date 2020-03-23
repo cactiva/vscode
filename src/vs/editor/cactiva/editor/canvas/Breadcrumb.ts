@@ -11,6 +11,7 @@ export default observer(({ canvas, onClick }: any) => {
 	const mode = cactiva.mode;
 	const changeMode = (mode: 'preview' | 'layout' | 'hybrid') => {
 		cactiva.mode = mode;
+		localStorage.cactivaMode = mode;
 	};
 
 	return html`

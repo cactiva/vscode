@@ -44,19 +44,25 @@ export const TagChild = observer(({ canvas, idx, onClick, node, Tag, isLast }: I
 						/>
 					`
 				);
+			} else {
+				content = node.text;
 			}
-		} else if (node.kind === 'JsxText') {
-			// const expressionProps = {
-			// 	style: {
-			// 		fontFamily: canvas.editorOptions?.fontFamily,
-			// 		font: canvas.editorOptions?.fontSize
-			// 	}
-			// };
-			// if (e.getText().trim()) {
-			// 	content = html`
-			// 		<div ...${expressionProps} className="expression-code">${e.getText().substr(0, 200)}</div>
-			// 	`;
-			// }
+		}
+
+		if (!!content || node.kind === 'JsxText') {
+			const expressionProps = {
+				style: {
+					fontFamily: canvas.editorOptions?.fontFamily,
+					font: canvas.editorOptions?.fontSize
+				}
+			};
+
+			const text = node.expression || node.text;
+			if (text) {
+				content = html`
+					<div ...${expressionProps} className="expression-code">${text.substr(0, 200)}</div>
+				`;
+			}
 		}
 
 		if (content) {

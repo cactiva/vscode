@@ -1,7 +1,7 @@
 import { observable } from 'mobx';
-import EditorSource from 'vs/editor/cactiva/models/EditorSource';
 import EditorBase from 'vs/editor/cactiva/models/EditorBase';
 import EditorNodeAttr from 'vs/editor/cactiva/models/EditorNodeAttr';
+import EditorSource from 'vs/editor/cactiva/models/EditorSource';
 
 export interface IEditorNodePos {
 	line: number;
@@ -21,6 +21,7 @@ export default class EditorNode extends EditorBase {
 	@observable path = '';
 	@observable text = '';
 	@observable kind = '';
+	@observable expression = '';
 	@observable children: EditorNode[] = [];
 	@observable source: EditorSource;
 	@observable domRef: any = undefined;
@@ -33,6 +34,7 @@ export default class EditorNode extends EditorBase {
 		children: EditorNode[];
 		start: IEditorNodePos;
 		end: IEditorNodePos;
+		expression: string;
 	}) {
 		super();
 		this.source = props.source;
@@ -41,6 +43,7 @@ export default class EditorNode extends EditorBase {
 		this.kind = props.kind;
 		this.start = props.start;
 		this.end = props.end;
+		this.expression = props.expression;
 
 		if (Array.isArray(props.children)) {
 			this.children = props.children.map((e: any) => {
@@ -54,7 +57,7 @@ export default class EditorNode extends EditorBase {
 	}
 
 	async getAttributes(): Promise<EditorNodeAttr[]> {
-		const result = await this.executeInWorker('node:get-attributes', {
+		const result = await this.executeInWorker('node:getAttributes', {
 			fileName: this.source.fileName,
 			path: this.path
 		});
