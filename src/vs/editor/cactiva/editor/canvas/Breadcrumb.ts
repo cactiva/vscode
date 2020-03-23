@@ -6,8 +6,10 @@ import IconPreview from 'vs/editor/cactiva/editor/icons/IconPreview';
 import html from 'vs/editor/cactiva/libs/html';
 import { cactiva } from 'vs/editor/cactiva/models/store';
 import EditorNode from 'vs/editor/cactiva/models/EditorNode';
+import Popover from 'vs/editor/cactiva/editor/ui/Popover';
+import EditorCanvas from 'vs/editor/cactiva/models/EditorCanvas';
 
-export default observer(({ canvas, onClick }: any) => {
+export default observer(({ canvas, onClick }: { canvas: EditorCanvas; onClick: any }) => {
 	const mode = cactiva.mode;
 	const changeMode = (mode: 'preview' | 'layout' | 'hybrid') => {
 		cactiva.mode = mode;
@@ -39,7 +41,7 @@ export default observer(({ canvas, onClick }: any) => {
 							const tagName = node.text;
 							const hovered = canvas.hoveredNode === node ? 'hover' : '';
 							const selected = canvas.selectedNode === node ? 'selected' : '';
-							return html`
+							const item = html`
 								<div
 									key=${idx}
 									onClick=${() => {
@@ -71,6 +73,42 @@ export default observer(({ canvas, onClick }: any) => {
 										`}
 								</div>
 							`;
+
+							if (idx > 0) {
+								return item;
+							} else {
+								return html`
+									<${Popover}
+										key=${idx}
+										content=${(popover: any) => {
+											return html`
+												<div>
+													${canvas.source.rootNodes.map((e, idx) => {
+														return html`
+															<div
+																key=${idx}
+																style=${{
+																	padding: '5px 15px',
+																	cursor: 'pointer',
+																	borderTop: idx === 0 ? '0px' : '1px solid #ccc'
+																}}
+																onClick=${() => {
+																	canvas.selectNode(idx.toString(), 'breadcrumb');
+																	popover.hide();
+																}}
+															>
+																${e.text}
+															</div>
+														`;
+													})}
+												</div>
+											`;
+										}}
+									>
+										${item}
+									<//>
+								`;
+							}
 						})}
 					</div>
 					<div className="canvas-toolbar">
