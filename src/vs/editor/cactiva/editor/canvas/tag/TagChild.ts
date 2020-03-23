@@ -30,9 +30,11 @@ export const TagChild = observer(({ canvas, idx, onClick, node, Tag, isLast }: I
 		`;
 	} else if (node.kind === 'JsxText' || node.kind === 'JsxExpression') {
 		let content = null;
+		let children = null;
 		if (node.kind === 'JsxExpression') {
+			content = node.expression;
 			if (node.children.length > 0) {
-				content = node.children.map(
+				children = node.children.map(
 					(j, jix) => html`
 						<${Tag}
 							canvas=${canvas}
@@ -44,8 +46,6 @@ export const TagChild = observer(({ canvas, idx, onClick, node, Tag, isLast }: I
 						/>
 					`
 				);
-			} else {
-				content = node.text;
 			}
 		}
 
@@ -59,13 +59,19 @@ export const TagChild = observer(({ canvas, idx, onClick, node, Tag, isLast }: I
 
 			const text = node.expression || node.text;
 			if (text) {
-				content = html`
-					<div ...${expressionProps} className="expression-code">${text.substr(0, 200)}</div>
-				`;
+				if (cactiva.mode !== 'layout' && node.kind === 'JsxExpression') {
+					content = null;
+				} else {
+					content = html`
+						<div ...${expressionProps} className=${`expression-code ${children ? 'has-children' : ''}`}>
+							${text}
+						</div>
+					`;
+				}
 			}
 		}
 
-		if (content) {
+		if (content || children) {
 			const selected = canvas.selectedNode === node ? 'selected' : '';
 			const hovered = canvas.hoveredNode === node ? 'hover' : '';
 			const type = node.kind === 'JsxText' ? '' : 'expression';
@@ -88,7 +94,7 @@ export const TagChild = observer(({ canvas, idx, onClick, node, Tag, isLast }: I
 						className=${`singletag vertical ${type} ${selected} ${hovered} ${mode}`}
 						key=${idx}
 					>
-						${content}
+						${content} ${children}
 					</div>
 					${mode !== 'preview' &&
 						html`

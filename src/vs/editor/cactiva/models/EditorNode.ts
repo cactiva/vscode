@@ -61,8 +61,12 @@ export default class EditorNode extends EditorBase {
 			fileName: this.source.fileName,
 			path: this.path
 		});
-		return result.map((e: any) => {
-			return new EditorNodeAttr({ ...e, node: this });
-		});
+		if (result) {
+			return result.map((e: any) => {
+				return new EditorNodeAttr({ ...e, node: this });
+			});
+		} else {
+			return [];
+		}
 	}
 }

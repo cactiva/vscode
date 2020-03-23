@@ -17,7 +17,7 @@ export function generateNodeInfo(node: Node) {
 	} else if (node instanceof JsxText) {
 		text = node.getText();
 	} else {
-		expression = node.getText();
+		expression = node.getText().substr(0, 200);
 		text = '{⋯}';
 	}
 

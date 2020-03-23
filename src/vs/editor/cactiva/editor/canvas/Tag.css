@@ -58,9 +58,14 @@
 	overflow: hidden;
 	white-space: pre-wrap;
 	text-overflow: ellipsis;
+	position: relative;
 }
 
-.singletag.preview {
+.singletag .expression .expression-code.has-children {
+	border-bottom: 1px dotted red;
+}
+
+​ .singletag.preview {
 	padding: 0;
 	border-width: 0;
 }
@@ -89,4 +94,14 @@
 	background-color: transparent;
 	border-radius: 3px;
 	background-size: 30px 30px;
+}
+
+.singletag.preview {
+	padding: 0;
+	border: 0 !important;
+}
+
+.singletag.preview .expression,
+.singletag.preview .expression .expression-code.has-children {
+	border: 0;
 }
