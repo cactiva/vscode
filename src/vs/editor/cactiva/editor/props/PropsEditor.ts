@@ -118,6 +118,7 @@ const PropsEditorContent = observer(({ domNode, style }: any) => {
 						`;
 					}}
 				/>
+				<input type="text" className="new-prop" placeholder="+ New Prop" />
 			</div>
 			<style>
 				.cactiva-props-editor {
@@ -136,6 +137,7 @@ const PropsEditorContent = observer(({ domNode, style }: any) => {
 
 				.cactiva-props-editor.popup {
 					min-width: 300px;
+					min-height: 80px;
 				}
 
 				.cactiva-props-editor.popup > .title {
@@ -240,6 +242,14 @@ const PropsEditorContent = observer(({ domNode, style }: any) => {
 				}
 				.cactiva-props-editor.popup .goto-source {
 					display: none !important;
+				}
+				.cactiva-props-editor .new-prop {
+					border: 0;
+					padding: 3px 0px 4px 12px;
+					font-size: 12px;
+					outline: none !important;
+					background: ${bgColor};
+					color: ${fontColor};
 				}
 			</style>
 		</div>
