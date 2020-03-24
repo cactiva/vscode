@@ -67,6 +67,7 @@ const PropsEditorContent = observer(({ domNode, style }: any) => {
 	}
 	const meta = useObservable({
 		tagName: '',
+		newProp: '',
 		attributes: [] as EditorNodeAttr[]
 	});
 
@@ -118,7 +119,7 @@ const PropsEditorContent = observer(({ domNode, style }: any) => {
 						`;
 					}}
 				/>
-				<input type="text" className="new-prop" placeholder="+ New Prop" />
+				<input type="text" className="new-prop" value=${meta.newProp} placeholder="+ new prop" />
 			</div>
 			<style>
 				.cactiva-props-editor {
@@ -245,8 +246,8 @@ const PropsEditorContent = observer(({ domNode, style }: any) => {
 				}
 				.cactiva-props-editor .new-prop {
 					border: 0;
-					padding: 3px 0px 4px 12px;
-					font-size: 12px;
+					padding: 2px 0px 4px 12px;
+					font-size: 14px;
 					outline: none !important;
 					background: ${bgColor};
 					color: ${fontColor};
