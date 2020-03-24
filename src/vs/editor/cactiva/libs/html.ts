@@ -20,18 +20,14 @@ const evaluate = (h: any, current: any, fields: any, args: any) => {
 
 		if (current[i] === TAG_SET) {
 			args[0] = value;
-		}
-		else if (current[i] === PROPS_SET) {
+		} else if (current[i] === PROPS_SET) {
 			(args[1] = args[1] || {})[current[++i]] = value;
-		}
-		else if (current[i] === PROPS_ASSIGN) {
+		} else if (current[i] === PROPS_ASSIGN) {
 			args[1] = Object.assign(args[1] || {}, value);
-		}
-		else if (current[i]) {
+		} else if (current[i]) {
 			// code === CHILD_RECURSE
 			args.push(h.apply(null, evaluate(h, value, fields, ['', null])));
-		}
-		else {
+		} else {
 			// code === CHILD_APPEND
 			args.push(value);
 		}
@@ -40,7 +36,7 @@ const evaluate = (h: any, current: any, fields: any, args: any) => {
 	return args;
 };
 
-const build = function (this: any, statics: any) {
+const build = function(this: any, statics: any) {
 	const fields = arguments;
 	const h = this;
 
@@ -54,41 +50,32 @@ const build = function (this: any, statics: any) {
 		if (mode === MODE_TEXT && (field || (buffer = buffer.replace(/^\s*\n\s*|\s*\n\s*$/g, '')))) {
 			if (MINI) {
 				current.push(field ? fields[field] : buffer);
-			}
-			else {
+			} else {
 				current.push(field || buffer, CHILD_APPEND);
 			}
-		}
-		else if (mode === MODE_TAGNAME && (field || buffer)) {
+		} else if (mode === MODE_TAGNAME && (field || buffer)) {
 			if (MINI) {
 				current[1] = field ? fields[field] : buffer;
-			}
-			else {
+			} else {
 				current.push(field || buffer, TAG_SET);
 			}
 			mode = MODE_WHITESPACE;
-		}
-		else if (mode === MODE_WHITESPACE && buffer === '...' && field) {
+		} else if (mode === MODE_WHITESPACE && buffer === '...' && field) {
 			if (MINI) {
 				current[2] = Object.assign(current[2] || {}, fields[field]);
-			}
-			else {
+			} else {
 				current.push(field, PROPS_ASSIGN);
 			}
-		}
-		else if (mode === MODE_WHITESPACE && buffer && !field) {
+		} else if (mode === MODE_WHITESPACE && buffer && !field) {
 			if (MINI) {
 				(current[2] = current[2] || {})[buffer] = true;
-			}
-			else {
+			} else {
 				current.push(true, PROPS_SET, buffer);
 			}
-		}
-		else if (mode === MODE_ATTRIBUTE && propName) {
+		} else if (mode === MODE_ATTRIBUTE && propName) {
 			if (MINI) {
 				(current[2] = current[2] || {})[propName] = field ? fields[field] : buffer;
-			}
-			else {
+			} else {
 				current.push(field || buffer, PROPS_SET, propName);
 			}
 			propName = '';
@@ -113,40 +100,31 @@ const build = function (this: any, statics: any) {
 					commit();
 					if (MINI) {
 						current = [current, '', null];
-					}
-					else {
+					} else {
 						current = [current];
 					}
 					mode = MODE_TAGNAME;
-				}
-				else {
+				} else {
 					buffer += char;
 				}
-			}
-			else if (quote) {
+			} else if (quote) {
 				if (char === quote) {
 					quote = '';
-				}
-				else {
+				} else {
 					buffer += char;
 				}
-			}
-			else if (char === '"' || char === "'") {
+			} else if (char === '"' || char === "'") {
 				quote = char;
-			}
-			else if (char === '>') {
+			} else if (char === '>') {
 				commit();
 				mode = MODE_TEXT;
-			}
-			else if (!mode) {
+			} else if (!mode) {
 				// Ignore everything until the tag ends
-			}
-			else if (char === '=') {
+			} else if (char === '=') {
 				mode = MODE_ATTRIBUTE;
 				propName = buffer;
 				buffer = '';
-			}
-			else if (char === '/') {
+			} else if (char === '/') {
 				commit();
 				if (mode === MODE_TAGNAME) {
 					current = current[0];
@@ -154,18 +132,15 @@ const build = function (this: any, statics: any) {
 				mode = current;
 				if (MINI && Array.isArray(mode)) {
 					(current = current[0]).push(h.apply(null, mode.slice(1)));
-				}
-				else {
+				} else {
 					(current = current[0]).push(mode, CHILD_RECURSE);
 				}
 				mode = MODE_SLASH;
-			}
-			else if (char === ' ' || char === '\t' || char === '\n' || char === '\r') {
+			} else if (char === ' ' || char === '\t' || char === '\n' || char === '\r') {
 				// <a disabled>
 				commit();
 				mode = MODE_WHITESPACE;
-			}
-			else {
+			} else {
 				buffer += char;
 			}
 		}
@@ -178,7 +153,6 @@ const build = function (this: any, statics: any) {
 	return current;
 };
 
-
 const CACHE = {} as any;
 const getCache = (statics: string) => {
 	let key = '';
@@ -188,7 +162,7 @@ const getCache = (statics: string) => {
 	return CACHE[key] || (CACHE[key] = build(statics));
 };
 
-export default function (statics: any, ..._: any) {
+export default function(statics: any, ..._: any) {
 	const res = evaluate(React.createElement, getCache(statics), arguments, []);
 	return res.length > 1 ? res : res[0];
-};
+}

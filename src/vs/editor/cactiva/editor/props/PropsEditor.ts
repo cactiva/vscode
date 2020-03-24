@@ -174,10 +174,11 @@ const PropsEditorContent = observer(({ domNode, style }: any) => {
 
 				.cactiva-props-editor .pointer {
 					cursor: pointer;
+					opacity: 0.7;
 				}
 
 				.cactiva-props-editor .pointer:hover {
-					opacity: 0.5;
+					opacity: 1;
 				}
 
 				.cactiva-props-editor .title {

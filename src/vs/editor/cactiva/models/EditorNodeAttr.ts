@@ -15,6 +15,8 @@ export default class EditorNodeAttr {
 		column: 0
 	};
 	@observable node: EditorNode;
+	@observable value: any;
+
 	constructor(props: {
 		node: EditorNode;
 		path: string;
@@ -22,6 +24,7 @@ export default class EditorNodeAttr {
 		name: string;
 		start: IEditorNodePos;
 		end: IEditorNodePos;
+		value: any;
 	}) {
 		this.name = props.name;
 		this.valueLabel = props.valueLabel;
@@ -30,6 +33,7 @@ export default class EditorNodeAttr {
 		this.start = props.start;
 		this.end = props.end;
 		this.node = props.node;
+		this.value = props.value;
 	}
 
 	selectInCode() {

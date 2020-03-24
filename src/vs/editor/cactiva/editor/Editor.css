@@ -1,3 +1,7 @@
+.btn {
+	cursor: pointer;
+}
+
 .cactiva-canvas {
 	display: flex;
 	flex-direction: column;
