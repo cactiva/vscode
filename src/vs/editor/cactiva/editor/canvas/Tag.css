@@ -74,6 +74,10 @@
 	padding: 3px;
 }
 
+.divider.hover {
+	background-color: rgb(6, 95, 212, 0.1);
+	box-shadow: inset 0 0 3px 0px rgb(6, 95, 212);
+}
 .divider.red {
 	background: red;
 }
@@ -104,4 +108,10 @@
 .singletag.preview .expression,
 .singletag.preview .expression .expression-code.has-children {
 	border: 0;
+}
+
+.singletag.dragging {
+	width: 100px;
+	height: 20px;
+	font-size: 12px !important;
 }

@@ -10,6 +10,7 @@ import { Tag } from 'vs/editor/cactiva/editor/canvas/Tag';
 import EditorNode from 'vs/editor/cactiva/models/EditorNode';
 import Breadcrumb from 'vs/editor/cactiva/editor/canvas/Breadcrumb';
 import { useEffect } from 'react';
+import TagDragPreview from 'vs/editor/cactiva/editor/canvas/tag/TagDragPreview';
 
 export default observer(({ canvas }: { canvas: EditorCanvas }) => {
 	const meta = useObservable({
@@ -52,6 +53,7 @@ export default observer(({ canvas }: { canvas: EditorCanvas }) => {
 				html`
 					<${PropsEditor} domNode=${propsEditorEl} />
 				`}
+			<${TagDragPreview} />
 			<div className="cactiva-canvas">
 				<div className=${`cactiva-canvas-content ${mode}`}>
 					${!meta.root

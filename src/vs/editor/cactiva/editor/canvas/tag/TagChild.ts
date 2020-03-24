@@ -17,6 +17,10 @@ interface ITagChild {
 
 export const TagChild = observer(({ canvas, idx, onClick, node, Tag, isLast }: ITagChild) => {
 	const mode = cactiva.mode;
+	const onDrop = (item: any) => {
+		console.log(item);
+	};
+
 	if (node.kind === 'JsxFragment' || node.kind === 'JsxSelfClosingElement' || node.kind === 'JsxElement') {
 		return html`
 			<${React.Fragment} key=${idx}>
@@ -24,7 +28,7 @@ export const TagChild = observer(({ canvas, idx, onClick, node, Tag, isLast }: I
 
 				${mode !== 'preview' &&
 					html`
-						<${Divider} position="after" bubbleHover=${isLast} node=${node} index=${idx} />
+						<${Divider} position="after" onDrop=${onDrop} bubbleHover=${isLast} node=${node} index=${idx} />
 					`}
 			<//>
 		`;
@@ -98,7 +102,7 @@ export const TagChild = observer(({ canvas, idx, onClick, node, Tag, isLast }: I
 					</div>
 					${mode !== 'preview' &&
 						html`
-							<${Divider} position="after" bubbleHover=${isLast} node=${node} index=${idx} />
+							<${Divider} onDrop=${onDrop} position="after" bubbleHover=${isLast} node=${node} index=${idx} />
 						`}
 				<//>
 			`;

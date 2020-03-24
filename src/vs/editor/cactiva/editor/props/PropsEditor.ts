@@ -1,6 +1,6 @@
 import { observer, useObservable } from 'mobx-react-lite';
 import { Callout, DirectionalHint, List } from 'office-ui-fabric-react';
-import { Fragment, useEffect, SyntheticEvent } from 'react';
+import { Fragment, useEffect } from 'react';
 import * as ReactDOM from 'react-dom';
 import IconClose from 'vs/editor/cactiva/editor/icons/IconClose';
 import IconComment from 'vs/editor/cactiva/editor/icons/IconComment';
@@ -21,6 +21,7 @@ export default observer(({ domNode }: any) => {
 				: html`
 						<${Fragment}>
 							${propsEditor.node &&
+								propsEditor.node.domRef &&
 								html`
 									<${Callout}
 										onDismiss=${() => {}}

@@ -1,14 +1,16 @@
 import { observer } from 'mobx-react-lite';
+import { useEffect } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import 'vs/css!./Tag';
 import { TagChild } from 'vs/editor/cactiva/editor/canvas/tag/TagChild';
 import { TagPreview } from 'vs/editor/cactiva/editor/canvas/tag/TagPreview';
 import html from 'vs/editor/cactiva/libs/html';
+import { useCallbackRef } from 'vs/editor/cactiva/libs/useCallbackRef';
 import EditorCanvas from 'vs/editor/cactiva/models/EditorCanvas';
 import EditorNode from 'vs/editor/cactiva/models/EditorNode';
 import { cactiva } from 'vs/editor/cactiva/models/store';
 import Divider from './tag/Divider';
-import { useRef, useEffect } from 'react';
-import { useCallbackRef } from 'vs/editor/cactiva/libs/useCallbackRef';
 
 interface ISingleTag {
 	canvas: EditorCanvas;
@@ -19,21 +21,40 @@ interface ISingleTag {
 }
 
 export const Tag: React.FunctionComponent<ISingleTag> = observer(({ canvas, node, style, onClick }: ISingleTag) => {
-	// const [, dragRef] = useDrag({
-	// 	item: { type: 'cactiva-tag', node, dropEffect: 'none' },
-	// 	canDrag: monitor => {
-	// 		return true;
-	// 	},
-	// 	collect: monitor => ({
-	// 		opacity: monitor.isDragging() ? 0.5 : 1
-	// 	})
-	// });
-	let mode = cactiva.mode;
-	let tagName = node.text;
+	const [, dragRef, preview] = useDrag({
+		item: { type: 'cactiva-tag', node, dropEffect: 'none' },
+		canDrag: monitor => {
+			return true;
+		},
+		collect: monitor => ({
+			text: node.text,
+			size: {
+				w: node.domRef ? node.domRef.clientWidth : 0,
+				h: node.domRef ? node.domRef.clientHeight : 0
+			},
+			opacity: monitor.isDragging() ? 0.5 : 1
+		})
+	});
+	const onDrop = (item: any) => {
+		console.log(item);
+	};
+	const [drop, dropRef] = useDrop({
+		accept: 'cactiva-tag',
+		collect: monitor => ({
+			hover: !!monitor.isOver({ shallow: true })
+		}),
+		drop: (item, monitor) => {
+			if (monitor.isOver({ shallow: true })) {
+				onDrop(item);
+			}
+		}
+	});
+
+	const mode = cactiva.mode;
+	const tagName = node.text;
 	const childrenNode = node.children;
 	const hovered = canvas.hoveredNode === node ? 'hover' : '';
 	const selected = canvas.selectedNode === node ? 'selected' : '';
-
 	const hasChildren = childrenNode.length > 0;
 	const domRef = useCallbackRef(null as HTMLElement | null, val => {
 		node.domRef = val;
@@ -42,6 +63,13 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(({ canvas, node
 	useEffect(() => {
 		node.domRef = domRef.current;
 	}, [node]);
+
+	useEffect(() => {
+		preview(getEmptyImage(), { captureDraggingState: true });
+	}, []);
+
+	dragRef(domRef);
+	dropRef(domRef);
 
 	return html`
 		<div
@@ -76,7 +104,7 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(({ canvas, node
 				${hasChildren &&
 					mode !== 'preview' &&
 					html`
-						<${Divider} position="before" node=${childrenNode[0]} index=${0} />
+						<${Divider} onDrop=${onDrop} position="before" hovered=${drop.hover} node=${childrenNode[0]} index=${0} />
 					`}
 				${hasChildren &&
 					html`

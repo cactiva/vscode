@@ -20,7 +20,3 @@
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container {
 	width: 100%;
 }
-.cactiva-canvas-content.preview,
-.cactiva-canvas-content.hybrid {
-	justify-content: center;
-}
