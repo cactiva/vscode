@@ -16,7 +16,7 @@ export default observer(() => {
 	const { isDragging, item, initialOffset, currentOffset } = useDragLayer(monitor => ({
 		item: monitor.getItem(),
 		initialOffset: monitor.getInitialSourceClientOffset(),
-		currentOffset: monitor.getSourceClientOffset(),
+		currentOffset: monitor.getClientOffset(),
 		isDragging: monitor.isDragging()
 	}));
 
@@ -28,12 +28,14 @@ export default observer(() => {
 			<div style=${getItemStyles(initialOffset, currentOffset)}>
 				<div
 					className="singletag hover dragging"
-					style=${!!item.size && {
-						width: item.size.w,
-						height: item.size.h
-					}}
+					style=${!!item.node.domRef
+						? {
+								width: item.node.domRef.offsetWidth,
+								height: Math.min(30, item.node.domRef.offsetHeight)
+						  }
+						: {}}
 				>
-					${item.text}
+					${item.node.text}
 				</div>
 			</div>
 		</div>

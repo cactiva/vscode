@@ -5,6 +5,9 @@ export default ({ item }: { item: EditorNodeAttr }) => {
 	return html`
 		<div
 			className="prop highlight"
+			onContextMenu=${(e: any) => {
+				console.log(e);
+			}}
 			onClick=${() => {
 				item.selectInCode();
 			}}

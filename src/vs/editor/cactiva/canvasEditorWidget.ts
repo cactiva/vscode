@@ -154,6 +154,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 	protected _attachModel(model: ITextModel | null): void {
 		super._attachModel(model);
 		if (!!model) {
+			cactiva.propsEditor.node = undefined;
 			if (this._modelData) {
 				this._canvasPane.updateModelData(this._modelData, this);
 			}

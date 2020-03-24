@@ -26,14 +26,6 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(({ canvas, node
 		canDrag: monitor => {
 			return true;
 		},
-		collect: monitor => ({
-			text: node.text,
-			size: {
-				w: node.domRef ? node.domRef.clientWidth : 0,
-				h: node.domRef ? node.domRef.clientHeight : 0
-			},
-			opacity: monitor.isDragging() ? 0.5 : 1
-		})
 	});
 	const onDrop = (item: any) => {
 		console.log(item);
