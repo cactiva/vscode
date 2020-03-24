@@ -108,6 +108,26 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 		this._codePane = this._register(codePane);
 		this._canvasPane = this._register(canvasPane);
 
+		const onResize = () => {
+			if (this._splitView.length === 1) {
+				this.superLayout({
+					width: this._domEl.clientWidth,
+					height: this._domEl.clientHeight
+				});
+			} else {
+				this.superLayout({
+					width: this._splitView.getViewSize(0),
+					height: this._domEl.clientHeight
+				});
+			}
+		};
+		window.addEventListener('resize', onResize);
+		this._register({
+			dispose: () => {
+				window.removeEventListener('resize', onResize);
+			}
+		});
+
 		this._register(
 			this._splitView.onDidSashChange(() => {
 				this.superLayout({
@@ -228,6 +248,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 				height: this._domEl.clientHeight
 			});
 		} else if (this._splitView.length > 1 && languageId.indexOf('react') < 0) {
+			cactiva.propsEditor.hidden = true;
 			this._splitView.setViewVisible(1, false);
 			this.layout({
 				width: this._domEl.clientWidth,

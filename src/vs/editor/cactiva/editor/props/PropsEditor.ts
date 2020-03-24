@@ -1,20 +1,63 @@
 import { observer, useObservable } from 'mobx-react-lite';
-import { List } from 'office-ui-fabric-react';
-import { useEffect } from 'react';
+import { Callout, DirectionalHint, List } from 'office-ui-fabric-react';
+import { Fragment, useEffect } from 'react';
 import * as ReactDOM from 'react-dom';
+import IconComment from 'vs/editor/cactiva/editor/icons/IconComment';
+import IconSidebar from 'vs/editor/cactiva/editor/icons/IconSidebar';
 import Attribute from 'vs/editor/cactiva/editor/props/Attribute';
 import html from 'vs/editor/cactiva/libs/html';
+import { useCallbackRef } from 'vs/editor/cactiva/libs/useCallbackRef';
 import EditorNodeAttr from 'vs/editor/cactiva/models/EditorNodeAttr';
 import { cactiva } from 'vs/editor/cactiva/models/store';
+import IconClose from 'vs/editor/cactiva/editor/icons/IconClose';
 
 export default observer(({ domNode }: any) => {
+	const propsEditor = cactiva.propsEditor;
+	const ref = useCallbackRef(null as any, newValue => {
+		meta.ref = newValue;
+	});
+	const meta = useObservable({
+		domNode: null,
+		ref: null
+	});
+	useEffect(() => {
+		if (propsEditor.node) {
+			meta.domNode = propsEditor.node.domRef;
+		}
+	}, [propsEditor.mode, propsEditor.node]);
+
+	return html`
+		<${Fragment}>
+			${propsEditor.mode === 'sidebar'
+				? html`
+						<${PropsEditorContent} domNode=${domNode} style=${{ display: propsEditor.hidden ? 'none' : 'flex' }} />
+				  `
+				: html`
+						<${Fragment}>
+							${meta.domNode &&
+								html`
+									<${Callout}
+										onDismiss=${() => {}}
+										directionalHint=${DirectionalHint.leftCenter}
+										target=${meta.domNode}
+									>
+										<${PropsEditorContent} />
+									<//>
+								`}
+						<//>
+				  `}
+		<//>
+	`;
+});
+
+const PropsEditorContent = observer(({ domNode, style }: any) => {
 	let bgColor = 'white';
 	let fontColor = 'black';
 
 	const propsEditor = cactiva.propsEditor;
 	const sidebar = document.getElementById('workbench.parts.sidebar');
 
-	if (sidebar) {
+	if (sidebar && propsEditor.mode === 'sidebar') {
 		bgColor = sidebar.style.backgroundColor;
 		fontColor = sidebar.style.color;
 	}
@@ -32,139 +75,172 @@ export default observer(({ domNode }: any) => {
 		})();
 	}, [propsEditor.node, cactiva.fontColor]);
 
-	return ReactDOM.createPortal(
-		html`
-			<div className="cactiva-props-editor" style=${{ display: propsEditor.hidden ? 'none' : 'flex' }}>
-				<div className="title row pad space-between">
-					<div>${meta.tagName}</div>
+	const content = html`
+		<div className=${`cactiva-props-editor ${propsEditor.mode}`} style=${style}>
+			<div className="title row pad space-between">
+				<div>${meta.tagName}</div>
+				<div className="row">
 					<div
-						className="close-btn center"
+						className="center margin-right pointer"
+						onClick=${() => {
+							if (propsEditor.mode === 'sidebar') propsEditor.mode = 'popup';
+							else propsEditor.mode = 'sidebar';
+						}}
+					>
+						${propsEditor.mode === 'popup'
+							? html`
+									<${IconSidebar} color=${fontColor} size=${11} />
+							  `
+							: html`
+									<${IconComment} color=${fontColor} size=${11} />
+							  `}
+					</div>
+					<div
+						className="center pointer"
 						onClick=${() => {
 							propsEditor.hidden = !propsEditor.hidden;
 						}}
 					>
-						×
+						<${IconClose} color=${fontColor} size=${13} />
 					</div>
 				</div>
-				<div>
-					<${List}
-						items=${meta.attributes}
-						onRenderCell=${(item: EditorNodeAttr, index: number): JSX.Element => {
-							return html`
-								<${Attribute} item=${item} />
-							`;
-						}}
-					/>
-				</div>
-				<style>
-					.cactiva-props-editor {
-						position: absolute;
-						top: 0;
-						left: 0;
-						right: 1px;
-						bottom: 0;
-						z-index: 9;
-						background: ${bgColor};
-						display: flex;
-						flex-direction: column;
-					}
-					.cactiva-props-editor .highlight:active {
-						background: rgba(255, 255, 0, 0.3);
-					}
-					.cactiva-props-editor div {
-						display: flex;
-						flex-direction: column;
-						color: ${fontColor};
-					}
-
-					.cactiva-props-editor .pad {
-						padding: 5px;
-					}
-
-					.cactiva-props-editor .full {
-						flex: 1;
-					}
-					.cactiva-props-editor .row {
-						align-items: stretch;
-						flex-direction: row;
-					}
-					.cactiva-props-editor .center {
-						align-items: center;
-						justify-content: center;
-					}
-					.cactiva-props-editor .space-between {
-						justify-content: space-between;
-					}
-
-					.cactiva-props-editor .close-btn {
-						width: 16px;
-						height: 16px;
-						cursor: pointer;
-						font-size: 18px;
-					}
-
-					.cactiva-props-editor .pointer {
-						cursor: pointer;
-					}
-
-					.cactiva-props-editor .title {
-						padding-left: 10px;
-					}
-
-					.cactiva-props-editor .ms-List-cell .prop {
-						padding: 3px;
-						border-bottom: 1px dotted ${fontColor};
-						overflow: hidden;
-					}
-
-					.cactiva-props-editor .ms-List-cell:first-page .ms-List-cell:first-child .prop {
-						border-top: 1px dotted ${fontColor};
-					}
-
-					.cactiva-props-editor .prop .title {
-						flex-basis: 30%;
-						min-width: 70px;
-						max-width: 150px;
-						overflow: hidden;
-						text-overflow: ellipsis;
-						white-space: nowrap;
-						word-break: break-all;
-						margin-right: 5px;
-					}
-
-					.cactiva-props-editor .prop .field,
-					.cactiva-props-editor .prop .field .input {
-						flex: 1;
-						position: relative;
-					}
-
-					.cactiva-props-editor .prop .field .input {
-						overflow: hidden;
-					}
-
-					.cactiva-props-editor .prop .field .input .overflow {
-						position: absolute;
-						top: 0;
-						left: 0;
-						right: 0;
-						bottom: 0;
-						white-space: nowrap;
-					}
-
-					.cactiva-props-editor .prop .field .goto-source {
-						flex-basis: 20px;
-						display: none;
-					}
-
-					.cactiva-props-editor .prop:hover .field .goto-source {
-						display: flex;
-					}
-					.cactiva-props-editor .prop:hover .field .goto-source:focus {
-						opacity: 0.5;
-					}
-				</style>
 			</div>
-		`,
-		domNode
-	);
+			<div>
+				<${List}
+					items=${meta.attributes}
+					onRenderCell=${(item: EditorNodeAttr, index: number): JSX.Element => {
+						return html`
+							<${Attribute} item=${item} />
+						`;
+					}}
+				/>
+			</div>
+			<style>
+				.cactiva-props-editor {
+					background: ${bgColor};
+					display: flex;
+					flex-direction: column;
+				}
+				.cactiva-props-editor.sidebar {
+					position: absolute;
+					top: 0;
+					left: 0;
+					right: 1px;
+					bottom: 0;
+					z-index: 9;
+				}
+
+				.cactiva-props-editor.popup {
+					min-width: 300px;
+				}
+
+				.cactiva-props-editor.popup > .title {
+					border-bottom: 1px solid #ccc;
+					background: #ececeb;
+				}
+
+				.cactiva-props-editor .highlight:active {
+					background: rgba(255, 255, 0, 0.3);
+				}
+				.cactiva-props-editor div {
+					display: flex;
+					flex-direction: column;
+					color: ${fontColor};
+				}
+
+				.cactiva-props-editor .pad {
+					padding: 5px;
+				}
+
+				.cactiva-props-editor .full {
+					flex: 1;
+				}
+				.cactiva-props-editor .row {
+					align-items: stretch;
+					flex-direction: row;
+				}
+				.cactiva-props-editor .center {
+					align-items: center;
+					justify-content: center;
+				}
+				.cactiva-props-editor .space-between {
+					justify-content: space-between;
+				}
+
+				.cactiva-props-editor .margin-right {
+					margin-right: 5px;
+				}
+
+				.cactiva-props-editor .pointer {
+					cursor: pointer;
+				}
+
+				.cactiva-props-editor .pointer:hover {
+					opacity: 0.5;
+				}
+
+				.cactiva-props-editor .title {
+					padding-left: 10px;
+				}
+
+				.cactiva-props-editor .ms-List-cell .prop {
+					padding: 3px;
+					border-bottom: 1px dotted ${fontColor};
+					overflow: hidden;
+				}
+
+				.cactiva-props-editor .ms-List-cell:first-page .ms-List-cell:first-child .prop {
+					border-top: 1px dotted ${fontColor};
+				}
+
+				.cactiva-props-editor .prop .title {
+					flex-basis: 30%;
+					min-width: 70px;
+					max-width: 150px;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					word-break: break-all;
+					margin-right: 5px;
+				}
+
+				.cactiva-props-editor .prop .field,
+				.cactiva-props-editor .prop .field .input {
+					flex: 1;
+					position: relative;
+				}
+
+				.cactiva-props-editor .prop .field .input {
+					overflow: hidden;
+				}
+
+				.cactiva-props-editor .prop .field .input .overflow {
+					position: absolute;
+					top: 0;
+					left: 0;
+					right: 0;
+					bottom: 0;
+					white-space: nowrap;
+				}
+
+				.cactiva-props-editor .prop .field .goto-source {
+					flex-basis: 20px;
+					display: none;
+				}
+
+				.cactiva-props-editor .prop:hover .field .goto-source {
+					display: flex;
+				}
+				.cactiva-props-editor .prop:hover .field .goto-source:focus {
+					opacity: 0.5;
+				}
+				.cactiva-props-editor.popup .goto-source {
+					display: none !important;
+				}
+			</style>
+		</div>
+	`;
+
+	if (!domNode) return content;
+	return ReactDOM.createPortal(content, domNode);
 });

@@ -12,6 +12,7 @@ interface IEditorProps {
 	el?: HTMLElement;
 	node?: EditorNode;
 	hidden?: boolean;
+	mode?: 'popup' | 'sidebar';
 }
 
 interface IEditorStore {
@@ -22,7 +23,9 @@ interface IEditorStore {
 }
 
 export const cactiva: IEditorStore = observable({
-	propsEditor: {},
+	propsEditor: {
+		mode: 'popup'
+	},
 	fontColor: '#fff',
 	canvas: {},
 	mode: localStorage.cactivaMode || 'layout'

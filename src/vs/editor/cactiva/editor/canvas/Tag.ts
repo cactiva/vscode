@@ -7,12 +7,13 @@ import EditorCanvas from 'vs/editor/cactiva/models/EditorCanvas';
 import EditorNode from 'vs/editor/cactiva/models/EditorNode';
 import { cactiva } from 'vs/editor/cactiva/models/store';
 import Divider from './tag/Divider';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 
 interface ISingleTag {
 	canvas: EditorCanvas;
 	node: EditorNode;
 	style?: any;
+	isLast?: boolean;
 	onClick?: (node: EditorNode) => void;
 }
 
@@ -34,7 +35,11 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(({ canvas, node
 
 	const hasChildren = childrenNode.length > 0;
 	const domRef = useRef(null as HTMLElement | null);
-	node.domRef = domRef;
+
+	useEffect(() => {
+		node.domRef = domRef;
+	}, [domRef.current]);
+
 	return html`
 		<div
 			onClick=${(e: any) => {

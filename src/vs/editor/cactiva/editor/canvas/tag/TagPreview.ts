@@ -16,12 +16,10 @@ interface ITagPreview {
 	tagName: string;
 }
 
-export const TagPreview: React.FunctionComponent<ITagPreview> = observer(
-	({ node, children, className, tagName }: ITagPreview) => {
-		return html`
-			<div className=${`tag-preview ${className}`}>
-				${children}
-			</div>
-		`;
-	}
-);
+export const TagPreview: React.FunctionComponent<ITagPreview> = observer(({ children, className }: ITagPreview) => {
+	return html`
+		<div className=${`tag-preview ${className}`}>
+			${children}
+		</div>
+	`;
+});

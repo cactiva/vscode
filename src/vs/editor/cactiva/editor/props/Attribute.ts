@@ -4,22 +4,24 @@ import EditorNodeAttr from 'vs/editor/cactiva/models/EditorNodeAttr';
 export default ({ item }: { item: EditorNodeAttr }) => {
 	return html`
 		<div
-			className="prop row pointer highlight"
+			className="prop highlight"
 			onClick=${() => {
 				item.selectInCode();
 			}}
 		>
-			<div className="title">
-				${item.name}
-			</div>
-			<div className="field row space-between">
-				<div className="input">
-					<div className="overflow">
-						${item.valueLabel}
-					</div>
+			<div className="pointer row">
+				<div className="title">
+					${item.name}
 				</div>
-				<div className="goto-source row center ">
-					▸
+				<div className="field row space-between">
+					<div className="input">
+						<div className="overflow">
+							${item.valueLabel}
+						</div>
+					</div>
+					<div className="goto-source row center ">
+						▸
+					</div>
 				</div>
 			</div>
 		</div>

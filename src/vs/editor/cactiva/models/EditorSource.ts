@@ -1,7 +1,7 @@
-import { observable, intercept } from 'mobx';
+import { observable } from 'mobx';
 import EditorBase from 'vs/editor/cactiva/models/EditorBase';
-import EditorNode from 'vs/editor/cactiva/models/EditorNode';
 import EditorCanvas from 'vs/editor/cactiva/models/EditorCanvas';
+import EditorNode from 'vs/editor/cactiva/models/EditorNode';
 
 export default class EditorSource extends EditorBase {
 	@observable fileName: string;
