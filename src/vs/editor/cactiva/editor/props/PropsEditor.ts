@@ -21,8 +21,12 @@ export default observer(({ domNode }: any) => {
 		ref: null
 	});
 	useEffect(() => {
-		if (propsEditor.node) {
-			meta.domNode = propsEditor.node.domRef;
+		if (propsEditor.mode === 'sidebar') {
+			meta.domNode = null;
+		} else {
+			if (propsEditor.node) {
+				meta.domNode = propsEditor.node.domRef;
+			}
 		}
 	}, [propsEditor.mode, propsEditor.node]);
 
