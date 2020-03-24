@@ -249,6 +249,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			});
 		} else if (this._splitView.length > 1 && languageId.indexOf('react') < 0) {
 			cactiva.propsEditor.hidden = true;
+			cactiva.propsEditor.node = undefined;
 			this._splitView.setViewVisible(1, false);
 			this.layout({
 				width: this._domEl.clientWidth,

@@ -8,6 +8,7 @@ import EditorNode from 'vs/editor/cactiva/models/EditorNode';
 import { cactiva } from 'vs/editor/cactiva/models/store';
 import Divider from './tag/Divider';
 import { useRef, useEffect } from 'react';
+import { useCallbackRef } from 'vs/editor/cactiva/libs/useCallbackRef';
 
 interface ISingleTag {
 	canvas: EditorCanvas;
@@ -34,11 +35,13 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(({ canvas, node
 	const selected = canvas.selectedNode === node ? 'selected' : '';
 
 	const hasChildren = childrenNode.length > 0;
-	const domRef = useRef(null as HTMLElement | null);
+	const domRef = useCallbackRef(null as HTMLElement | null, val => {
+		node.domRef = val;
+	});
 
 	useEffect(() => {
-		node.domRef = domRef;
-	}, [domRef.current]);
+		node.domRef = domRef.current;
+	}, [node]);
 
 	return html`
 		<div

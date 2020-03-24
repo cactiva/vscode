@@ -1,35 +1,17 @@
 import { observer, useObservable } from 'mobx-react-lite';
 import { Callout, DirectionalHint, List } from 'office-ui-fabric-react';
-import { Fragment, useEffect } from 'react';
+import { Fragment, useEffect, SyntheticEvent } from 'react';
 import * as ReactDOM from 'react-dom';
+import IconClose from 'vs/editor/cactiva/editor/icons/IconClose';
 import IconComment from 'vs/editor/cactiva/editor/icons/IconComment';
 import IconSidebar from 'vs/editor/cactiva/editor/icons/IconSidebar';
 import Attribute from 'vs/editor/cactiva/editor/props/Attribute';
 import html from 'vs/editor/cactiva/libs/html';
-import { useCallbackRef } from 'vs/editor/cactiva/libs/useCallbackRef';
 import EditorNodeAttr from 'vs/editor/cactiva/models/EditorNodeAttr';
 import { cactiva } from 'vs/editor/cactiva/models/store';
-import IconClose from 'vs/editor/cactiva/editor/icons/IconClose';
 
 export default observer(({ domNode }: any) => {
 	const propsEditor = cactiva.propsEditor;
-	const ref = useCallbackRef(null as any, newValue => {
-		meta.ref = newValue;
-	});
-	const meta = useObservable({
-		domNode: null,
-		ref: null
-	});
-	useEffect(() => {
-		if (propsEditor.mode === 'sidebar') {
-			meta.domNode = null;
-		} else {
-			if (propsEditor.node) {
-				meta.domNode = propsEditor.node.domRef;
-			}
-		}
-	}, [propsEditor.mode, propsEditor.node]);
-
 	return html`
 		<${Fragment}>
 			${propsEditor.mode === 'sidebar'
@@ -38,12 +20,12 @@ export default observer(({ domNode }: any) => {
 				  `
 				: html`
 						<${Fragment}>
-							${meta.domNode &&
+							${propsEditor.node &&
 								html`
 									<${Callout}
 										onDismiss=${() => {}}
 										directionalHint=${DirectionalHint.leftCenter}
-										target=${meta.domNode}
+										target=${propsEditor.node.domRef}
 									>
 										<${PropsEditorContent} />
 									<//>
@@ -104,6 +86,9 @@ const PropsEditorContent = observer(({ domNode, style }: any) => {
 						className="center pointer"
 						onClick=${() => {
 							propsEditor.hidden = !propsEditor.hidden;
+							if (propsEditor.hidden) {
+								propsEditor.node = undefined;
+							}
 						}}
 					>
 						<${IconClose} color=${fontColor} size=${13} />
@@ -119,7 +104,15 @@ const PropsEditorContent = observer(({ domNode, style }: any) => {
 						`;
 					}}
 				/>
-				<input type="text" className="new-prop" value=${meta.newProp} placeholder="+ new prop" />
+				<input
+					type="text"
+					className="new-prop"
+					onChange=${(e: any) => {
+						meta.newProp = e.target.value;
+					}}
+					value=${meta.newProp}
+					placeholder="+ new prop"
+				/>
 			</div>
 			<style>
 				.cactiva-props-editor {

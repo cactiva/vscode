@@ -22,7 +22,7 @@ export default observer(({ canvas }: { canvas: EditorCanvas }) => {
 			rootItem = canvas.breadcrumbs[0];
 		}
 		meta.root = rootItem;
-	}, [canvas.breadcrumbs, canvas.breadcrumbs.length]);
+	}, [canvas.breadcrumbs, canvas.breadcrumbs.length, canvas.selectedNode]);
 
 	const propsEditorEl = cactiva.propsEditor.el;
 	const mode = cactiva.mode;
