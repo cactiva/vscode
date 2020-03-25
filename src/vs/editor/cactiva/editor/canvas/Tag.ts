@@ -73,16 +73,17 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(({ canvas, node
 			onClick=${(e: any) => {
 				if (onClick) {
 					onClick(node);
-					if (node === canvas.selectedNode) {
-						if (cactiva.propsEditor.mode === 'popup') {
-							cactiva.propsEditor.hidden = false;
-						}
-					}
 					e.stopPropagation();
 				}
 			}}
 			ref=${domRef}
 			onContextMenu=${(e: any) => {
+				if (cactiva.propsEditor.mode === 'popup') {
+					if (onClick) {
+						onClick(node);
+					}
+					cactiva.propsEditor.hidden = false;
+				}
 				e.stopPropagation();
 			}}
 			onMouseOut=${() => {

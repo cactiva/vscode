@@ -47,7 +47,7 @@ export default observer(
 							ariaLabelledBy=${id}
 							ariaDescribedBy=${describe}
 							role="alertdialog"
-							setInitialFocus=${true}
+							setInitialFocus=${false}
 							gapSpace=${0}
 							calloutWidth=${60}
 							directionalHint=${DirectionalHint.topCenter}

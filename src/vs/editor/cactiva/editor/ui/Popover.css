@@ -5,6 +5,7 @@
 
 .popover {
 	min-height: 100px;
+	background: white;
 	overflow: visible;
 }
 

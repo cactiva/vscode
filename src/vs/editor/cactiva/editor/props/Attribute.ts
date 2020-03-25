@@ -11,7 +11,7 @@ export default ({ item }: { item: EditorNodeAttr }) => {
 			calloutProps=${{
 				className: 'popover',
 				directionalHint:
-					cactiva.propsEditor.mode === 'popup' ? DirectionalHint.leftTopEdge : DirectionalHint.rightTopEdge,
+					cactiva.propsEditor.mode === 'popup' ? DirectionalHint.leftCenter : DirectionalHint.rightCenter,
 				calloutWidth: 200,
 				isBeakVisible: cactiva.propsEditor.mode === 'sidebar'
 			}}
