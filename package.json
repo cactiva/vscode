@@ -73,7 +73,7 @@
         "rpm"
       ],
       "category": "Development",
-      "icon": "src/assets/cactiva.icns"
+      "icon": "src/assets/cactiva.png"
     },
    "deb": {
      "depends":[
