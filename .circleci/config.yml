@@ -3,18 +3,7 @@ orbs:
   node: circleci/node@1.1.6
   win: circleci/windows@2.2.0
 jobs:
-  build_git:
-    executor:
-      name: node/default
-      tag: '10.4'
-    steps:
-      - checkout
-      - node/with-cache:
-          steps:
-            - run: cd ..
-            - run: git clone https://github.com/cactiva/release
-            - run: cd release
-            - run: pwd
+
   build_linux:
     executor:
       name: node/default
@@ -40,27 +29,8 @@ jobs:
             - run: 
                 command: sudo yarn run dist --linux
                 when: always
-            - run: 
-                command: git add dist/Cactiva.deb
-                when: always
-            - run: 
-                command: git add dist/Cactiva.rpm
-                when: always
-            - run: 
-                command: git config --global user.email "erlangga@cactiva.app"
-                when: always
-            - run: 
-                command: git config --global user.name "Erlangga"
-                when: always
-            - run: 
-                command: git commit -m "linux, build dari circleci"
-                when: always
-            - run: 
-                command: git remote add release https://github.com/cactiva/release.git
-                when: always
-            - run: 
-                command: git push release master
-                when: always
+            - store_artifacts:
+                path: dist/
   
   build_windows:
     executor: win/default
@@ -105,27 +75,10 @@ jobs:
        - run: 
            command: sudo yarn run dist --mac
            when: always
-       - run: 
-           command: git add dist/Cactiva.dmg
-           when: always
-       - run: 
-           command: git config --global user.email "erlangga@cactiva.app"
-           when: always
-       - run: 
-           command: git config --global user.name "Erlangga"
-           when: always
-       - run: 
-           command: git commit -m "macos, build dari circleci"
-           when: always
-       - run: 
-           command: git remote add release https://github.com/cactiva/release.git
-           when: always
-       - run: 
-           command: git push release master
-           when: always
+       - store_artifacts:
+           path: dist/
   
 workflows:
     build-and-test:
       jobs:
         - build_linux
-        - build_macos
