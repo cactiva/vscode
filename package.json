@@ -72,7 +72,22 @@
         "deb",
         "rpm"
       ],
-      "category": "Development"
+      "category": "Development",
+      "icon": "src/assets/cactiva.icns"
+    },
+   "deb": {
+     "depends":[
+       "libx11-dev",
+       "libxkbfile-dev",
+       "libsecret-1-dev"
+     ]
+   },
+   "rpm": {
+      "depends":[
+       "libX11-devel.x86_64",
+       "libxkbfile-devel.x86_64",
+       "libsecret-devel"
+     ]
     },
     "win": {
       "target": "msi",
