@@ -56,6 +56,40 @@ export default class EditorNode extends EditorBase {
 		}
 	}
 
+	async setCode(code: string, refreshCanvas?: boolean): Promise<void> {
+		const result = await this.executeInWorker('node:setCode', {
+			fileName: this.source.fileName,
+			path: this.path,
+			code
+		});
+		if (result) {
+			await this.source.canvas.updateContent(result, refreshCanvas);
+		}
+	}
+
+	async getCode(): Promise<{ kind: string; text: string }[]> {
+		const result = await this.executeInWorker('node:getCode', {
+			fileName: this.source.fileName,
+			path: this.path
+		});
+		if (result) {
+			return result;
+		}
+		return [];
+	}
+
+	async prependChild(node: EditorNode): Promise<void> {
+		const result = await this.executeInWorker('node:move', {
+			fileName: this.source.fileName,
+			from: node.path,
+			to: this.path,
+			position: 'children'
+		});
+		if (result) {
+			this.source.canvas.updateContent(result);
+		}
+	}
+
 	async getAttributes(): Promise<EditorNodeAttr[]> {
 		const result = await this.executeInWorker('node:getAttributes', {
 			fileName: this.source.fileName,

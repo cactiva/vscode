@@ -1,16 +1,16 @@
 import { observer, useObservable } from 'mobx-react-lite';
+import { useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import 'vs/css!./Editor';
+import Breadcrumb from 'vs/editor/cactiva/editor/canvas/Breadcrumb';
+import { Tag } from 'vs/editor/cactiva/editor/canvas/Tag';
+import TagDragPreview from 'vs/editor/cactiva/editor/canvas/tag/TagDragPreview';
 import PropsEditor from 'vs/editor/cactiva/editor/props/PropsEditor';
 import html from 'vs/editor/cactiva/libs/html';
 import EditorCanvas from 'vs/editor/cactiva/models/EditorCanvas';
-import { cactiva } from 'vs/editor/cactiva/models/store';
-import { Tag } from 'vs/editor/cactiva/editor/canvas/Tag';
 import EditorNode from 'vs/editor/cactiva/models/EditorNode';
-import Breadcrumb from 'vs/editor/cactiva/editor/canvas/Breadcrumb';
-import { useEffect } from 'react';
-import TagDragPreview from 'vs/editor/cactiva/editor/canvas/tag/TagDragPreview';
+import { cactiva } from 'vs/editor/cactiva/models/store';
 
 export default observer(({ canvas }: { canvas: EditorCanvas }) => {
 	const meta = useObservable({
@@ -36,10 +36,6 @@ export default observer(({ canvas }: { canvas: EditorCanvas }) => {
 	const breadcrumbClicked = (node: EditorNode) => {
 		canvas.selectNode(node.path, 'canvas');
 	};
-
-	if (!meta.root) {
-		return null;
-	}
 
 	if (!canvas) {
 		return html`

@@ -24,7 +24,8 @@ interface IEditorStore {
 
 export const cactiva: IEditorStore = observable({
 	propsEditor: {
-		mode: 'popup'
+		mode: 'popup',
+		hidden: false
 	},
 	fontColor: '#fff',
 	canvas: {},

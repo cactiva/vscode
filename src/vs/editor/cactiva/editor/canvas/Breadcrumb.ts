@@ -116,6 +116,7 @@ export default observer(({ canvas, onClick }: { canvas: EditorCanvas; onClick: a
 							className=${`btn btn-toolbar btn-layout ${mode === 'preview' ? 'active' : ''}`}
 							onClick=${() => {
 								changeMode('preview');
+								cactiva.propsEditor.node = undefined;
 							}}
 						>
 							<${IconPreview} size=${14} color=${cactiva.fontColor} />

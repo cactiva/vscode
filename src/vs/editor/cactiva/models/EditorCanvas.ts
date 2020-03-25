@@ -6,7 +6,10 @@ import EditorNode from 'vs/editor/cactiva/models/EditorNode';
 import EditorSource from 'vs/editor/cactiva/models/EditorSource';
 import { cactiva } from 'vs/editor/cactiva/models/store';
 import { IEditorConstructionOptions } from 'vs/editor/common/config/editorOptions';
+import { Position } from 'vs/editor/common/core/position';
 import { Range } from 'vs/editor/common/core/range';
+import { DefaultEndOfLine } from 'vs/editor/common/model';
+import { createTextBuffer } from 'vs/editor/common/model/textModel';
 
 export default class EditorCanvas extends EditorBase {
 	@observable breadcrumbs: EditorNode[] = [];
@@ -32,7 +35,6 @@ export default class EditorCanvas extends EditorBase {
 		});
 	}
 
-
 	async selectRootNode(path: string) {
 		this.isReady = false;
 		this.breadcrumbs = [];
@@ -41,6 +43,34 @@ export default class EditorCanvas extends EditorBase {
 			cactiva.propsEditor.hidden = true;
 		});
 		this.isReady = true;
+	}
+
+	async setSource(sourceText: string) {
+		const modelData = this.modelData;
+		if (modelData) this.source = new EditorSource(modelData.model.uri.fsPath, sourceText, this);
+	}
+
+	async updateContent(content: string, refreshCanvas: boolean = true) {
+		const editor = this.editor;
+		const model = this.modelData?.model;
+		if (editor && model) {
+			const eol = model.getEOL();
+			const from = editor.getValue();
+			const getPos = (str: string) => {
+				const buffer = createTextBuffer(str, eol === '\n' ? DefaultEndOfLine.LF : DefaultEndOfLine.CRLF);
+				return buffer.getPositionAt(str.length);
+			};
+			const end = getPos(from);
+			editor.pushUndoStop();
+			editor.executeEdits(this.id, [
+				{
+					range: Range.fromPositions(new Position(0, 0), new Position(end.lineNumber, end.column)),
+					text: content
+				}
+			]);
+			editor.pushUndoStop();
+			if (refreshCanvas) await this.source.load(content);
+		}
 	}
 
 	async selectNode(path: string, from: 'canvas' | 'code' | 'breadcrumb') {
@@ -67,15 +97,15 @@ export default class EditorCanvas extends EditorBase {
 
 			const cnode = this.selectedNode;
 			const dom = cnode.domRef;
-			if (dom && dom.current) {
-				dom.current.scrollIntoView({
+			if (dom && dom) {
+				dom.scrollIntoView({
 					behavior: 'auto',
 					block: 'center',
 					inline: 'center'
 				});
 			}
 		} else if (from === 'canvas' || from === 'breadcrumb') {
-			cactiva.propsEditor.hidden = false;
+			if (cactiva.propsEditor.mode === 'sidebar') cactiva.propsEditor.hidden = false;
 			cactiva.propsEditor.node = this.selectedNode;
 			const s = this.selectedNode.start;
 			const e = this.selectedNode.end;

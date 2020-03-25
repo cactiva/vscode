@@ -30,7 +30,7 @@ export default class EditorSource extends EditorBase {
 		}
 	}
 
-	async updateContent(content: string) {
+	async load(content: string) {
 		this.executeInWorker('source:load', {
 			fileName: this.fileName,
 			content
@@ -62,7 +62,6 @@ export default class EditorSource extends EditorBase {
 		whenEachFound?: (node: EditorNode, path: string) => void
 	): Promise<EditorNode | null> {
 		if (!nodePath || typeof nodePath !== 'string') null;
-
 		if (!(await this.continueWhenReady())) return null;
 
 		const pathArray = nodePath.split('.');

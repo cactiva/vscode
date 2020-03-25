@@ -32,6 +32,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 	private _canvasPaneSize: number;
 	private _canvasPaneSizeStoreKey: string;
 	private _paneMode: 'code' | 'vertical' | 'horizontal' | 'canvas';
+	public commandService: ICommandService;
 
 	public layout(dimension?: editorCommon.IDimension): void {
 		if (dimension) {
@@ -94,6 +95,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			accessibilityService
 		);
 
+		this.commandService = commandService;
 		this._canvasPaneSizeStoreKey = `cactiva-sash-${this.getId()}`;
 		const _canvasPaneSize = localStorage[this._canvasPaneSizeStoreKey];
 		this._canvasPaneSize = _canvasPaneSize ? parseInt(_canvasPaneSize) : 0;
@@ -207,11 +209,12 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 								const canvas = cactiva.canvas[model.id];
 								if (canvas) {
 									if (canvas.source.fileName === model.uri.fsPath) {
-										canvas.source.updateContent(model.getValue());
+										canvas.source.load(model.getValue());
 									} else {
 										canvas.source.dispose();
 										canvas.source = new EditorSource(model.uri.fsPath, model.getValue(), canvas);
 									}
+									canvas.selectedNode = undefined;
 									cactiva.propsEditor.node = undefined;
 								}
 							}

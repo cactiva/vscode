@@ -27,7 +27,7 @@ export class CanvasPane extends Pane implements IView {
 		const canvas = this._canvas.root;
 
 		if (canvas.source.fileName === modelData.model.uri.fsPath) {
-			canvas.source.updateContent(modelData.model.getValue());
+			canvas.source.load(modelData.model.getValue());
 		} else {
 			canvas.source.dispose();
 			canvas.source = new EditorSource(modelData.model.uri.fsPath, modelData.model.getValue(), canvas);

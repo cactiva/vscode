@@ -22,6 +22,7 @@ export default observer(({ domNode }: any) => {
 						<${Fragment}>
 							${propsEditor.node &&
 								propsEditor.node.domRef &&
+								!propsEditor.hidden &&
 								html`
 									<${Callout}
 										onDismiss=${() => {}}

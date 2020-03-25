@@ -1,4 +1,4 @@
-import { Node, Project } from 'ts-morph';
+import { Node, Project, JsxElement, JsxFragment } from 'ts-morph';
 import { createSourceFile } from 'vs/editor/cactiva/models/worker/morph/createSourceFile';
 import { generateChildNodes } from 'vs/editor/cactiva/models/worker/morph/generateChildNodes';
 import { generateNodes } from 'vs/editor/cactiva/models/worker/morph/generateNodes';
@@ -28,6 +28,52 @@ const actions: any = {
 		const node = getNodeFromPath(source, data.path);
 		if (node) return getNodeAttributes(node);
 		return [];
+	},
+	'node:move': async (data: {
+		fileName: string;
+		from: string;
+		to: string;
+		position: 'children' | 'before' | 'after';
+	}) => {
+		const source = project.getSourceFile(data.fileName);
+		if (!source) return '';
+
+		const from = getNodeFromPath(source, data.from);
+		const to = getNodeFromPath(source, data.to);
+
+		if (from && to && !from.wasForgotten() && !to.wasForgotten()) {
+			if (data.position === 'children') {
+				const code = from.getText();
+				from.replaceWithText('');
+
+				if (to instanceof JsxElement || to instanceof JsxFragment) {
+					const children = to.getChildren().map(e => e.getText());
+					children.splice(1, 0, code);
+					to.replaceWithText(children.join('\n'));
+				}
+			}
+		}
+		source.formatText();
+		return source.getText();
+	},
+	'node:getCode': async (data: { fileName: string; path: string }) => {
+		const source = project.getSourceFile(data.fileName);
+		if (!source) return '';
+
+		const node = getNodeFromPath(source, data.path);
+		return node?.getChildren().map(e => {
+			return { kind: e.getKindName(), text: e.getText() };
+		});
+	},
+	'node:setCode': async (data: { fileName: string; path: string; code: string }) => {
+		const source = project.getSourceFile(data.fileName);
+		if (!source) return '';
+
+		const node = getNodeFromPath(source, data.path);
+		if (node) {
+			source.replaceText([node.getStart(), node.getEnd()], data.code);
+		}
+		return source.getText();
 	},
 	'node:getNodePathAtPos': async (data: { fileName: string; pos: number }) => {
 		const source = project.getSourceFile(data.fileName);

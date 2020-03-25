@@ -17,8 +17,8 @@ interface ITagChild {
 
 export const TagChild = observer(({ canvas, idx, onClick, node, Tag, isLast }: ITagChild) => {
 	const mode = cactiva.mode;
-	const onDrop = (item: any) => {
-		console.log(item);
+	const onDrop = (from: any, to: any, pos: string) => {
+		console.log(from, to, pos);
 	};
 
 	if (node.kind === 'JsxFragment' || node.kind === 'JsxSelfClosingElement' || node.kind === 'JsxElement') {
