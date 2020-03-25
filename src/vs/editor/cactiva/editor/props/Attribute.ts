@@ -1,32 +1,55 @@
+import { DirectionalHint } from 'office-ui-fabric-react';
+import StyleEditor from 'vs/editor/cactiva/editor/props/style/StyleEditor';
+import Popover from 'vs/editor/cactiva/editor/ui/Popover';
 import html from 'vs/editor/cactiva/libs/html';
 import EditorNodeAttr from 'vs/editor/cactiva/models/EditorNodeAttr';
+import { cactiva } from 'vs/editor/cactiva/models/store';
 
 export default ({ item }: { item: EditorNodeAttr }) => {
 	return html`
-		<div
-			className="prop highlight"
-			onContextMenu=${(e: any) => {
-				console.log(e);
+		<${Popover}
+			calloutProps=${{
+				className: 'popover',
+				directionalHint:
+					cactiva.propsEditor.mode === 'popup' ? DirectionalHint.leftTopEdge : DirectionalHint.rightTopEdge,
+				calloutWidth: 200,
+				isBeakVisible: cactiva.propsEditor.mode === 'sidebar'
 			}}
-			onClick=${() => {
+			content=${(popover: any) => {
+				switch (item.name) {
+					case 'style':
+						return html`
+							<div className="po-content">
+								<${StyleEditor} value=${item.value} />
+							</div>
+						`;
+
+					default:
+						return html`
+							<div className="po-content">
+								${item.valueLabel}
+							</div>
+						`;
+				}
+			}}
+			onClickCapture=${(e: any) => {
 				item.selectInCode();
 			}}
+			visibleOnRightClick=${true}
 		>
-			<div className="pointer row">
-				<div className="title">
-					${item.name}
-				</div>
-				<div className="field row space-between">
-					<div className="input">
+			<div className="prop highlight pointer row">
+					<div className="title">
+						${item.name}
+					</div>
+					<div className="field row space-between">
 						<div className="overflow">
 							${item.valueLabel}
 						</div>
+						<div className="goto-source row center ">
+							▸
+						</div>
 					</div>
-					<div className="goto-source row center ">
-						▸
-					</div>
-				</div>
 			</div>
-		</div>
+		</${Popover}>
 	`;
 };
