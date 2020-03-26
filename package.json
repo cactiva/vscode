@@ -36,7 +36,7 @@
   },
  "build": {
     "appId": "com.cactiva.app",
-    "asar":true,
+    "asar": false,
     "productName": "Cactiva",
     "copyright": "Copyright © 2020 Cactiva",
     "detectUpdateChannel": true,
@@ -47,7 +47,8 @@
       "out",
       "resources",
       "package.json",
-      "product.json"
+      "product.json",
+      "scripts"
     ],
     "mac": {
       "category": "public.app-category.developer-tools"
