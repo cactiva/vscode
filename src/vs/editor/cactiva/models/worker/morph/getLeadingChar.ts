@@ -2,7 +2,9 @@ export function getLeadingChar(str: string, pos: number, isFirst?: boolean) {
 	let loop = true;
 	let i = pos;
 	while (loop) {
-		if (i <= 0) loop = false;
+		if (i <= 0) {
+			loop = false;
+		}
 		if (isFirst && str[pos] === '\n') {
 			loop = false;
 			return 0;

@@ -11,4 +11,4 @@ export const walkNode: any = (root: Node, f: (node: Node, meta?: any) => boolean
 			}
 		});
 	}
-}
+};

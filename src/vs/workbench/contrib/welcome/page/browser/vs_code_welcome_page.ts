@@ -17,7 +17,7 @@ export default () => `
 			)}</h1>
 			<p class="subtitle detail">${escape(
 				localize(
-					{ key: 'welcomePage.editingEvolved', comment: ['Shown as subtitle on the Welcome page.'] },
+					{ key: 'welcomePage.editingEvolvedDesc', comment: ['Shown as subtitle on the Welcome page.'] },
 					'Now anyone can build react apps easily'
 				)
 			)}</p>

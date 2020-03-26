@@ -1,3 +1,8 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Cactiva. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
 import * as React from 'react';
 
 const MINI = false;
@@ -113,7 +118,7 @@ const build = function(this: any, statics: any) {
 				} else {
 					buffer += char;
 				}
-			} else if (char === '"' || char === "'") {
+			} else if (char === '"' || char === `'`) {
 				quote = char;
 			} else if (char === '>') {
 				commit();

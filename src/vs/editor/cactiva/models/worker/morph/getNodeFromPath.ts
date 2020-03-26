@@ -6,13 +6,17 @@ export function getNodeFromPath(
 	nodePath: string,
 	whenEachFound?: (node: Node, path: string) => void
 ): Node | null {
-	if (!nodePath || !source) return source || null;
+	if (!nodePath || !source) {
+		return source || null;
+	}
 
 	const lastPath: string[] = [];
 	let lastNode = source;
 	let continueLoop = true;
 	nodePath.split('.').forEach((e, idx: number) => {
-		if (!continueLoop) return;
+		if (!continueLoop) {
+			return;
+		}
 		lastPath.push(e);
 		const num = parseInt(e);
 		const path = lastPath.join('.');

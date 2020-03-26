@@ -1,6 +1,8 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Cactiva. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+
 import { observable } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import * as ReactDOM from 'react-dom';
@@ -41,7 +43,9 @@ export class CanvasPane extends Pane implements IView {
 		super(options);
 
 		const Canvas = observer(() => {
-			if (!this._canvas.root) return null;
+			if (!this._canvas.root) {
+				return null;
+			}
 			return html`
 				<${Editor} canvas=${this._canvas.root} />
 			`;

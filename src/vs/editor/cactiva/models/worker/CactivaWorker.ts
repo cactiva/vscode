@@ -23,10 +23,14 @@ const actions: any = {
 	},
 	'node:getAttributes': async (data: { fileName: string; path: string }) => {
 		const source = project.getSourceFile(data.fileName);
-		if (!source) return [];
+		if (!source) {
+			return [];
+		}
 
 		const node = getNodeFromPath(source, data.path);
-		if (node) return getNodeAttributes(node);
+		if (node) {
+			return getNodeAttributes(node);
+		}
 		return [];
 	},
 	'node:move': async (data: {
@@ -36,7 +40,9 @@ const actions: any = {
 		position: 'children' | 'before' | 'after';
 	}) => {
 		const source = project.getSourceFile(data.fileName);
-		if (!source) return '';
+		if (!source) {
+			return '';
+		}
 
 		const from = getNodeFromPath(source, data.from);
 		const to = getNodeFromPath(source, data.to);
@@ -58,7 +64,9 @@ const actions: any = {
 	},
 	'node:getCode': async (data: { fileName: string; path: string }) => {
 		const source = project.getSourceFile(data.fileName);
-		if (!source) return '';
+		if (!source) {
+			return '';
+		}
 
 		const node = getNodeFromPath(source, data.path);
 		return node?.getChildren().map(e => {
@@ -67,7 +75,9 @@ const actions: any = {
 	},
 	'node:setCode': async (data: { fileName: string; path: string; code: string }) => {
 		const source = project.getSourceFile(data.fileName);
-		if (!source) return '';
+		if (!source) {
+			return '';
+		}
 
 		const node = getNodeFromPath(source, data.path);
 		if (node) {
@@ -77,7 +87,9 @@ const actions: any = {
 	},
 	'node:getNodePathAtPos': async (data: { fileName: string; pos: number }) => {
 		const source = project.getSourceFile(data.fileName);
-		if (!source) return '';
+		if (!source) {
+			return '';
+		}
 
 		const rawNode = source.getDescendantAtPos(data.pos);
 		if (rawNode) {
@@ -92,7 +104,9 @@ const actions: any = {
 				const parent: Node<any> = cursor.getParent();
 				cursor = parent;
 			}
-			if (cursor) return cursor.cactivaPath;
+			if (cursor) {
+				return cursor.cactivaPath;
+			}
 		}
 		return '';
 	}

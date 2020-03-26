@@ -1,3 +1,8 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Cactiva. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
 import { observer, useObservable } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
