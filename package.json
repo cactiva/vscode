@@ -19,7 +19,7 @@
     "watch-client": "gulp watch-client --max_old_space_size=4095",
     "mocha": "mocha test/unit/node/all.js --delay",
     "gulp": "gulp --max_old_space_size=8192",
-    "electron": "node build/lib/electron",
+    "electron": "yarn && node build/lib/electron",
     "7z": "7z",
     "update-grammars": "node build/npm/update-all-grammars.js",
     "update-localization-extension": "node build/npm/update-localization-extension.js",
@@ -44,6 +44,7 @@
     "artifactName": "${productName}.${ext}",
     "files":[
       "extensions",
+      "build",
       "out",
       "resources",
       "package.json",
