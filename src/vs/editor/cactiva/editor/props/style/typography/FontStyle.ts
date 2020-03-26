@@ -4,7 +4,7 @@ import IconTextField from 'vs/editor/cactiva/editor/icons/IconTextField';
 import Field from 'vs/editor/cactiva/editor/props/style/components/Field';
 import html from 'vs/editor/cactiva/libs/html';
 
-export default ({meta, path}: any) => {
+export default ({ meta, path }: any) => {
 	const value = get(meta, `style.${path}`, 'regular');
 	const onChange = (v: any) => {
 		if (v === 'italic') {

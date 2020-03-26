@@ -8,7 +8,7 @@ import LineHeight from 'vs/editor/cactiva/editor/props/style/typography/LineHeig
 import { observer } from 'mobx-react-lite';
 import FontWeight from 'vs/editor/cactiva/editor/props/style/typography/FontWeight';
 
-export default observer(({meta}: any) => {
+export default observer(({ meta }: any) => {
 	return html`
 		<div className="group">
 			<div
@@ -26,11 +26,11 @@ export default observer(({meta}: any) => {
 						justifyContent: 'space-between'
 					}}
 				>
-					<${FontStyle} meta=${meta} path="fontStyle"/>
+					<${FontStyle} meta=${meta} path="fontStyle" />
 					<${TextAlign} meta=${meta} path="textAlign" />
 				</div>
 				<${Color} meta=${meta} path="color" />
-				<${FontWeight} meta=${meta} path="fontStyle"/>
+				<${FontWeight} meta=${meta} path="fontStyle" />
 				<div
 					className="fd-row section"
 					style=${{
