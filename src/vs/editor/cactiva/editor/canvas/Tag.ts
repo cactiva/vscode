@@ -29,6 +29,10 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(({ canvas, node
 		}
 	});
 	const onDrop = debounce(async (from: EditorNode, to: EditorNode, pos: string) => {
+		if (cactiva.propsEditor.mode === 'popup') {
+			cactiva.propsEditor.hidden = true;
+		}
+
 		const editor = node.source.canvas.editor;
 		if (editor) {
 			await to.prependChild(from);
@@ -99,7 +103,7 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(({ canvas, node
 			${mode !== 'preview' &&
 				html`
 					<div className="headertag">
-						<span className="tagname"> ${tagName} </span>
+						<span className="tagname"> ${tagName} ${node.className} </span>
 					</div>
 				`}
 			<${TagPreview} className="children" node=${node} tagName=${tagName}>

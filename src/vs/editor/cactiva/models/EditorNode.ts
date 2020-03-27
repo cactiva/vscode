@@ -78,6 +78,18 @@ export default class EditorNode extends EditorBase {
 		return [];
 	}
 
+	async moveFrom(node: EditorNode, pos: 'before' | 'after') {
+		const result = await this.executeInWorker('node:move', {
+			fileName: this.source.fileName,
+			from: node.path,
+			to: this.path,
+			position: pos
+		});
+		if (result) {
+			this.source.canvas.updateContent(result);
+		}
+	}
+
 	async prependChild(node: EditorNode): Promise<void> {
 		const result = await this.executeInWorker('node:move', {
 			fileName: this.source.fileName,

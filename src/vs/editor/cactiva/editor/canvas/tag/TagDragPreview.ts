@@ -20,7 +20,7 @@ export default observer(() => {
 		isDragging: monitor.isDragging()
 	}));
 
-	if (!isDragging) {
+	if (!isDragging || !item || !item.node) {
 		return null;
 	}
 	return html`

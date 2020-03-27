@@ -5,6 +5,8 @@ import EditorCanvas from 'vs/editor/cactiva/models/EditorCanvas';
 import EditorNode from 'vs/editor/cactiva/models/EditorNode';
 import { cactiva } from 'vs/editor/cactiva/models/store';
 import Divider from './Divider';
+import { useDrag } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 
 interface ITagChild {
 	canvas: EditorCanvas;
@@ -17,10 +19,34 @@ interface ITagChild {
 
 export const TagChild = observer(({ canvas, idx, onClick, node, Tag, isLast }: ITagChild) => {
 	const mode = cactiva.mode;
-	const onDrop = (from: any, to: any, pos: string) => {
-		console.log(from, to, pos);
-	};
+	const onDrop = async (from: any, to: any, pos: string) => {
+		const editor = node.source.canvas.editor;
+		if (editor) {
+			if (cactiva.propsEditor.mode === 'popup') {
+				cactiva.propsEditor.hidden = true;
+			}
 
+			await to.moveFrom(from, pos);
+			const toPath = to.path.split('.');
+			let selectPath = toPath.join('.');
+			let index = toPath[toPath.length - 1];
+			if (pos === 'after') {
+				toPath[toPath.length - 1] = (index * 1 + 1).toString();
+				selectPath = toPath.join('.');
+			}
+			await node.source.canvas.selectNode(selectPath, 'canvas');
+		}
+	};
+	const [, dragRef, preview] = useDrag({
+		item: { type: 'cactiva-tag', node, dropEffect: 'none' },
+		canDrag: monitor => {
+			return true;
+		}
+	});
+
+	React.useEffect(() => {
+		preview(getEmptyImage(), { captureDraggingState: true });
+	}, []);
 	if (node.kind === 'JsxFragment' || node.kind === 'JsxSelfClosingElement' || node.kind === 'JsxElement') {
 		return html`
 			<${React.Fragment} key=${idx}>
@@ -67,7 +93,7 @@ export const TagChild = observer(({ canvas, idx, onClick, node, Tag, isLast }: I
 					content = null;
 				} else {
 					content = html`
-						<div ...${expressionProps} className=${`expression-code ${children ? 'has-children' : ''}`}>
+						<div ...${expressionProps} ref=${dragRef} className=${`expression-code ${children ? 'has-children' : ''}`}>
 							${text}
 						</div>
 					`;

@@ -24,7 +24,7 @@ if grep -qi Microsoft /proc/version; then
 		CLI=$(wslpath -m "$VSCODE_PATH/resources/app/out/cli.js")
 
 		# use the Remote WSL extension if installed
-		WSL_EXT_ID="ms-vscode-remote.remote-wsl"
+		WSL_EXT_ID="ms-cactiva-remote.remote-wsl"
 
 		if [ $WSL_BUILD -ge 41955 -a $WSL_BUILD -lt 41959 ]; then
 			# WSL2 workaround for https://github.com/microsoft/WSL/issues/4337

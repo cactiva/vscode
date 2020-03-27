@@ -7,8 +7,8 @@
 rm -f /usr/bin/@@NAME@@
 ln -s /usr/share/@@NAME@@/bin/@@NAME@@ /usr/bin/@@NAME@@
 
-# Register code in the alternatives system
-# Priority of 0 should never make code the default editor in auto mode as most
+# Register cactiva in the alternatives system
+# Priority of 0 should never make cactiva the default editor in auto mode as most
 # developers would prefer a terminal editor as the default.
 update-alternatives --install /usr/bin/editor editor /usr/bin/@@NAME@@ 0
 
@@ -18,15 +18,15 @@ if hash desktop-file-install 2>/dev/null; then
 	desktop-file-install /usr/share/applications/@@NAME@@-url-handler.desktop
 fi
 
-if [ "@@NAME@@" != "code-oss" ]; then
+if [ "@@NAME@@" != "cactiva-oss" ]; then
 	# Remove the legacy bin command if this is the stable build
-	if [ "@@NAME@@" = "code" ]; then
-		rm -f /usr/local/bin/code
+	if [ "@@NAME@@" = "cactiva" ]; then
+		rm -f /usr/local/bin/cactiva
 	fi
 
 	# Register apt repository
 	eval $(apt-config shell APT_SOURCE_PARTS Dir::Etc::sourceparts/d)
-	CODE_SOURCE_PART=${APT_SOURCE_PARTS}vscode.list
+	CODE_SOURCE_PART=${APT_SOURCE_PARTS}cactiva.list
 
 	eval $(apt-config shell APT_TRUSTED_PARTS Dir::Etc::trustedparts/d)
 	CODE_TRUSTED_PART=${APT_TRUSTED_PARTS}microsoft.gpg
@@ -61,13 +61,13 @@ NdCFTW7wY0Fb1fWJ+/KTsC4=
 	if [ ! -f $CODE_SOURCE_PART ]; then
 		# Write source list if it does not exist
 		WRITE_SOURCE=1
-	elif grep -q "# disabled on upgrade to" /etc/apt/sources.list.d/vscode.list; then
+	elif grep -q "# disabled on upgrade to" /etc/apt/sources.list.d/cactiva.list; then
 		# Write source list if it was disabled by OS upgrade
 		WRITE_SOURCE=1
 	fi
 	if [ "$WRITE_SOURCE" -eq "1" ]; then
 		echo "### THIS FILE IS AUTOMATICALLY CONFIGURED ###
 # You may comment out this entry, but any other modifications may be lost.
-deb [arch=amd64] http://packages.microsoft.com/repos/vscode stable main" > $CODE_SOURCE_PART
+deb [arch=amd64] http://packages.microsoft.com/repos/cactiva stable main" > $CODE_SOURCE_PART
 	fi
 fi
