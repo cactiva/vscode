@@ -12,7 +12,6 @@ import EditorCanvas from 'vs/editor/cactiva/models/EditorCanvas';
 import EditorNode from 'vs/editor/cactiva/models/EditorNode';
 import { cactiva } from 'vs/editor/cactiva/models/store';
 import Divider from './tag/Divider';
-import { toJS } from 'mobx';
 
 interface ISingleTag {
 	canvas: EditorCanvas;

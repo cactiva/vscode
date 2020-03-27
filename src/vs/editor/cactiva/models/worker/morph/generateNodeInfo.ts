@@ -1,6 +1,6 @@
-import { JsxElement, Node, JsxSelfClosingElement, JsxFragment, JsxText, JsxAttribute } from 'ts-morph';
+import { JsxAttribute, JsxElement, JsxFragment, JsxSelfClosingElement, JsxText, Node } from 'ts-morph';
 import { getLeadingChar } from 'vs/editor/cactiva/models/worker/morph/getLeadingChar';
-import { getValue, getValueLabel } from 'vs/editor/cactiva/models/worker/morph/getNodeAttributes';
+import { getValueLabel } from 'vs/editor/cactiva/models/worker/morph/getNodeAttributes';
 
 export function generateNodeInfo(node: Node, withAttribute: boolean = true) {
 	const src = node.getSourceFile().getFullText();
