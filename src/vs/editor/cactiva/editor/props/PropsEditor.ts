@@ -72,8 +72,11 @@ const PropsEditorContent = observer(({ domNode, style }: any) => {
 					<div
 						className="center margin-right pointer"
 						onClick=${() => {
-							if (propsEditor.mode === 'sidebar') propsEditor.mode = 'popup';
-							else propsEditor.mode = 'sidebar';
+							if (propsEditor.mode === 'sidebar') {
+								propsEditor.mode = 'popup';
+							} else {
+								propsEditor.mode = 'sidebar';
+							}
 						}}
 					>
 						${propsEditor.mode === 'popup'
@@ -252,6 +255,8 @@ const PropsEditorContent = observer(({ domNode, style }: any) => {
 		</div>
 	`;
 
-	if (!domNode) return content;
+	if (!domNode) {
+		return content;
+	}
 	return ReactDOM.createPortal(content, domNode);
 });

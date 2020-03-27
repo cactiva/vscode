@@ -3,10 +3,14 @@ const modules = {} as any;
 const wpath = 'vs/editor/cactiva/models/worker';
 const coreDefine = function(this: string, deps: any, definition: any) {
 	const args = deps.map((e: string) => {
-		if (e === 'require') return require;
+		if (e === 'require') {
+			return require;
+		}
 		if (e === 'exports') {
 			if (this) {
-				if (modules[this]) return modules[this];
+				if (modules[this]) {
+					return modules[this];
+				}
 				modules[this] = {};
 				return modules[this];
 			}

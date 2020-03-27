@@ -47,7 +47,9 @@ export default class EditorCanvas extends EditorBase {
 
 	async setSource(sourceText: string) {
 		const modelData = this.modelData;
-		if (modelData) this.source = new EditorSource(modelData.model.uri.fsPath, sourceText, this);
+		if (modelData) {
+			this.source = new EditorSource(modelData.model.uri.fsPath, sourceText, this);
+		}
 	}
 
 	async updateContent(content: string, refreshCanvas: boolean = true) {
@@ -69,7 +71,9 @@ export default class EditorCanvas extends EditorBase {
 				}
 			]);
 			editor.pushUndoStop();
-			if (refreshCanvas) await this.source.load(content);
+			if (refreshCanvas) {
+				await this.source.load(content);
+			}
 		}
 	}
 
@@ -79,12 +83,16 @@ export default class EditorCanvas extends EditorBase {
 			breadcrumbs.push(n);
 		});
 
-		if (breadcrumbs.length === 0) return;
+		if (breadcrumbs.length === 0) {
+			return;
+		}
 
 		this.breadcrumbs = breadcrumbs;
 		this.selectedNode = this.breadcrumbs[this.breadcrumbs.length - 1];
 
-		if (!this.selectedNode) return;
+		if (!this.selectedNode) {
+			return;
+		}
 		if (from === 'code') {
 			// only show propsEditor when it's not hidden
 			if (!cactiva.propsEditor.hidden) {
@@ -105,7 +113,9 @@ export default class EditorCanvas extends EditorBase {
 				});
 			}
 		} else if (from === 'canvas' || from === 'breadcrumb') {
-			if (cactiva.propsEditor.mode === 'sidebar') cactiva.propsEditor.hidden = false;
+			if (cactiva.propsEditor.mode === 'sidebar') {
+				cactiva.propsEditor.hidden = false;
+			}
 			cactiva.propsEditor.node = this.selectedNode;
 			const s = this.selectedNode.start;
 			const e = this.selectedNode.end;

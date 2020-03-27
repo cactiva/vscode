@@ -61,8 +61,12 @@ export default class EditorSource extends EditorBase {
 		nodePath: string,
 		whenEachFound?: (node: EditorNode, path: string) => void
 	): Promise<EditorNode | null> {
-		if (!nodePath || typeof nodePath !== 'string') null;
-		if (!(await this.continueWhenReady())) return null;
+		if (!nodePath || typeof nodePath !== 'string') {
+			return null;
+		}
+		if (!(await this.continueWhenReady())) {
+			return null;
+		}
 
 		const pathArray = nodePath.split('.');
 		const lastPath: string[] = [];
@@ -70,24 +74,33 @@ export default class EditorSource extends EditorBase {
 		let lastNode = { children: this.rootNodes };
 		let continueLoop = true;
 		pathArray.forEach((e, idx: number) => {
-			if (!continueLoop) return;
+			if (!continueLoop) {
+				return;
+			}
 			lastPath.push(e);
 			const num = parseInt(e);
 			const path = lastPath.join('.');
 			const children = lastNode.children;
-			const child = children[num];
 
-			if (child) {
-				if (whenEachFound) {
-					whenEachFound(child, path);
-				}
-				lastNode = child;
-			} else {
+			if (num >= children.length) {
 				continueLoop = false;
+			} else {
+				const child = children[num];
+
+				if (child) {
+					if (whenEachFound) {
+						whenEachFound(child, path);
+					}
+					lastNode = child;
+				} else {
+					continueLoop = false;
+				}
 			}
 		});
 
-		if (lastNode instanceof EditorNode) return lastNode;
+		if (lastNode instanceof EditorNode) {
+			return lastNode;
+		}
 		return null;
 	}
 

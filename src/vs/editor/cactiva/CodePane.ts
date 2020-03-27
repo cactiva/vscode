@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Cactiva. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 import { Pane } from 'vs/base/browser/ui/splitview/paneview';
@@ -22,7 +23,7 @@ export class CodePane extends Pane implements IView {
 		const bench = document.getElementsByClassName('monaco-workbench');
 		if (bench.length > 0 && bench[0] instanceof HTMLElement) {
 			const color = window.getComputedStyle(bench[0], null).getPropertyValue('color');
-			if (cactiva.fontColor != color) {
+			if (cactiva.fontColor !== color) {
 				cactiva.fontColor = color;
 			}
 		}

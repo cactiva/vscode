@@ -22,7 +22,7 @@ export function getNodeAttributes(node: Node) {
 	if (attr) {
 		return (attr as any).map((e: JsxAttribute) => {
 			return {
-				...generateNodeInfo(e),
+				...generateNodeInfo(e, false),
 				name: e.getName(),
 				value: getValue(e),
 				valueLabel: getValueLabel(e)
@@ -31,7 +31,7 @@ export function getNodeAttributes(node: Node) {
 	}
 }
 
-function getValue(item: JsxAttribute): any {
+export function getValue(item: JsxAttribute): any {
 	const izer = item.getInitializer();
 	if (izer instanceof JsxExpression) {
 		const exp = izer.getExpression();
@@ -48,16 +48,16 @@ function getValue(item: JsxAttribute): any {
 	}
 }
 
-function parseValue(item: PropertyAssignment) {
+export function parseValue(item: PropertyAssignment) {
 	let izer = item.getInitializer();
 	if (izer instanceof StringLiteral) {
 		let v = izer.getText();
-		return v.slice(1, v.length-1);
+		return v.slice(1, v.length - 1);
 	}
 	return izer?.getText();
 }
 
-function getValueLabel(item: JsxAttribute) {
+export function getValueLabel(item: JsxAttribute) {
 	const izer = item.getInitializer();
 	let result = '';
 	let text = '';
@@ -75,7 +75,8 @@ function getValueLabel(item: JsxAttribute) {
 	}
 
 	const niceName = {
-		ObjectLiteralExpression: '{ object }'
+		ObjectLiteralExpression: '{ object }',
+		StringLiteral: text.substr(1, text.length - 2)
 	} as any;
 
 	return niceName[result] || text;

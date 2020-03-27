@@ -1,3 +1,4 @@
+import { debounce } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
@@ -11,7 +12,7 @@ import EditorCanvas from 'vs/editor/cactiva/models/EditorCanvas';
 import EditorNode from 'vs/editor/cactiva/models/EditorNode';
 import { cactiva } from 'vs/editor/cactiva/models/store';
 import Divider from './tag/Divider';
-import { debounce } from 'lodash';
+import { toJS } from 'mobx';
 
 interface ISingleTag {
 	canvas: EditorCanvas;
@@ -61,6 +62,16 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(({ canvas, node
 		node.domRef = val;
 	});
 
+	let className = node.tag.attributes.className || '';
+	if (className) {
+		className =
+			'.' +
+			className
+				.split(' ')
+				.filter(e => !!e.trim())
+				.join(' .');
+	}
+
 	useEffect(() => {
 		node.domRef = domRef.current;
 	}, [node]);
@@ -103,7 +114,7 @@ export const Tag: React.FunctionComponent<ISingleTag> = observer(({ canvas, node
 			${mode !== 'preview' &&
 				html`
 					<div className="headertag">
-						<span className="tagname"> ${tagName} ${node.className} </span>
+						<span className="tagname"> ${tagName}${className} </span>
 					</div>
 				`}
 			<${TagPreview} className="children" node=${node} tagName=${tagName}>

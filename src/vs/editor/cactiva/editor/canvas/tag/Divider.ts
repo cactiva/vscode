@@ -1,4 +1,4 @@
-import { observer } from 'mobx-react-lite';
+import { observer, useObservable } from 'mobx-react-lite';
 import { useDrop } from 'react-dnd';
 import html from 'vs/editor/cactiva/libs/html';
 import EditorNode from 'vs/editor/cactiva/models/EditorNode';
@@ -12,6 +12,9 @@ export default observer(
 		index: number;
 		onDrop: (from: EditorNode, to: EditorNode, pos: string) => void;
 	}) => {
+		const meta = useObservable({
+			hover: false
+		});
 		const [drop, dropRef] = useDrop({
 			accept: 'cactiva-tag',
 			collect: monitor => ({
@@ -25,12 +28,17 @@ export default observer(
 				}
 			}
 		});
-		const hovered = drop.hover || props.hovered ? 'hover' : '';
+		const hovered = meta.hover || drop.hover || props.hovered ? 'hover' : '';
 		return html`
 			<div
 				ref=${dropRef}
 				className=${`divider ${hovered}`}
+				onMouseOut=${() => {
+					meta.hover = false;
+				}}
 				onMouseOver=${(e: any) => {
+					meta.hover = true;
+
 					if (!props.bubbleHover) {
 						e.stopPropagation();
 					}

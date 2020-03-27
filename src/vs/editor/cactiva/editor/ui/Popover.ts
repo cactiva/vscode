@@ -64,14 +64,22 @@ export default observer(
 							<div
 								ref=${childrenProps.ref}
 								onClickCapture=${(e: any) => {
-									onClickCapture && onClickCapture(e);
-									if (!visibleOnRightClick) meta.visible = !meta.visible;
+									if (onClickCapture) {
+										onClickCapture(e);
+									}
+									if (!visibleOnRightClick) {
+										meta.visible = !meta.visible;
+									}
 									e.preventDefault();
 									e.stopPropagation();
 								}}
 								onContextMenu=${(e: any) => {
-									onContextMenu && onContextMenu(e);
-									if (!!visibleOnRightClick) meta.visible = !meta.visible;
+									if (onContextMenu) {
+										onContextMenu(e);
+									}
+									if (!!visibleOnRightClick) {
+										meta.visible = !meta.visible;
+									}
 									e.preventDefault();
 									e.stopPropagation();
 								}}

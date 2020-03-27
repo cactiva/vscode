@@ -8,6 +8,12 @@ export interface IEditorNodePos {
 	column: number;
 }
 
+interface ITagInfo {
+	attributes: {
+		[key: string]: string;
+	};
+}
+
 export default class EditorNode extends EditorBase {
 	@observable start: IEditorNodePos = {
 		line: 0,
@@ -21,6 +27,9 @@ export default class EditorNode extends EditorBase {
 	@observable path = '';
 	@observable text = '';
 	@observable kind = '';
+	@observable tag: ITagInfo = {
+		attributes: {}
+	};
 	@observable expression = '';
 	@observable children: EditorNode[] = [];
 	@observable source: EditorSource;
@@ -31,6 +40,7 @@ export default class EditorNode extends EditorBase {
 		path: string;
 		text: string;
 		kind: string;
+		tag: ITagInfo;
 		children: EditorNode[];
 		start: IEditorNodePos;
 		end: IEditorNodePos;
@@ -43,6 +53,7 @@ export default class EditorNode extends EditorBase {
 		this.kind = props.kind;
 		this.start = props.start;
 		this.end = props.end;
+		this.tag = props.tag;
 		this.expression = props.expression;
 
 		if (Array.isArray(props.children)) {
@@ -108,6 +119,7 @@ export default class EditorNode extends EditorBase {
 			path: this.path
 		});
 		if (result) {
+			this.tag.attributes = result;
 			return result.map((e: any) => {
 				return new EditorNodeAttr({ ...e, node: this });
 			});

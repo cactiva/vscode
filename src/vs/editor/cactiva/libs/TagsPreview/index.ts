@@ -1,1 +1,1 @@
-export * as ReactNative from "./react-native/index";
+export * from './react-native/index';
