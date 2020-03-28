@@ -40,7 +40,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			if (this._splitView.length > 1) {
 				this.superLayout({
 					...dimension,
-					width: this._splitView.getViewSize(0)
+					width: this._splitView.getViewSize(0),
 				});
 			} else {
 				this.superLayout(dimension);
@@ -78,7 +78,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 		@IAccessibilityService accessibilityService: IAccessibilityService
 	) {
 		const splitview = new SplitView(domElement, {
-			orientation: Orientation.HORIZONTAL
+			orientation: Orientation.HORIZONTAL,
 		});
 		const codePane = new CodePane({ title: 'Code' });
 		const canvasPane = new CanvasPane({ title: 'Canvas' });
@@ -115,12 +115,12 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			if (this._splitView.length === 1) {
 				this.superLayout({
 					width: this._domEl.clientWidth,
-					height: this._domEl.clientHeight
+					height: this._domEl.clientHeight,
 				});
 			} else {
 				this.superLayout({
 					width: this._splitView.getViewSize(0),
-					height: this._domEl.clientHeight
+					height: this._domEl.clientHeight,
 				});
 			}
 		};
@@ -128,14 +128,14 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 		this._register({
 			dispose: () => {
 				window.removeEventListener('resize', onResize);
-			}
+			},
 		});
 
 		this._register(
 			this._splitView.onDidSashChange(() => {
 				this.superLayout({
 					width: this._splitView.getViewSize(0),
-					height: this._domEl.clientHeight
+					height: this._domEl.clientHeight,
 				});
 				localStorage[`cactiva-sash-${this.getId()}`] = this._splitView.getViewSize(1);
 			})
@@ -148,7 +148,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 		this._register({
 			dispose: () => {
 				window.removeEventListener('onresize', onWindowResize);
-			}
+			},
 		});
 
 		splitview.addView(codePane, Sizing.Distribute);
@@ -163,14 +163,14 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			}
 			this._changeLanguageTo(model?.getLanguageIdentifier().language);
 			this._modelData?.listenersToRemove.push(
-				this.onDidChangeModelLanguage(e => {
+				this.onDidChangeModelLanguage((e) => {
 					this._changeLanguageTo(e.newLanguage);
 				})
 			);
 			this._modelData?.listenersToRemove.push(
 				this.onDidChangeCursorPosition(
 					debounce(
-						async e => {
+						async (e) => {
 							const id = this._modelData?.model.id;
 							if (id) {
 								const canvas = cactiva.canvas[id];
@@ -204,7 +204,8 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			this._modelData?.listenersToRemove.push(
 				this.onDidChangeModelContent(
 					debounce(
-						e => {
+						(e) => {
+							console.log('halo');
 							const model = this._modelData?.model;
 							if (model) {
 								const canvas = cactiva.canvas[model.id];
@@ -228,12 +229,12 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			if (this._splitView.length === 1) {
 				this.superLayout({
 					width: this._domEl.clientWidth,
-					height: this._domEl.clientHeight
+					height: this._domEl.clientHeight,
 				});
 			} else {
 				this.superLayout({
 					width: this._splitView.getViewSize(0),
-					height: this._domEl.clientHeight
+					height: this._domEl.clientHeight,
 				});
 			}
 		}
@@ -250,7 +251,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			}
 			this.superLayout({
 				width: this._splitView.getViewSize(0),
-				height: this._domEl.clientHeight
+				height: this._domEl.clientHeight,
 			});
 		} else if (this._splitView.length > 1 && languageId.indexOf('react') < 0) {
 			cactiva.propsEditor.hidden = true;
@@ -258,7 +259,7 @@ export class CanvasEditorWidget extends CodeEditorWidget {
 			this._splitView.setViewVisible(1, false);
 			this.layout({
 				width: this._domEl.clientWidth,
-				height: this._domEl.clientHeight
+				height: this._domEl.clientHeight,
 			});
 		}
 	}

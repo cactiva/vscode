@@ -12,7 +12,7 @@
 	display: flex;
 	justify-content: space-between;
 	overflow: hidden;
-	height: 20px;
+	height: 14px;
 }
 
 .singletag .headertag .tagname {
